@@ -15,7 +15,10 @@ public class ObjFile {
 
     private final BufferedReader fileReader;
 
-    private ArrayList<ObjInstruction> instructions = new ArrayList<>();
+    private ArrayList<Vertex4F> vertexes = new ArrayList<>();
+    private ArrayList<Face> faces=new ArrayList<>();
+    private ArrayList<Vertex3F> normals=new ArrayList<>();
+    private ArrayList<Vertex3F> textures=new ArrayList<>();
 
     public ObjFile(File file) throws FileNotFoundException {
         this.file = file;
@@ -28,7 +31,19 @@ public class ObjFile {
         while (line != null) {
             String[] words = line.split(" ");
             InstructionType instructionType = ObjInstruction.keySetInstructions.get(words[0]);
-            //System.out.println("")
+            switch (instructionType){
+                case VERTEX:
+                    vertexes.add(handleVertex(line));
+                    break;
+                case FACE:
+                    faces.add(handleFace(line));
+                    break;
+                case NORMAL:
+                    normals.add(handleNormal(line));
+                    break;
+
+
+            }
             ObjInstruction instruction = new ObjInstruction(instructionType);
             for (int i = 1; i < words.length; i++) {
                 instruction.addParam(words[i]);
@@ -47,13 +62,13 @@ public class ObjFile {
 
             switch (objInstruction.type) {
                 case VERTEX:
-                    handleVertex(objInstruction);
+
                     break;
                 case NORMAL:
                     handleNormal(objInstruction);
                     break;
                 case FACE:
-                    //handleFace(objInstruction);
+                    handleFace(objInstruction);
                     break;
                 default:
                     Constants.logger.warning("Unhandled instruction:" + objInstruction);
@@ -64,10 +79,12 @@ public class ObjFile {
         GL11.glEnd();
     }
 
-    private static void handleVertex(ObjInstruction vertex){
+    private static Vertex4F handleVertex(String line){
         float x, y, z, normal;
+        ObjInstruction vertex=makeInstruction(line);
         String params[]=new String[vertex.params.size()];
-        for (int i=0;i<vertex.params.size();i++){
+        normal=1f;
+        for (int i=1;i<vertex.params.size();i++){
             params[i]=vertex.params.get(i);
         }
         boolean hasNormal=params.length==4;
@@ -77,15 +94,13 @@ public class ObjFile {
         Constants.logger.fine("Handling vertex");
         if(hasNormal) {
             normal = Float.parseFloat(params[3]);
-            GL11.glVertex4f(x,y,z,normal);
         }
-        else {
-            GL11.glVertex3f(x,y,z);
-        }
+
     }
 
-    private static void handleNormal(ObjInstruction normal){
+    private static Vertex3F handleNormal(String line){
         float x, y, z;
+        ObjInstruction normal=makeInstruction(line);
         String params[]=new String[normal.params.size()];
         for (int i=0;i<normal.params.size();i++){
             params[i]=normal.params.get(i);
@@ -93,27 +108,51 @@ public class ObjFile {
         x=Float.parseFloat(params[0]);
         y=Float.parseFloat(params[1]);
         z=Float.parseFloat(params[2]);
-        GL11.glNormal3f(x,y,z);
+        return new Vertex3F(x,y,z);
     }
 
-    private static void handleFace(ObjInstruction vertex){
+    private Face handleFace(String line){
         float x, y, z, normal;
-        String params[]=new String[vertex.params.size()];
-        for (int i=0;i<vertex.params.size();i++){
-            params[i]=vertex.params.get(i);
+        ObjInstruction faceobjstr=makeInstruction(line);
+
+        String params[]=new String[faceobjstr.params.size()];
+        for (int i=0;i<faceobjstr.params.size();i++){
+            params[i]=faceobjstr.params.get(i);
         }
-        boolean hasNormal=params.length==4;
-        x=Float.parseFloat(params[0]);
-        y=Float.parseFloat(params[1]);
-        z=Float.parseFloat(params[2]);
-        System.out.println("Handling face");
-        if(hasNormal) {
-            normal = Float.parseFloat(params[3]);
-            GL11.glVertex4f(x,y,z,normal);
+        ArrayList<FacePoint> poligons=new ArrayList<>();
+        for(String param: params){
+            String[] parts=param.split("/");
+            if(parts.length==1){
+                int var1=Integer.parseInt(parts[0]);
+                poligons.add(new FacePoint(vertexes.get(var1),null,null));
+            }
+            if(parts.length==2){
+                int var1=Integer.parseInt(parts[0]);
+                int var2=Integer.parseInt(parts[1]);
+                poligons.add(new FacePoint(vertexes.get(var1),textures.get(var2),null));
+            }
+            if(parts.length==3){
+                int var1=Integer.parseInt(parts[0]);
+                int var2=Integer.parseInt(parts[1]);
+                int var3=Integer.parseInt(parts[2]);
+                poligons.add(new FacePoint(vertexes.get(var1),textures.get(var2),normals.get(var3)));
+            }
+
+
+
         }
-        else {
-            GL11.glVertex3f(x,y,z);
+        return new Face(poligons);
+    }
+
+    public static ObjInstruction makeInstruction(String line){
+        String[] words = line.split(" ");
+        InstructionType instructionType = ObjInstruction.keySetInstructions.get(words[0]);
+
+        ObjInstruction instruction = new ObjInstruction(instructionType);
+        for (int i = 1; i < words.length; i++) {
+            instruction.addParam(words[i]);
         }
+        return instruction;
     }
 
     public static class ObjFormatException extends Exception {

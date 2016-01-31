@@ -54,8 +54,9 @@ public class Starter {
            // GL11.glTranslatef(0,-5,0);
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT); //clear screen
             GL11.glTranslatef(1,-2,1);
-            GL11.glRotatef(rotation,0,1,0.25f);
+            GL11.glRotatef(rotation,0,1,0);
             rotation++;
+
             //System.out.println(glGetError());
             //glTranslatef(-1,-1,-1);
             file.render();
