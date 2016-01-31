@@ -74,7 +74,7 @@ public class ObjFile {
         x=Float.parseFloat(params[0]);
         y=Float.parseFloat(params[1]);
         z=Float.parseFloat(params[2]);
-        System.out.println("Handling vertex");
+        Constants.logger.fine("Handling vertex");
         if(hasNormal) {
             normal = Float.parseFloat(params[3]);
             GL11.glVertex4f(x,y,z,normal);
