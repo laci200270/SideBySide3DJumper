@@ -51,10 +51,13 @@ public class Starter {
             GL11.glMatrixMode(GL11.GL_PROJECTION);
             GL11.glLoadIdentity();
            // GL11.glOrtho(0, Display.getDisplayMode().getWidth(), 0, Display.getDisplayMode().getHeight(), -1, 1);
+           // GL11.glTranslatef(0,-5,0);
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT); //clear screen
+            GL11.glTranslatef(1,-2,1);
+            GL11.glRotatef(rotation,0,1,0.25f);
             rotation++;
-            System.out.println(glGetError());
-            glTranslatef(-1,-1,-1);
+            //System.out.println(glGetError());
+            //glTranslatef(-1,-1,-1);
             file.render();
             Display.update();
             Display.sync(60);
