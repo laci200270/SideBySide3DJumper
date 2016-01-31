@@ -10,14 +10,12 @@ import java.io.File;
  * Created by Laci on 2016. 01. 23..
  */
 public class FileUtils {
-    public static void unzipIt(File zipFile, File outputFolder) {
+    public static void unzipIt(File zipFile, File outputFolder) throws ZipException {
 
-        try {
+
             ZipFile file = new ZipFile(zipFile);
             file.extractAll(outputFolder.getAbsolutePath());
-        } catch (ZipException e) {
-            e.printStackTrace();
-        }
+
     }
 
     public static File getTempDir() {

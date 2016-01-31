@@ -4,6 +4,7 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import hu.laci200270.games.sbs3djumper.Constants;
 import hu.laci200270.games.sbs3djumper.utils.FileUtils;
+import net.lingala.zip4j.exception.ZipException;
 
 import java.io.IOException;
 
@@ -14,7 +15,7 @@ public class CommonUtils {
     public static String generateLwjglName() {
         return String.format("lwjgl-%s", Constants.lwjgl_version);
     }
-    public static void setupLwjgl(){
+    public static void setupLwjgl() throws ZipException {
         try {
             System.out.println(FileUtils.getRootDir().getAbsolutePath());
             boolean shouldExtract=Constants.lwjgl_zip.exists();

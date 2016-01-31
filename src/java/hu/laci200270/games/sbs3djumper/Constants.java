@@ -5,7 +5,11 @@ package hu.laci200270.games.sbs3djumper;
 import hu.laci200270.games.sbs3djumper.utils.CommonUtils;
 import hu.laci200270.games.sbs3djumper.utils.FileUtils;
 
+
+
 import java.io.File;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * Created by Laci on 2016. 01. 23..
@@ -18,7 +22,7 @@ public class Constants {
     public static final File lwjgl_zip=new File(FileUtils.getTempDir(),"lwjgl.zip");
     public static final File lwjgl_dir=new File(FileUtils.getRootDir(),"lwjgl");
     public static final File lwjgl_unpacked_dir=new File(lwjgl_dir, CommonUtils.generateLwjglName());
-    public static final File lwjgl_natives_dir=new File(lwjgl_unpacked_dir,"natives");
+    public static final File lwjgl_natives_dir=new File(FileUtils.getRootDir(),"natives");
 
     //COMMON
     public static final String gameVer="{developer_version}";
@@ -27,6 +31,8 @@ public class Constants {
     public static final String gameName="Side By Side 3D Jumper";
     public static final String gameCodeName="SbS3DJumper";
 
+    //Log4J
+    public static final Logger logger= Logger.getLogger("console");
 
 
 }
