@@ -41,8 +41,8 @@ public class ObjFile {
     public void render() {
         GL11.glBegin(GL11.GL_TRIANGLES);
         GL11.glColor3d(128,128,0);
-        System.out.println("Rendering");
-        System.out.println("Instrctions size: "+instructions.size());
+        Constants.logger.fine("Rendering");
+        Constants.logger.fine("Instructions size size: " + instructions.size());
         for (ObjInstruction objInstruction : instructions) {
 
             switch (objInstruction.type) {
