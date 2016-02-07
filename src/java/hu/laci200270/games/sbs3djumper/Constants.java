@@ -8,6 +8,7 @@ import hu.laci200270.games.sbs3djumper.utils.FileUtils;
 
 
 import java.io.File;
+import java.util.Random;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
@@ -30,6 +31,7 @@ public class Constants {
     public static final String devName="laci200270";
     public static final String gameName="Side By Side 3D Jumper";
     public static final String gameCodeName="SbS3DJumper";
+    public static Random random=new Random();
 
     //Log4J
     public static final Logger logger= Logger.getLogger("console");

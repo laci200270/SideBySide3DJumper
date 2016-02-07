@@ -18,6 +18,7 @@ public class ObjInstruction {
         keySetInstructions.put("mtllib", InstructionType.MATERIAL_LIB_LOAD);
         keySetInstructions.put("usemtl", InstructionType.MATERIAL_SELECT);
         keySetInstructions.put("s", InstructionType.SHADING);
+        keySetInstructions.put("vt", InstructionType.TEXTURE);
     }
 
     public InstructionType type;

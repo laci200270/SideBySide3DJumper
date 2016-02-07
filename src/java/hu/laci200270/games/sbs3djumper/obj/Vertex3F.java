@@ -4,7 +4,14 @@ package hu.laci200270.games.sbs3djumper.obj;
  * Created by Laci on 2016. 01. 31..
  */
 public class Vertex3F {
-    float x,y,z;
+    public float x, y, z;
+
+    public Vertex3F(float x, float y, float z) {
+
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
 
     public float getX() {
         return x;
@@ -27,13 +34,6 @@ public class Vertex3F {
     }
 
     public void setZ(float z) {
-        this.z = z;
-    }
-
-    public Vertex3F(float x, float y, float z) {
-
-        this.x = x;
-        this.y = y;
         this.z = z;
     }
 
