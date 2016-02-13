@@ -20,8 +20,10 @@ public class Shader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        GL20.glShaderSource(id,shaderContents);
+        GL20.glShaderSource(id, shaderContents);
         GL20.glCompileShader(id);
+
+        System.out.println(GL20.glGetShaderInfoLog(id));
 
 
     }
