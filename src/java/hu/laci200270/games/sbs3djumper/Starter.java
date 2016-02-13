@@ -69,6 +69,7 @@ try {
 
         //GL11.glDisable(GL11.GL_CULL_FACE);
         GL20.glUseProgram(Constants.programID);
+        System.out.println(GL20.glGetProgramInfoLog(Constants.programID));
         file.render();
         glfwSwapBuffers(window);
         glfwPollEvents();
