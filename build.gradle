@@ -11,29 +11,39 @@ buildscript {
             url "https://plugins.gradle.org/m2/"
         }
     }
-    dependencies {
-        classpath "us.kirchmeier:gradle-capsule-plugin:1.0.2"
-    }
+        dependencies {
+            classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
+        }
+
 }
 
-apply plugin: "us.kirchmeier.capsule"
+apply plugin: 'idea'
+apply plugin: 'com.github.johnrengelman.shadow'
 repositories {
     mavenCentral()
 }
 
-
-
-task fatCapsule(type: FatCapsule) {
-    applicationClass 'hu.laci200270.games.firstgame.Starter'
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
 }
 
-dependencies{
-    compile group: 'org.lwjgl.lwjgl', name: 'lwjgl', version: '2.9.3'
+
+project.ext.lwjglVersion = "3.0.0a"
+
+dependencies {
+    compile "org.lwjgl:lwjgl:${lwjglVersion}"
+    compile "org.lwjgl:lwjgl-platform:${lwjglVersion}:natives-windows"
+    compile "org.lwjgl:lwjgl-platform:${lwjglVersion}:natives-linux"
+    compile "org.lwjgl:lwjgl-platform:${lwjglVersion}:natives-osx"
     compile group: 'com.google.guava', name: 'guava', version: '18.0'
     compile group: 'net.lingala.zip4j', name: 'zip4j', version: '1.3.2'
     compile group: 'org.apache.commons', name: 'commons-io', version: '1.3.2'
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.5'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.5'
+    compile group: 'com.hackoeur', name: 'jglm', version: '1.0.0'
 }
 
 sourceSets {
@@ -45,6 +55,12 @@ sourceSets {
 
             srcDir 'src/resources'
         }
+    }
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'hu.laci200270.games.sbs3djumper.Starter'
     }
 }
 

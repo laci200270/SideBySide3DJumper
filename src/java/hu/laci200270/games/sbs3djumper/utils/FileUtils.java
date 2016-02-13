@@ -4,7 +4,7 @@ import hu.laci200270.games.sbs3djumper.Constants;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 
-import java.io.File;
+import java.io.*;
 
 /**
  * Created by Laci on 2016. 01. 23..
@@ -29,5 +29,18 @@ public class FileUtils {
         rootDir.mkdirs();
 
         return rootDir;
+    }
+
+    public static String readFile(File file) throws IOException {
+        String str="";
+        BufferedReader reader=new BufferedReader(new FileReader(file));
+
+        String line=reader.readLine();
+        while(line!=null){
+            str+=line+'\n';
+            line=reader.readLine();
+        }
+
+        return str;
     }
 }

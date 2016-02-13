@@ -82,6 +82,7 @@ public class ObjLoader implements IModelLoader {
         while (line != null) {
             String[] words = line.split(" ");
             InstructionType instructionType = ObjInstruction.keySetInstructions.get(words[0]);
+            //System.out.println(line);
             try{switch (instructionType) {
                 case VERTEX:
                     vertexes.add(handleVertex(line));

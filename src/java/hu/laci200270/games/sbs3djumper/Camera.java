@@ -1,4 +1,4 @@
-package hu.laci200270.games.sbs3djumper;
+/*package hu.laci200270.games.sbs3djumper;
 
 import hu.laci200270.games.sbs3djumper.obj.Vertex3F;
 import org.lwjgl.input.Keyboard;
@@ -6,13 +6,13 @@ import org.lwjgl.input.Mouse;
 
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glRotatef;
-import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.glTranslatef;*/
 
 /**
  * Created by Laci on 2016. 02. 06..
  */
 public class Camera {
-    public static float moveSpeed = 0.001f;
+    /*public static float moveSpeed = 0.001f;
 
     private static float maxLook = 85;
 
@@ -222,5 +222,5 @@ public class Camera {
 
     public static float getMouseSensitivity() {
         return mouseSensitivity;
-    }
+    }*/
 }

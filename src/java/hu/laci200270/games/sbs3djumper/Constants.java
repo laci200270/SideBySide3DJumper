@@ -4,7 +4,7 @@ package hu.laci200270.games.sbs3djumper;
 
 import hu.laci200270.games.sbs3djumper.utils.CommonUtils;
 import hu.laci200270.games.sbs3djumper.utils.FileUtils;
-
+import org.lwjgl.opengl.GL20;
 
 
 import java.io.File;
@@ -35,6 +35,10 @@ public class Constants {
 
     //Log4J
     public static final Logger logger= Logger.getLogger("console");
+
+    //RENDER
+    public static boolean useVBOs=false;
+    public static final int programID= GL20.glCreateProgram();
 
 
 }
