@@ -27,7 +27,7 @@ import static org.lwjgl.system.MemoryUtil.memStrLen1;
 public class Starter {
 
     private static long lastFrame;
-    private static long window;
+    public static long window;
 
     final static String classPath = System.getProperty("java.class.path", ".");
     final static String[] classPathElements = classPath.split(System.getProperty("path.separator"));
@@ -49,7 +49,8 @@ try {
     GL11.glDepthFunc(GL11.GL_LEQUAL);
     Shader vert=new Shader(new ResourceLocation("shaders/object.vert").file, GL20.GL_VERTEX_SHADER);
     Shader frag= new Shader(new ResourceLocation("shaders/object.frag").file, GL20.GL_FRAGMENT_SHADER);
-
+    vert.apply(Constants.programID);
+    frag.apply(Constants.programID);
     while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE) {
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glLoadIdentity();
@@ -60,20 +61,21 @@ try {
         GL11.glTranslatef(0, -1, -0.5f);
         GL11.glScalef(0.1f, 0.1f, 0.1f);
         GL11.glRotatef(rotation, 0, 1, 0f);
+        GL20.glLinkProgram(Constants.programID);
         rotation++;
         Mat4 transform=new Mat4();
         //GL11.glClearColor(1,0,1,0);
 
-        vert.apply(Constants.programID);
-        frag.apply(Constants.programID);
+
 
         //GL11.glDisable(GL11.GL_CULL_FACE);
         GL20.glUseProgram(Constants.programID);
-        System.out.println(GL20.glGetProgramInfoLog(Constants.programID));
+        //System.out.println(GL20.glGetProgramInfoLog(Constants.programID));
+        //System.out.println(GL11.glGetError());
         file.render();
         glfwSwapBuffers(window);
         glfwPollEvents();
-        GL11.glPopMatrix();
+
 
 
     }
@@ -99,7 +101,7 @@ try {
         return delta;
     }
 
-    private static void init() {
+    public static void init() {
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
         //glfwSetErrorCallback(errorCallback = GLFWErrorCallback.createPrint(System.err));

@@ -18,6 +18,10 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_VERTEX_ARRAY;
+import static org.lwjgl.opengl.GL11.glDisableClientState;
+
 /**
  * Created by Laci on 2016. 01. 30..
  */
@@ -41,6 +45,9 @@ public class ObjModel implements IModel {
     private int VBOid;
     int numberOfVerts=0;
     int numberOfPoint=0;
+    int vertexSize = 3;
+    int colorSize = 2;
+    int stride = (vertexSize + colorSize) * 4;
 
     public ObjModel(ArrayList<Vertex4F> vertexes, ArrayList<Face> faces, ArrayList<Vertex3F> normals, ArrayList<Vertex3F> textures) {
         this.vertexes = vertexes;
@@ -51,24 +58,42 @@ public class ObjModel implements IModel {
         if(Constants.useVBOs){
 
             for(Face face: faces){
-                numberOfVerts+=face.getElements().size()*4;
+                numberOfVerts+=face.getElements().size()*3;
                 numberOfPoint+=face.getElements().size();
             }
             VBOid=GL15.glGenBuffers();
-            FloatBuffer vertBuff= BufferUtils.createFloatBuffer(numberOfVerts);
-            FloatBuffer textureBuff=  BufferUtils.createFloatBuffer(numberOfPoint*3);
+
+
+
+           // int texSize=3;
+
+
+            float[] vertexArray = new float[]{-0.5f, -0.5f, 0,1, 1,0,0, 0.5f, -0.5f, 0,1, 0,1,0, 0.5f, 0.5f, 0,1, 0,0,1, -0.5f, 0.5f, 0,1, 1,1,1};
+
+            ArrayList<Float> floats=new ArrayList<>();
             for(Face face:faces){
                 for(FacePoint point: face.elements){
-                    vertBuff.put(new float[]{point.point.getX(),point.point.getY(),point.point.getZ(),point.point.getW()});
+                    floats.add(point.point.getX());
+                    floats.add(point.point.getY());
+                    floats.add(point.point.getZ());
+                    //floats.add(point.point.getW());
+                    floats.add(point.color.getX());
+                    floats.add(point.color.getY());
+                   //floats.add(point.color.getZ());
+//                    vertBuff.put(new float[]{point.texture.getX(),point.texture.getZ()})
                     //textureBuff.put(new float[]{point.texture.getX(),point.texture.getY(),point.texture.getZ()});
                 }
             }
-            vertBuff.flip();
-            textureBuff.flip();
-
+            //vertBuff.flip();
+            //textureBuff.flip();
+            FloatBuffer vertBuff=BufferUtils.createFloatBuffer(floats.size());
+            for(Float float1:floats){
+                vertBuff.put(float1);
+            }
+            //vertBuff.flip();
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,VBOid);
             GL15.glBufferData(GL15.GL_ARRAY_BUFFER,vertBuff,GL15.GL_STATIC_DRAW);
-
+            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,0);
 
         }
 
@@ -81,26 +106,15 @@ public class ObjModel implements IModel {
 
     public void render() {
         if(Constants.useVBOs){
-            // Bind buffers
-            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, VBOid);
 
-            // Enable attribute types
-            GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
-            GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
-            GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
-            // Bind attribute types
-            GL11.glNormalPointer(GL11.GL_FLOAT, 32, 12);
-            GL11.glColorPointer(4, GL11.GL_BYTE, 32, 24);
-            GL11.glVertexPointer(numberOfVerts, GL11.GL_FLOAT, 32, 0);
-            // Draw attributes from GL_ARRAY_BUFFER using indices from GL_ELEMENT_ARRAY_BUFFER
-            GL11.glDrawElements(GL11.GL_TRIANGLES, numberOfVerts, GL11.GL_INT, 0);
-            // Disable attribute types
-            GL11.glDisableClientState(GL11.GL_COLOR_ARRAY);
-            GL11.glDisableClientState(GL11.GL_NORMAL_ARRAY);
-            GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
-            // Unbind buffers
-            GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, 0);
-            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+            glEnableClientState(GL_VERTEX_ARRAY);
+            glEnableClientState(GL_COLOR_ARRAY);
+           // glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+            glDrawArrays(GL_TRIANGLES, 0, numberOfVerts);
+            //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+            glDisableClientState(GL_COLOR_ARRAY);
+            glDisableClientState(GL_VERTEX_ARRAY);
+
 
         }
         else {

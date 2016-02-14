@@ -23,7 +23,7 @@ public class Shader {
         GL20.glShaderSource(id, shaderContents);
         GL20.glCompileShader(id);
 
-        System.out.println(GL20.glGetShaderInfoLog(id));
+       // System.out.println(GL20.glGetShaderInfoLog(id));
 
 
     }
