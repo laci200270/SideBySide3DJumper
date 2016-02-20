@@ -1,13 +1,13 @@
 package hu.laci200270.games.sbs3djumper.models;
 
 
+import hu.laci200270.games.sbs3djumper.ResourceLocation;
 import hu.laci200270.games.sbs3djumper.Texture;
 import hu.laci200270.games.sbs3djumper.utils.GLUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
@@ -19,7 +19,6 @@ import java.util.HashMap;
  */
 public class ModelLoaderRegistry {
     private static ArrayList<IModelLoader> loaders=new ArrayList<IModelLoader>();
-    private static HashMap<File,IModel> models=new HashMap<>();
     private static HashMap<IModel,Texture> textures=new HashMap<>();
     private static IntBuffer textureIntBuffer= BufferUtils.createIntBuffer(1024);
 
@@ -31,32 +30,19 @@ public class ModelLoaderRegistry {
         }
         loaders.add(loader);
     }
-    public static IModel getModel(File file,String type) throws IOException {
-        if(models.containsKey(file)){
-            return models.get(file);
-        }
-        for(IModelLoader current:loaders){
-            if(current.getTypeFormat().equals(type)){
-                IModel model=current.loadModel(file);
-                models.put(file,model);
+
+    public static IModel getModel(ResourceLocation loc, String type) throws IOException {
+
+        for (IModelLoader current : loaders) {
+            if (current.getTypeFormat().equals(type)) {
+                IModel model = current.loadModel(loc);
+
                 return model;
             }
         }
         return null;
     }
-    public static void uploadTextures() throws IOException {
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glGenTextures(textureIntBuffer);
-        for(File file: models.keySet()){
-            IModel model=models.get(file);
-            if(model.getTexture()!=null) {
 
-
-                getTexture(model);
-
-            }
-        }
-    }
 
     public static Texture getTexture(IModel model,
                               int target,
@@ -117,7 +103,7 @@ public class ModelLoaderRegistry {
         return ret;
     }
     public static Texture getTexture(IModel model) throws IOException {
-        Texture tex = (Texture) textures.get(model);
+        Texture tex = textures.get(model);
 
         if (tex != null) {
             return tex;

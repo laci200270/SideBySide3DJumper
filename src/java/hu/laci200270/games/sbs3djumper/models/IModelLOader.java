@@ -1,7 +1,7 @@
 package hu.laci200270.games.sbs3djumper.models;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import hu.laci200270.games.sbs3djumper.ResourceLocation;
+
 import java.io.IOException;
 
 /**
@@ -10,7 +10,7 @@ import java.io.IOException;
 public interface IModelLoader {
 
 
-    public IModel loadModel(File file) throws IOException;
+    public IModel loadModel(ResourceLocation loc) throws IOException;
     public String getTypeFormat();
 
 }

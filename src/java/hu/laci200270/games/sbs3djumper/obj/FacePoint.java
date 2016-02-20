@@ -1,5 +1,7 @@
 package hu.laci200270.games.sbs3djumper.obj;
 
+import com.hackoeur.jglm.Vec3;
+import com.hackoeur.jglm.Vec4;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -7,15 +9,15 @@ import org.lwjgl.opengl.GL11;
  */
 public class FacePoint {
 
-    public Vertex4F point;
+    public Vec4 point;
 
-    public Vertex3F texture;
+    public Vec3 texture;
 
-    public Vertex3F normal;
+    public Vec3 normal;
 
-    public Vertex3F color;
+    public Vec3 color;
 
-    public FacePoint(Vertex4F point, Vertex3F texture, Vertex3F normal) {
+    public FacePoint(Vec4 point, Vec3 texture, Vec3 normal) {
         this.point = point;
         this.texture = texture;
         this.normal = normal;

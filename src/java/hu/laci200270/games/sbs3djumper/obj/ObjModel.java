@@ -1,26 +1,19 @@
 package hu.laci200270.games.sbs3djumper.obj;
 
+import com.hackoeur.jglm.Vec3;
+import com.hackoeur.jglm.Vec4;
 import hu.laci200270.games.sbs3djumper.Constants;
-import hu.laci200270.games.sbs3djumper.ResourceLocation;
 import hu.laci200270.games.sbs3djumper.Texture;
 import hu.laci200270.games.sbs3djumper.models.IModel;
-import hu.laci200270.games.sbs3djumper.utils.GLUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_VERTEX_ARRAY;
-import static org.lwjgl.opengl.GL11.glDisableClientState;
 
 /**
  * Created by Laci on 2016. 01. 30..
@@ -28,13 +21,23 @@ import static org.lwjgl.opengl.GL11.glDisableClientState;
 public class ObjModel implements IModel {
 
 
-    private ArrayList<Vertex4F> vertexes = new ArrayList<>();
+    int numberOfVerts = 0;
+
+    int numberOfPoint = 0;
+
+    int vertexSize = 3;
+
+    int colorSize = 2;
+
+    int stride = (vertexSize + colorSize) * 4;
+
+    private ArrayList<Vec4> vertexes = new ArrayList<>();
 
     private ArrayList<Face> faces = new ArrayList<>();
 
-    private ArrayList<Vertex3F> normals = new ArrayList<>();
+    private ArrayList<Vec3> normals = new ArrayList<>();
 
-    private ArrayList<Vertex3F> textures = new ArrayList<>();
+    private ArrayList<Vec3> textures = new ArrayList<>();
 
     private BufferedImage textureBuffImg;
 
@@ -43,13 +46,8 @@ public class ObjModel implements IModel {
     private Texture texture;
 
     private int VBOid;
-    int numberOfVerts=0;
-    int numberOfPoint=0;
-    int vertexSize = 3;
-    int colorSize = 2;
-    int stride = (vertexSize + colorSize) * 4;
 
-    public ObjModel(ArrayList<Vertex4F> vertexes, ArrayList<Face> faces, ArrayList<Vertex3F> normals, ArrayList<Vertex3F> textures) {
+    public ObjModel(ArrayList<Vec4> vertexes, ArrayList<Face> faces, ArrayList<Vec3> normals, ArrayList<Vec3> textures) {
         this.vertexes = vertexes;
         this.faces = faces;
         this.normals = normals;
@@ -97,11 +95,10 @@ public class ObjModel implements IModel {
 
         }
 
-        try {
-           this.textureBuffImg=ImageIO.read(new ResourceLocation("KnifeD.png").getFile());
+      /*  try {this.textureBuffImg=ImageIO.read(new ResourceLocation("KnifeD.png").getFile());
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void render() {
