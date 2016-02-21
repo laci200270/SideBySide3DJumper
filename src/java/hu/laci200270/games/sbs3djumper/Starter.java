@@ -66,7 +66,7 @@ public class Starter {
             GL11.glLoadIdentity();
             GL11.glDisable(GL11.GL_CULL_FACE);
             camera.apply();
-
+            GL11.glClearColor(0.5f,0.5f,1,0);
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); //clear screen
             GL11.glTranslatef(0, -1, -0.5f);
             GL11.glScalef(0.5f, 0.5f, 0.5f);
@@ -75,8 +75,8 @@ public class Starter {
             rotation++;
 
 
-            GL20.glUseProgram(Constants.programID);
-            System.out.println(GL20.glGetProgramInfoLog(Constants.programID));
+            //GL20.glUseProgram(Constants.programID);
+           // System.out.println(GL20.glGetProgramInfoLog(Constants.programID));
             file.render();
             glfwSwapBuffers(window);
             glfwPollEvents();

@@ -37,7 +37,7 @@ public class Constants {
     public static Random random = new Random();
 
     //RENDER
-    public static boolean useVBOs=false;
+    public static boolean useVBOs=true;
 
     public static boolean useShaders = true;
 
