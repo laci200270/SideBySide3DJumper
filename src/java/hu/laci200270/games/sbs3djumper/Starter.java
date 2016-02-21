@@ -1,6 +1,5 @@
 package hu.laci200270.games.sbs3djumper;
 
-import com.hackoeur.jglm.Mat4;
 import hu.laci200270.games.sbs3djumper.models.IModel;
 import hu.laci200270.games.sbs3djumper.models.ModelLoaderRegistry;
 import hu.laci200270.games.sbs3djumper.models.ModelRegistry;
@@ -43,7 +42,8 @@ public class Starter {
         IModel file = null;
         ModelLoaderRegistry.registerModelLoader(new ObjLoader());
         float rotation = 0f;
-
+        Camera camera = new Camera();
+        camera.init();
 
         AnimationThread animationThread = new AnimationThread();
         new Thread(animationThread).start();
@@ -53,32 +53,37 @@ public class Starter {
         Shader frag = new Shader(new ResourceLocation("shaders/object.frag"), GL20.GL_FRAGMENT_SHADER);
         vert.apply(Constants.programID);
         frag.apply(Constants.programID);
+
+        Constants.viewMatPos = GL20.glGetUniformLocation(Constants.programID, "viewMatrix");
+        Constants.projMatPos = GL20.glGetUniformLocation(Constants.programID, "projectionMatrix");
+        Constants.modelMatPos = GL20.glGetUniformLocation(Constants.programID, "modelMatrix");
+        Constants.vertexVecPos = GL20.glGetUniformLocation(Constants.programID, "vertexPos");
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
         while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE) {
             // GL11.glLightModeli(GL_LIGHT0,1);
             file = ModelRegistry.getModel("spehreandcube.obj");
             GL11.glMatrixMode(GL11.GL_PROJECTION);
             GL11.glLoadIdentity();
             GL11.glDisable(GL11.GL_CULL_FACE);
-
+            camera.apply();
 
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); //clear screen
             GL11.glTranslatef(0, -1, -0.5f);
-            GL11.glScalef(0.1f, 0.1f, 0.1f);
+            GL11.glScalef(0.5f, 0.5f, 0.5f);
             GL11.glRotatef(rotation, 0, 1, 0f);
             GL20.glLinkProgram(Constants.programID);
             rotation++;
-            Mat4 transform = new Mat4();
 
 
             GL20.glUseProgram(Constants.programID);
-
+            System.out.println(GL20.glGetProgramInfoLog(Constants.programID));
             file.render();
             glfwSwapBuffers(window);
             glfwPollEvents();
 
 
         }
-
+        GLFW.glfwDestroyWindow(window);
     }
 
     private static void handleDir(File file) {
@@ -112,8 +117,8 @@ public class Starter {
         glfwWindowHint(GLFW_VISIBLE, GL_TRUE); // the window will stay hidden after creation
         glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // the window will be resizable
 
-        int WIDTH = 300;
-        int HEIGHT = 300;
+        int WIDTH = 700;
+        int HEIGHT = 700;
 
         // Create the window
         window = glfwCreateWindow(WIDTH, HEIGHT, "Hello World!", NULL, NULL);

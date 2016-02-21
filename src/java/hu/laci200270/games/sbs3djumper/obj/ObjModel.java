@@ -6,21 +6,24 @@ import hu.laci200270.games.sbs3djumper.Constants;
 import hu.laci200270.games.sbs3djumper.Texture;
 import hu.laci200270.games.sbs3djumper.models.IModel;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.ARBVertexBufferObject;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL15;
 
 import java.awt.image.BufferedImage;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
-
-import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Created by Laci on 2016. 01. 30..
  */
 public class ObjModel implements IModel {
 
+    int vertexBufferId = 0;
 
+    int indicesBufferId = 0;
     int numberOfVerts = 0;
 
     int numberOfPoint = 0;
@@ -39,6 +42,9 @@ public class ObjModel implements IModel {
 
     private ArrayList<Vec3> textures = new ArrayList<>();
 
+    private ArrayList<Vec3> points = new ArrayList<>();
+
+    private ArrayList<Vec3> indices = new ArrayList<>();
     private BufferedImage textureBuffImg;
 
     private int texId;
@@ -47,7 +53,7 @@ public class ObjModel implements IModel {
 
     private int VBOid;
 
-    public ObjModel(ArrayList<Vec4> vertexes, ArrayList<Face> faces, ArrayList<Vec3> normals, ArrayList<Vec3> textures) {
+    public ObjModel(ArrayList<Vec4> vertexes, ArrayList<Face> faces, ArrayList<Vec3> normals, ArrayList<Vec3> textures, ArrayList<Vec3> points, ArrayList<Vec3> indices) {
         this.vertexes = vertexes;
         this.faces = faces;
         this.normals = normals;
@@ -59,8 +65,8 @@ public class ObjModel implements IModel {
                 numberOfVerts+=face.getElements().size()*3;
                 numberOfPoint+=face.getElements().size();
             }
-            VBOid=GL15.glGenBuffers();
-
+            vertexBufferId = ARBVertexBufferObject.glGenBuffersARB();
+            indicesBufferId = ARBVertexBufferObject.glGenBuffersARB();
 
 
            // int texSize=3;
@@ -74,43 +80,43 @@ public class ObjModel implements IModel {
                     floats.add(point.point.getX());
                     floats.add(point.point.getY());
                     floats.add(point.point.getZ());
-                    //floats.add(point.point.getW());
-                    floats.add(point.color.getX());
-                    floats.add(point.color.getY());
-                   //floats.add(point.color.getZ());
-//                    vertBuff.put(new float[]{point.texture.getX(),point.texture.getZ()})
-                    //textureBuff.put(new float[]{point.texture.getX(),point.texture.getY(),point.texture.getZ()});
+
                 }
             }
-            //vertBuff.flip();
-            //textureBuff.flip();
-            FloatBuffer vertBuff=BufferUtils.createFloatBuffer(floats.size());
-            for(Float float1:floats){
-                vertBuff.put(float1);
-            }
-            //vertBuff.flip();
-            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,VBOid);
-            GL15.glBufferData(GL15.GL_ARRAY_BUFFER,vertBuff,GL15.GL_STATIC_DRAW);
-            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,0);
 
+            FloatBuffer vertBuff = BufferUtils.createFloatBuffer(points.size() * 3);
+            IntBuffer indicesBuffer = BufferUtils.createIntBuffer(indices.size() * 3);
+            for (Vec3 point : points) {
+                float[] coords = {point.getX(), point.getY(), point.getZ()};
+                vertBuff.put(coords);
+            }
+            for (Vec3 indice : indices) {
+                int[] coords = {(int) indice.getX(), (int) indice.getY(), (int) indice.getZ()};
+                indicesBuffer.put(coords);
+            }
+            vertBuff.flip();
+            indicesBuffer.flip();
+            ARBVertexBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, vertexBufferId);
+            ARBVertexBufferObject.glBufferDataARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, VBOid, ARBVertexBufferObject.GL_STATIC_DRAW_ARB);
+            ARBVertexBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB, indicesBufferId);
+            ARBVertexBufferObject.glBufferDataARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB, indicesBuffer,
+                    ARBVertexBufferObject.GL_STATIC_DRAW_ARB);
         }
 
-      /*  try {this.textureBuffImg=ImageIO.read(new ResourceLocation("KnifeD.png").getFile());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+
     }
 
     public void render() {
         if(Constants.useVBOs){
 
-            glEnableClientState(GL_VERTEX_ARRAY);
-            glEnableClientState(GL_COLOR_ARRAY);
-           // glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-            glDrawArrays(GL_TRIANGLES, 0, numberOfVerts);
-            //glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-            glDisableClientState(GL_COLOR_ARRAY);
-            glDisableClientState(GL_VERTEX_ARRAY);
+            GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+            ARBVertexBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ARRAY_BUFFER_ARB, vertexBufferId);
+            GL11.glVertexPointer(3, GL11.GL_FLOAT, 0, 0);
+
+
+            ARBVertexBufferObject.glBindBufferARB(ARBVertexBufferObject.GL_ELEMENT_ARRAY_BUFFER_ARB, indicesBufferId);
+            GL12.glDrawRangeElements(GL11.GL_TRIANGLES, 0, indices.size(), indices.size(),
+                    GL11.GL_UNSIGNED_INT, 0);
 
 
         }

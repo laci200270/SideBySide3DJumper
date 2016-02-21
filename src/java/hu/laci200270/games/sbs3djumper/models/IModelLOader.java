@@ -10,7 +10,16 @@ import java.io.IOException;
 public interface IModelLoader {
 
 
+    /**
+     * @param loc the location of the model that should get loaded
+     * @return the loaded model, or null if there was an error
+     * @throws IOException if there was error while loading inputstream
+     */
     public IModel loadModel(ResourceLocation loc) throws IOException;
+
+    /***
+     * @return the file extension what this loader should handle
+     */
     public String getTypeFormat();
 
 }

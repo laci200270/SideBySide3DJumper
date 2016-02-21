@@ -1,5 +1,8 @@
 package hu.laci200270.games.sbs3djumper.utils;
 
+import com.hackoeur.jglm.Vec3;
+import hu.laci200270.games.sbs3djumper.Constants;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -7,6 +10,7 @@ import java.awt.color.ColorSpace;
 import java.awt.image.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.util.Hashtable;
 
 /**
@@ -52,4 +56,18 @@ public class GLUtils {
         GL11.glVertex3f(10000,y,10000);
         GL11.glEnd();
     }
+
+    public static FloatBuffer makeGoodBuffer(FloatBuffer badBuffer) {
+        FloatBuffer retBuff = BufferUtils.createFloatBuffer(badBuffer.capacity());
+        retBuff.put(badBuffer);
+        retBuff.flip();
+        return retBuff;
+    }
+
+    public void translate(Vec3 trans) {
+        if (Constants.useShaders) {
+
+        }
+    }
+
 }

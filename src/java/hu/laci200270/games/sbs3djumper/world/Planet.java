@@ -1,5 +1,6 @@
 package hu.laci200270.games.sbs3djumper.world;
 
+import com.hackoeur.jglm.Vec3;
 import hu.laci200270.games.sbs3djumper.models.IModel;
 
 /**
@@ -7,11 +8,18 @@ import hu.laci200270.games.sbs3djumper.models.IModel;
  */
 public class Planet implements IWorldPart {
 
+    private final String texName;
+
     IModel planetModel = null;
+
+    Vec3 posOnPrevTick = new Vec3();
+
+    Vec3 posOnCurrentTick = new Vec3();
 
     int texutre;
 
     public Planet(String texName) {
+        this.texName = texName;
 
     }
 
@@ -32,7 +40,9 @@ public class Planet implements IWorldPart {
     }
 
     @Override
-    public void setPosition() {
+    public void setPosition(Vec3 pos) {
 
     }
+
+
 }

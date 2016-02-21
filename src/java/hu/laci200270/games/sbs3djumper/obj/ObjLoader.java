@@ -28,24 +28,9 @@ public class ObjLoader implements IModelLoader {
 
     private ArrayList<Vec3> textures = new ArrayList<>();
 
-    private static Vec4 handleVertex(String line) {
-        float x, y, z, normal;
-        ObjInstruction vertex = makeInstruction(line);
-        String params[] = new String[vertex.params.size()];
-        normal = 1f;
-        for (int i = 0; i < vertex.params.size(); i++) {
-            params[i] = vertex.params.get(i);
-        }
-        boolean hasNormal = params.length == 4;
-        x = Float.parseFloat(params[0]);
-        y = Float.parseFloat(params[1]);
-        z = Float.parseFloat(params[2]);
-        Constants.logger.fine("Handling vertex");
-        if (hasNormal) {
-            normal = Float.parseFloat(params[3]);
-        }
-        return new Vec4(x, y, z, normal);
-    }
+    private ArrayList<Vec3> points = new ArrayList<>();
+
+    private ArrayList<Vec3> indices = new ArrayList<>();
 
     private static Vec3 handleNormal(String line) {
         float x, y, z;
@@ -71,6 +56,25 @@ public class ObjLoader implements IModelLoader {
         return instruction;
     }
 
+    private Vec4 handleVertex(String line) {
+        float x, y, z, normal;
+        ObjInstruction vertex = makeInstruction(line);
+        String params[] = new String[vertex.params.size()];
+        normal = 1f;
+        for (int i = 0; i < vertex.params.size(); i++) {
+            params[i] = vertex.params.get(i);
+        }
+        boolean hasNormal = params.length == 4;
+        x = Float.parseFloat(params[0]);
+        y = Float.parseFloat(params[1]);
+        z = Float.parseFloat(params[2]);
+        Constants.logger.fine("Handling vertex");
+        if (hasNormal) {
+            normal = Float.parseFloat(params[3]);
+        }
+        points.add(new Vec3(x, y, z));
+        return new Vec4(x, y, z, normal);
+    }
 
     public IModel loadModel(InputStream inputStream) throws IOException {
         this.fileReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -78,6 +82,8 @@ public class ObjLoader implements IModelLoader {
         faces = new ArrayList<>();
         normals = new ArrayList<>();
         textures = new ArrayList<>();
+        points = new ArrayList<>();
+        indices = new ArrayList<>();
         String line = null;
         line = fileReader.readLine();
 
@@ -114,7 +120,7 @@ public class ObjLoader implements IModelLoader {
         }
         fileReader.close();
 
-        return new ObjModel(vertexes, faces, normals, textures);
+        return new ObjModel(vertexes, faces, normals, textures, points, indices);
     }
 
     private Vec3 handleTexture(String line) {
@@ -144,6 +150,32 @@ public class ObjLoader implements IModelLoader {
     }
 
     private Face handleFace(String line) {
+        ObjInstruction instruction = makeInstruction(line);
+        Vec3 vec = new Vec3();
+        for (int i = 0; i < 3; i++) {
+            String param = instruction.params.get(i);
+            if (!param.contains("/")) {
+                if (i == 0)
+                    vec = new Vec3(Integer.parseInt(param), vec.getY(), vec.getZ());
+                if (i == 1)
+                    vec = new Vec3(vec.getX(), Integer.parseInt(param), vec.getZ());
+                if (i == 2)
+                    vec = new Vec3(vec.getX(), vec.getY(), Integer.parseInt(param));
+            } else {
+                int value = Integer.parseInt(param.split("/")[0]);
+                if (i == 0)
+                    vec = new Vec3(value, vec.getY(), vec.getZ());
+                if (i == 1)
+                    vec = new Vec3(vec.getX(), value, vec.getZ());
+                if (i == 2)
+                    vec = new Vec3(vec.getX(), vec.getY(), value);
+            }
+        }
+        indices.add(vec);
+        return handleNormalFace(line);
+    }
+
+    public Face handleNormalFace(String line) {
         float x, y, z, normal;
         ObjInstruction faceobjstr = makeInstruction(line);
 
@@ -151,9 +183,11 @@ public class ObjLoader implements IModelLoader {
         for (int i = 0; i < faceobjstr.params.size(); i++) {
             params[i] = faceobjstr.params.get(i);
         }
+
         ArrayList<FacePoint> poligons = new ArrayList<>();
         for (String param : params) {
             String[] parts = param.split("/");
+
             if (parts.length == 1) {
                 int var1 = Integer.parseInt(parts[0]) - 1;
                 FacePoint point = new FacePoint(vertexes.get(var1), null, null);
@@ -190,5 +224,6 @@ public class ObjLoader implements IModelLoader {
         }
         return new Face(poligons);
     }
+
 
 }

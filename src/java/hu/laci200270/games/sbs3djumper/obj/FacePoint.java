@@ -2,7 +2,10 @@ package hu.laci200270.games.sbs3djumper.obj;
 
 import com.hackoeur.jglm.Vec3;
 import com.hackoeur.jglm.Vec4;
+import hu.laci200270.games.sbs3djumper.Constants;
+import hu.laci200270.games.sbs3djumper.utils.GLUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 /**
  * Created by Laci on 2016. 01. 31..
@@ -34,6 +37,8 @@ public class FacePoint {
         }
         GL11.glVertex4f(point.getX(), point.getY(), point.getZ(), point.getW());
 
+
+        GL20.glUniformMatrix4fv(Constants.vertexVecPos, true, GLUtils.makeGoodBuffer(point.getBuffer()));
 
     }
 

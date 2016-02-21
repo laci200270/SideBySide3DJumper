@@ -1,8 +1,13 @@
-#version 120
+#version 330
 
-varying vec4 vertColor;
+out vec4 vertColor;
+
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 modelMatrix;
+uniform vec4 vertexPos;
 
 void main(){
-    gl_Position = gl_ModelViewProjectionMatrix*gl_Vertex;
-    vertColor = vec4(glVertex,1);
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vertexPos;
+    vertColor = vec4(vertexPos.x,1,1,1);
 }

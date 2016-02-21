@@ -1,15 +1,12 @@
 package hu.laci200270.games.sbs3djumper;
 
 
-
 import hu.laci200270.games.sbs3djumper.utils.CommonUtils;
 import hu.laci200270.games.sbs3djumper.utils.FileUtils;
 import org.lwjgl.opengl.GL20;
 
-
 import java.io.File;
 import java.util.Random;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 /**
@@ -31,14 +28,27 @@ public class Constants {
     public static final String devName="laci200270";
     public static final String gameName="Side By Side 3D Jumper";
     public static final String gameCodeName="SbS3DJumper";
-    public static Random random=new Random();
 
     //Log4J
     public static final Logger logger= Logger.getLogger("console");
 
+    public static final int programID = GL20.glCreateProgram();
+
+    public static Random random = new Random();
+
     //RENDER
     public static boolean useVBOs=false;
-    public static final int programID= GL20.glCreateProgram();
+
+    public static boolean useShaders = true;
+
+    public static int viewMatPos;
+
+    public static int projMatPos;
+
+    public static int modelMatPos;
+
+    public static int vertexVecPos;
+
 
 
 }
