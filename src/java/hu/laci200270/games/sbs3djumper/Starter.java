@@ -84,6 +84,7 @@ public class Starter {
 
         }
         GLFW.glfwDestroyWindow(window);
+        System.exit(0);
     }
 
     private static void handleDir(File file) {

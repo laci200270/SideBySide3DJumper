@@ -6,7 +6,6 @@ import hu.laci200270.games.sbs3djumper.Constants;
 import hu.laci200270.games.sbs3djumper.Texture;
 import hu.laci200270.games.sbs3djumper.models.IModel;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.Sys;
 import org.lwjgl.opengl.ARBVertexBufferObject;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -97,7 +96,7 @@ public class ObjModel implements IModel {
             vertBuff.flip();
             indicesBuffer.flip();
 
-            float[] colors={1,0,1};
+            float[] colors = {1, 0, 1, 1};
             FloatBuffer colorBuff=BufferUtils.createFloatBuffer(colors.length);
             colorBuff.put(colors);
             colorBuff.flip();
@@ -120,7 +119,7 @@ public class ObjModel implements IModel {
 
             GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, colorBufferId);
-            GL11.glVertexPointer(3, GL11.GL_FLOAT, 0, 0);
+            GL11.glColorPointer(4, GL11.GL_FLOAT, 0, 0);
 
             GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vertexBufferId);
