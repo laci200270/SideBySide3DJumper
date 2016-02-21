@@ -101,7 +101,7 @@ public class ObjModel implements IModel {
             colorBuff.put(colors);
             colorBuff.flip();
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vertexBufferId);
-            GL15.glBufferData(GL15.GL_ARRAY_BUFFER, VBOid, ARBVertexBufferObject.GL_STATIC_DRAW_ARB);
+            GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertBuff, GL15.GL_ARRAY_BUFFER);
             GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBufferId);
             GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer,
                     GL15.GL_STATIC_DRAW);

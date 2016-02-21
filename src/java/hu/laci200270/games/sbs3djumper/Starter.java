@@ -1,19 +1,21 @@
 package hu.laci200270.games.sbs3djumper;
 
+import com.hackoeur.jglm.Mat4;
 import hu.laci200270.games.sbs3djumper.models.IModel;
 import hu.laci200270.games.sbs3djumper.models.ModelLoaderRegistry;
 import hu.laci200270.games.sbs3djumper.models.ModelRegistry;
 import hu.laci200270.games.sbs3djumper.obj.ObjLoader;
 import hu.laci200270.games.sbs3djumper.threading.AnimationThread;
+import hu.laci200270.games.sbs3djumper.utils.FileUtils;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GLContext;
+import org.lwjgl.opengl.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
@@ -34,12 +36,12 @@ public class Starter {
 
     public static void main(String[] args) throws IOException {
 
-        //  FileUtils.unzipIt(new ResourceLocation("natives.zip").getInputStream(),Constants.lwjgl_natives_dir);
+         //FileUtils.unzipIt(new ResourceLocation("natives.zip").getInputStream(), Constants.lwjgl_natives_dir);
         System.setProperty("org.lwjgl.librarypath", Object.class.getResource("/natives/windows/").getFile());
         init();
         GLContext.createFromCurrent();
         GL.createCapabilities(true);
-        IModel file = null;
+        /*IModel file = null;
         ModelLoaderRegistry.registerModelLoader(new ObjLoader());
         float rotation = 0f;
         Camera camera = new Camera();
@@ -68,20 +70,81 @@ public class Starter {
             camera.apply();
             GL11.glClearColor(0.5f,0.5f,1,0);
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); //clear screen
-            GL11.glTranslatef(0, -1, -0.5f);
-            GL11.glScalef(0.5f, 0.5f, 0.5f);
-            GL11.glRotatef(rotation, 0, 1, 0f);
-            GL20.glLinkProgram(Constants.programID);
+            //GL11.glTranslatef(0, -1, -0.5f);
+            //GL11.glScalef(0.5f, 0.5f, 0.5f);
+            //GL11.glRotatef(rotation, 0, 1, 0f);
+            //GL.at
+            //GL20.glLinkProgram(Constants.programID);
             rotation++;
 
 
-            //GL20.glUseProgram(Constants.programID);
+           // GL20.glUseProgram(Constants.programID);
            // System.out.println(GL20.glGetProgramInfoLog(Constants.programID));
             file.render();
             glfwSwapBuffers(window);
             glfwPollEvents();
 
 
+        }*/
+        float[] vertexes={
+                0.0f, 0.0f, 0.0f, // 0 LBF
+                1.0f, 0.0f, 0.0f, // 1 RBF
+                0.0f, 0.0f, 1.0f, // 2 LBB
+                1.0f, 0.0f, 1.0f, // 3 RBB
+
+                0.0f, 1.0f, 0.0f, // 4 LTF
+                1.0f, 1.0f, 0.0f, // 5 RTF
+                0.0f, 1.0f, 1.0f, // 6 LTB
+                1.0f, 1.0f, 1.0f  // 7 RTB
+
+        };
+        int[] indices={
+                4, 5, 1, 0, // FRONT
+                5, 7, 3, 1, // RIGHT
+                7, 6, 2, 3, // BACK
+                6, 4, 0, 2, // LEFT
+                0, 1, 3, 2, // BOTTOM
+                6, 7, 5, 4 // TOP
+        };
+        float[] colors={
+                1.0f, 1.0f, 1.0f, 1.0f
+        };
+        FloatBuffer vertBuffer= BufferUtils.createFloatBuffer(vertexes.length);
+        FloatBuffer colorBuffer=BufferUtils.createFloatBuffer(colors.length);
+        IntBuffer indicesBuffer=BufferUtils.createIntBuffer(indices.length);
+        vertBuffer.put(vertexes).flip();
+        colorBuffer.put(colors).flip();
+        indicesBuffer.put(indices).flip();
+
+        int vertBuffId=GL15.glGenBuffers();
+        int colorBuffId=GL15.glGenBuffers();
+        int indBuffId=GL15.glGenBuffers();
+
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vertBuffId);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertBuffer, GL15.GL_STATIC_DRAW);
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, indBuffId);
+        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer,
+                GL15.GL_STATIC_DRAW);
+        GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, colorBuffId);
+        GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, colorBuffer,
+                GL15.GL_STATIC_DRAW);
+
+        while (GLFW.glfwWindowShouldClose(window)==GL11.GL_FALSE) {
+
+            GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
+            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vertBuffId);
+            GL11.glVertexPointer(3, GL11.GL_FLOAT, 0, 0);
+
+            GL11.glEnableClientState(GL11.GL_COLOR_ARRAY);
+            GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, colorBuffId);
+            GL11.glColorPointer(4, GL11.GL_FLOAT, 0, 0);
+
+            GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, indBuffId);
+            GL12.glDrawRangeElements(GL11.GL_QUADS, 0, 24, 24,
+                    GL11.GL_UNSIGNED_INT, 0);
+
+            GLFW.glfwSwapBuffers(window);
+            GLFW.glfwPollEvents();
         }
         GLFW.glfwDestroyWindow(window);
         System.exit(0);
