@@ -1,12 +1,5 @@
 package hu.laci200270.games.sbs3djumper;
 
-import com.hackoeur.jglm.Mat4;
-import hu.laci200270.games.sbs3djumper.models.IModel;
-import hu.laci200270.games.sbs3djumper.models.ModelLoaderRegistry;
-import hu.laci200270.games.sbs3djumper.models.ModelRegistry;
-import hu.laci200270.games.sbs3djumper.obj.ObjLoader;
-import hu.laci200270.games.sbs3djumper.threading.AnimationThread;
-import hu.laci200270.games.sbs3djumper.utils.FileUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.*;
@@ -15,7 +8,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
@@ -97,15 +91,21 @@ public class Starter {
         GL30.glBindVertexArray(vaoId);
         buff.put(vertexes);
         buff.flip();
+
         int vboId=GL15.glGenBuffers();
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,vboId);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER,buff,GL15.GL_STATIC_DRAW);
         GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,0);
         GL30.glBindVertexArray(0);
+        ShaderProgram shaderProgram = null;
+        try {
+            shaderProgram = new ShaderProgram("object");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         while (GLFW.glfwWindowShouldClose(window)==GL11.GL_FALSE) {
-
-
+            shaderProgram.bind();
             GL30.glBindVertexArray(vaoId);
             GL20.glEnableVertexAttribArray(0);
             GL20.glDisableVertexAttribArray(0);
@@ -113,7 +113,10 @@ public class Starter {
 
             GLFW.glfwSwapBuffers(window);
             GLFW.glfwPollEvents();
+            shaderProgram.unbind();
             System.out.println(GL11.glGetError());
+
+            System.out.println(GL20.glGetProgramInfoLog(Constants.programID));
         }
         GLFW.glfwDestroyWindow(window);
         System.exit(0);
@@ -173,6 +176,16 @@ public class Starter {
 
         // Make the window visible
         glfwShowWindow(window);
+    }
+
+    public static void processGlError() {
+        int errCode = GL11.glGetError();
+        if (errCode != 0) {
+            List<StackTraceElement> strElemets = Arrays.asList(Thread.currentThread().getStackTrace());
+            for (StackTraceElement elemt : strElemets)
+                System.err.println(elemt.toString());
+            System.err.println(errCode);
+        }
     }
 
 

@@ -1,13 +1,8 @@
 #version 330
 
-out vec4 vertColor;
+layout (location=0) in vec3 pos;
 
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 modelMatrix;
-uniform vec4 vertexPos;
-
-void main(){
-    gl_Position = projectionMatrix * viewMatrix * modelMatrix * vertexPos;
-    vertColor = vec4(vertexPos.x,1,1,1);
+void main()
+{
+    gl_Position = vec4(pos, 1.0);
 }
