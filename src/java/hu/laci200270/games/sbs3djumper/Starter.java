@@ -48,7 +48,7 @@ public class Starter {
                 -0.5f, 0.5f, 0f
         };
         float[] colors = {
-                0.5f, 0.75f, 0.2f
+                1f, 1f, 1f
 
         };
         // Sending data to OpenGL requires the usage of (flipped) byte buffers
