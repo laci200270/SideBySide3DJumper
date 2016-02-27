@@ -35,88 +35,91 @@ public class Starter {
         init();
         GLContext.createFromCurrent();
         GL.createCapabilities(true);
-        /*IModel file = null;
-        ModelLoaderRegistry.registerModelLoader(new ObjLoader());
-        float rotation = 0f;
-        Camera camera = new Camera();
-        camera.init();
-
-        AnimationThread animationThread = new AnimationThread();
-        new Thread(animationThread).start();
-
-        GL11.glDepthFunc(GL11.GL_LEQUAL);
-        Shader vert = new Shader(new ResourceLocation("shaders/object.vert"), GL20.GL_VERTEX_SHADER);
-        Shader frag = new Shader(new ResourceLocation("shaders/object.frag"), GL20.GL_FRAGMENT_SHADER);
-        vert.apply(Constants.programID);
-        frag.apply(Constants.programID);
-
-        Constants.viewMatPos = GL20.glGetUniformLocation(Constants.programID, "viewMatrix");
-        Constants.projMatPos = GL20.glGetUniformLocation(Constants.programID, "projectionMatrix");
-        Constants.modelMatPos = GL20.glGetUniformLocation(Constants.programID, "modelMatrix");
-        Constants.vertexVecPos = GL20.glGetUniformLocation(Constants.programID, "vertexPos");
-        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-        while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE) {
-            // GL11.glLightModeli(GL_LIGHT0,1);
-            file = ModelRegistry.getModel("spehreandcube.obj");
-            GL11.glMatrixMode(GL11.GL_PROJECTION);
-            GL11.glLoadIdentity();
-            GL11.glDisable(GL11.GL_CULL_FACE);
-            camera.apply();
-            GL11.glClearColor(0.5f,0.5f,1,0);
-            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT); //clear screen
-            //GL11.glTranslatef(0, -1, -0.5f);
-            //GL11.glScalef(0.5f, 0.5f, 0.5f);
-            //GL11.glRotatef(rotation, 0, 1, 0f);
-            //GL.at
-            //GL20.glLinkProgram(Constants.programID);
-            rotation++;
 
 
-           // GL20.glUseProgram(Constants.programID);
-           // System.out.println(GL20.glGetProgramInfoLog(Constants.programID));
-            file.render();
-            glfwSwapBuffers(window);
-            glfwPollEvents();
-
-
-        }*/
-        float[] vertexes={
-                0.0f,  0.5f, 0.0f,
-                -0.5f, -0.5f, 0.0f,
-                0.5f, -0.5f, 0.0f
+        float[] vertices = {
+                // Left bottom triangle
+                -0.5f, 0.5f, 0f,
+                -0.5f, -0.5f, 0f,
+                0.5f, -0.5f, 0f,
+                // Right top triangle
+                0.5f, -0.5f, 0f,
+                0.5f, 0.5f, 0f,
+                -0.5f, 0.5f, 0f
+        };
+        float[] colors = {
+                0.5f, 0.75f, 0.2f
 
         };
-        FloatBuffer buff=BufferUtils.createFloatBuffer(vertexes.length);
-        int vaoId=GL30.glGenVertexArrays();
-        GL30.glBindVertexArray(vaoId);
-        buff.put(vertexes);
-        buff.flip();
+        // Sending data to OpenGL requires the usage of (flipped) byte buffers
+        FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length);
+        verticesBuffer.put(vertices);
+        verticesBuffer.flip();
 
-        int vboId=GL15.glGenBuffers();
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,vboId);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER,buff,GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER,0);
-        GL30.glBindVertexArray(0);
-        ShaderProgram shaderProgram = null;
+        FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(colors.length);
+        colorBuffer.put(colors);
+        colorBuffer.flip();
+
+        int vertexCount = 6;
+
+        // Create a new Vertex Array Object in memory and select it (bind)
+        // A VAO can have up to 16 attributes (VBO's) assigned to it by default
+        int vaoId = GL30.glGenVertexArrays();
+        GL30.glBindVertexArray(vaoId);
+        ShaderProgram shader = null;
         try {
-            shaderProgram = new ShaderProgram("object");
+            shader = new ShaderProgram("object");
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            shader.link();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Create a new Vertex Buffer Object in memory and select it (bind)
+        // A VBO is a collection of Vectors which in this case resemble the location of each vertex.
+
+        int vboId = GL15.glGenBuffers();
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboId);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
+        // Put the VBO in the attributes list at index 0
+        GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
+
+        // Deselect (bind to 0) the VBO
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+        int colorVboId = GL15.glGenBuffers();
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, colorVboId);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colorBuffer, GL15.GL_STATIC_DRAW);
+        // Put the VBO in the attributes list at index 0
+        GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0);
+
+        // Deselect (bind to 0) the VBO
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+        // Deselect (bind to 0) the VAO
+        GL30.glBindVertexArray(0);
+
         while (GLFW.glfwWindowShouldClose(window)==GL11.GL_FALSE) {
-            shaderProgram.bind();
+            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
+            shader.bind();
+            // Bind to the VAO that has all the information about the quad vertices
             GL30.glBindVertexArray(vaoId);
             GL20.glEnableVertexAttribArray(0);
+
+
+            GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, vertexCount);
+
+
+            // Put everything back to default (deselect)
             GL20.glDisableVertexAttribArray(0);
             GL30.glBindVertexArray(0);
-
+            shader.unbind();
             GLFW.glfwSwapBuffers(window);
             GLFW.glfwPollEvents();
-            shaderProgram.unbind();
-            System.out.println(GL11.glGetError());
 
-            System.out.println(GL20.glGetProgramInfoLog(Constants.programID));
+            // System.out.println(GL20.glGetProgramInfoLog(Constants.programID));
         }
         GLFW.glfwDestroyWindow(window);
         System.exit(0);

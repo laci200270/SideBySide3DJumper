@@ -33,7 +33,7 @@ public class ShaderProgram {
         if (programId == 0)
             throw new Exception("Could not create Shader");
         createVertexShader(readResourceUntilEnd(new ResourceLocation(String.format("shaders/%s.vert", shaderName)).getInputStream()));
-        createVertexShader(readResourceUntilEnd(new ResourceLocation(String.format("shaders/%s.frag", shaderName)).getInputStream()));
+        createFragmentShader(readResourceUntilEnd(new ResourceLocation(String.format("shaders/%s.frag", shaderName)).getInputStream()));
     }
 
     public void createVertexShader(String shaderCode) throws Exception {
