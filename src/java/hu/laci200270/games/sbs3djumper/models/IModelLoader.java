@@ -17,7 +17,7 @@ public interface IModelLoader {
      */
     public IModel loadModel(ResourceLocation loc) throws IOException;
 
-    /***
+    /**
      * @return the file extension what this loader should handle
      */
     public String getTypeFormat();

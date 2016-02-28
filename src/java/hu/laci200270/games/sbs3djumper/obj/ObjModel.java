@@ -1,12 +1,11 @@
 package hu.laci200270.games.sbs3djumper.obj;
 
-import com.hackoeur.jglm.Vec3;
-import com.hackoeur.jglm.Vec4;
 import hu.laci200270.games.sbs3djumper.Constants;
 import hu.laci200270.games.sbs3djumper.Texture;
 import hu.laci200270.games.sbs3djumper.models.IModel;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.ARBVertexBufferObject;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL15;
@@ -36,17 +35,17 @@ public class ObjModel implements IModel {
 
     int stride = (vertexSize + colorSize) * 4;
 
-    private ArrayList<Vec4> vertexes = new ArrayList<>();
+    private ArrayList<Vector4f> vertexes = new ArrayList<>();
 
     private ArrayList<Face> faces = new ArrayList<>();
 
-    private ArrayList<Vec3> normals = new ArrayList<>();
+    private ArrayList<Vector3f> normals = new ArrayList<>();
 
-    private ArrayList<Vec3> textures = new ArrayList<>();
+    private ArrayList<Vector3f> textures = new ArrayList<>();
 
-    private ArrayList<Vec3> points = new ArrayList<>();
+    private ArrayList<Vector3f> points = new ArrayList<>();
 
-    private ArrayList<Vec3> indices = new ArrayList<>();
+    private ArrayList<Vector3f> indices = new ArrayList<>();
 
     private BufferedImage textureBuffImg;
 
@@ -56,7 +55,7 @@ public class ObjModel implements IModel {
 
     private int VBOid;
 
-    public ObjModel(ArrayList<Vec4> vertexes, ArrayList<Face> faces, ArrayList<Vec3> normals, ArrayList<Vec3> textures, ArrayList<Vec3> points, ArrayList<Vec3> indices) {
+    public ObjModel(ArrayList<Vector4f> vertexes, ArrayList<Face> faces, ArrayList<Vector3f> normals, ArrayList<Vector3f> textures, ArrayList<Vector3f> points, ArrayList<Vector3f> indices) {
         this.vertexes = vertexes;
         this.faces = faces;
         this.normals = normals;
@@ -72,23 +71,23 @@ public class ObjModel implements IModel {
             ArrayList<Float> floats = new ArrayList<>();
             for (Face face : faces) {
                 for (FacePoint point : face.elements) {
-                    floats.add(point.point.getX());
-                    floats.add(point.point.getY());
-                    floats.add(point.point.getZ());
+                    floats.add(point.point.x);
+                    floats.add(point.point.y);
+                    floats.add(point.point.x);
 
                 }
             }
 
             FloatBuffer vertBuff = BufferUtils.createFloatBuffer(points.size() * 3);
             IntBuffer indicesBuffer = BufferUtils.createIntBuffer(indices.size() * 3);
-            for (Vec3 point : points) {
-                float[] coords = {point.getX(), point.getY(), point.getZ()};
+            for (Vector3f point : points) {
+                float[] coords = {point.x, point.y, point.z};
                 System.out.println(Arrays.toString(coords));
                 vertBuff.put(coords);
             }
 
-            for (Vec3 indice : indices) {
-                int[] coords = {(int) indice.getX(), (int) indice.getY(), (int) indice.getZ()};
+            for (Vector3f indice : indices) {
+                int[] coords = {(int) indice.x, (int) indice.y, (int) indice.z};
                 System.out.println(Arrays.toString(coords));
                 indicesBuffer.put(coords);
             }
@@ -97,7 +96,7 @@ public class ObjModel implements IModel {
             indicesBuffer.flip();
 
             float[] colors = {1, 0, 1, 1};
-            FloatBuffer colorBuff=BufferUtils.createFloatBuffer(colors.length);
+            FloatBuffer colorBuff = BufferUtils.createFloatBuffer(colors.length);
             colorBuff.put(colors);
             colorBuff.flip();
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vertexBufferId);
@@ -127,7 +126,7 @@ public class ObjModel implements IModel {
 
             GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, indicesBufferId);
 
-            GL12.glDrawRangeElements(GL11.GL_TRIANGLES, 0, indices.size(), indices.size()/3,
+            GL12.glDrawRangeElements(GL11.GL_TRIANGLES, 0, indices.size(), indices.size() / 3,
                     GL11.GL_UNSIGNED_INT, 0);
 
 

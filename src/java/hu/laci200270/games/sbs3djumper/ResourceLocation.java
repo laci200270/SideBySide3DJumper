@@ -9,7 +9,7 @@ public class ResourceLocation {
 
     InputStream inputStream;
 
-    public ResourceLocation(String location){
+    public ResourceLocation(String location) {
 
         this.inputStream = getClass().getClassLoader().getResourceAsStream(location);
 

@@ -10,9 +10,10 @@ import java.util.ArrayList;
  */
 public class Face {
     ArrayList<FacePoint> elements = new ArrayList<>();
-    float red= Constants.random.nextFloat();
-    float blue= Constants.random.nextFloat();
-    float green= Constants.random.nextFloat();
+    float red = Constants.random.nextFloat();
+    float blue = Constants.random.nextFloat();
+    float green = Constants.random.nextFloat();
+
     public Face(ArrayList<FacePoint> elements) {
         this.elements = elements;
     }
@@ -24,11 +25,10 @@ public class Face {
     public void renderFace() {
         //GL11.glColor3f(red,green,blue);
         for (FacePoint current : elements) {
-            if(elements.indexOf(current)%2==0){
-                GL11.glColor3f(1,1,0);
-            }
-            else
-                GL11.glColor3f(1,0,1);
+            if (elements.indexOf(current) % 2 == 0) {
+                GL11.glColor3f(1, 1, 0);
+            } else
+                GL11.glColor3f(1, 0, 1);
             current.render();
         }
     }

@@ -1,7 +1,7 @@
 package hu.laci200270.games.sbs3djumper.world;
 
-import com.hackoeur.jglm.Vec3;
 import hu.laci200270.games.sbs3djumper.models.IModel;
+import org.joml.Vector3f;
 
 /**
  * Created by Laci on 2016. 02. 19..
@@ -12,9 +12,9 @@ public class Planet implements IWorldPart {
 
     IModel planetModel = null;
 
-    Vec3 posOnPrevTick = new Vec3();
+    Vector3f posOnPrevTick = new Vector3f();
 
-    Vec3 posOnCurrentTick = new Vec3();
+    Vector3f posOnCurrentTick = new Vector3f();
 
     int texutre;
 
@@ -40,7 +40,7 @@ public class Planet implements IWorldPart {
     }
 
     @Override
-    public void setPosition(Vec3 pos) {
+    public void setPosition(Vector3f pos) {
 
     }
 

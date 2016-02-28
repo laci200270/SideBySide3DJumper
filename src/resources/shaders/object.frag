@@ -1,9 +1,9 @@
 #version 330
 #extension GL_ARB_separate_shader_objects : enable
-in vec3 passColor;
+in vec4 passColor;
 out vec4 fragColor;
 
 void main()
 {
-    fragColor = vec4(passColor,1);
+    fragColor = passColor;
 }

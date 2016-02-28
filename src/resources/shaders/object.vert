@@ -1,11 +1,15 @@
 #version 330
 
-layout (location=0) in vec3 pos;
+layout (location=0) in vec4 pos;
 layout (location=1) in vec3 color;
-out vec3 passColor;
+uniform mat4 projectionMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 modelMatrix;
+out vec4 passColor;
 
 void main()
 {
-    gl_Position = vec4(pos, 1.0);
-    passColor=color;
+    gl_Position = pos;
+    gl_Position = projectionMatrix * viewMatrix * modelMatrix * pos;
+    passColor=vec4(color,1);
 }

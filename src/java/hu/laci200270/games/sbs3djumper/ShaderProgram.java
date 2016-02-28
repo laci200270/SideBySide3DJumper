@@ -1,9 +1,14 @@
 package hu.laci200270.games.sbs3djumper;
 
+import hu.laci200270.games.sbs3djumper.utils.GLUtils;
+import org.lwjgl.opengl.GL20;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.FloatBuffer;
+import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -14,9 +19,8 @@ import static org.lwjgl.opengl.GL20.*;
 public class ShaderProgram {
 
     private final int programId;
-
+    HashMap<String, Integer> unformLocations = new HashMap();
     private int vertexShaderId;
-
     private int fragmentShaderId;
 
     public ShaderProgram() throws Exception {
@@ -34,6 +38,18 @@ public class ShaderProgram {
             throw new Exception("Could not create Shader");
         createVertexShader(readResourceUntilEnd(new ResourceLocation(String.format("shaders/%s.vert", shaderName)).getInputStream()));
         createFragmentShader(readResourceUntilEnd(new ResourceLocation(String.format("shaders/%s.frag", shaderName)).getInputStream()));
+    }
+
+    public int getProgramId() {
+        return programId;
+    }
+
+    public int getVertexShaderId() {
+        return vertexShaderId;
+    }
+
+    public int getFragmentShaderId() {
+        return fragmentShaderId;
     }
 
     public void createVertexShader(String shaderCode) throws Exception {
@@ -110,5 +126,17 @@ public class ShaderProgram {
         }
 
         return returnable;
+    }
+
+    public int getUniformLocation(String uniformName) {
+        bind();
+        return GL20.glGetUniformLocation(programId, uniformName);
+    }
+
+    public void setUnifromMatrix(String name, FloatBuffer value) {
+        bind();
+        if (!unformLocations.containsKey(name))
+            unformLocations.put(name, getUniformLocation(name));
+        GL20.glUniformMatrix4fv(unformLocations.get(name), false, GLUtils.makeGoodBuffer(value));
     }
 }

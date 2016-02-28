@@ -34,7 +34,7 @@ public class WebUtils {
     public static boolean isFileUpdated(URL original, File local) throws IOException {
         if (!local.exists())
             return true;
-        System.out.println(String.format("Last modified on %s (local and the upstream %s",local.lastModified(),original.openConnection().getLastModified()));
+        System.out.println(String.format("Last modified on %s (local and the upstream %s", local.lastModified(), original.openConnection().getLastModified()));
         return local.lastModified() != original.openConnection().getLastModified();
     }
 }

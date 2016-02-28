@@ -15,8 +15,8 @@ public class FileUtils {
     public static void unzipIt(File zipFile, File outputFolder) throws ZipException {
 
 
-            ZipFile file = new ZipFile(zipFile);
-            file.extractAll(outputFolder.getAbsolutePath());
+        ZipFile file = new ZipFile(zipFile);
+        file.extractAll(outputFolder.getAbsolutePath());
 
     }
 
@@ -49,20 +49,20 @@ public class FileUtils {
     }
 
     public static File getRootDir() {
-        File rootDir = new File(System.getProperty("java.user.home"), String.format("%s/%s", Constants.devName,Constants.gameCodeName));
+        File rootDir = new File(System.getProperty("java.user.home"), String.format("%s/%s", Constants.devName, Constants.gameCodeName));
         rootDir.mkdirs();
 
         return rootDir;
     }
 
     public static String readFile(File file) throws IOException {
-        String str="";
-        BufferedReader reader=new BufferedReader(new FileReader(file));
+        String str = "";
+        BufferedReader reader = new BufferedReader(new FileReader(file));
 
-        String line=reader.readLine();
-        while(line!=null){
-            str+=line+'\n';
-            line=reader.readLine();
+        String line = reader.readLine();
+        while (line != null) {
+            str += line + '\n';
+            line = reader.readLine();
         }
 
         return str;

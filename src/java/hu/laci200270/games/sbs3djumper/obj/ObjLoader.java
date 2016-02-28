@@ -1,11 +1,11 @@
 package hu.laci200270.games.sbs3djumper.obj;
 
-import com.hackoeur.jglm.Vec3;
-import com.hackoeur.jglm.Vec4;
 import hu.laci200270.games.sbs3djumper.Constants;
 import hu.laci200270.games.sbs3djumper.ResourceLocation;
 import hu.laci200270.games.sbs3djumper.models.IModel;
 import hu.laci200270.games.sbs3djumper.models.IModelLoader;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,19 +20,19 @@ public class ObjLoader implements IModelLoader {
 
     private BufferedReader fileReader;
 
-    private ArrayList<Vec4> vertexes = new ArrayList<>();
+    private ArrayList<Vector4f> vertexes = new ArrayList<>();
 
     private ArrayList<Face> faces = new ArrayList<>();
 
-    private ArrayList<Vec3> normals = new ArrayList<>();
+    private ArrayList<Vector3f> normals = new ArrayList<>();
 
-    private ArrayList<Vec3> textures = new ArrayList<>();
+    private ArrayList<Vector3f> textures = new ArrayList<>();
 
-    private ArrayList<Vec3> points = new ArrayList<>();
+    private ArrayList<Vector3f> points = new ArrayList<>();
 
-    private ArrayList<Vec3> indices = new ArrayList<>();
+    private ArrayList<Vector3f> indices = new ArrayList<>();
 
-    private static Vec3 handleNormal(String line) {
+    private static Vector3f handleNormal(String line) {
         float x, y, z;
         ObjInstruction normal = makeInstruction(line);
         String params[] = new String[normal.params.size()];
@@ -42,7 +42,7 @@ public class ObjLoader implements IModelLoader {
         x = Float.parseFloat(params[0]);
         y = Float.parseFloat(params[1]);
         z = Float.parseFloat(params[2]);
-        return new Vec3(x, y, z);
+        return new Vector3f(x, y, z);
     }
 
     public static ObjInstruction makeInstruction(String line) {
@@ -56,7 +56,7 @@ public class ObjLoader implements IModelLoader {
         return instruction;
     }
 
-    private Vec4 handleVertex(String line) {
+    private Vector4f handleVertex(String line) {
         float x, y, z, normal;
         ObjInstruction vertex = makeInstruction(line);
         String params[] = new String[vertex.params.size()];
@@ -72,8 +72,8 @@ public class ObjLoader implements IModelLoader {
         if (hasNormal) {
             normal = Float.parseFloat(params[3]);
         }
-        points.add(new Vec3(x, y, z));
-        return new Vec4(x, y, z, normal);
+        points.add(new Vector3f(x, y, z));
+        return new Vector4f(x, y, z, normal);
     }
 
     public IModel loadModel(InputStream inputStream) throws IOException {
@@ -123,7 +123,7 @@ public class ObjLoader implements IModelLoader {
         return new ObjModel(vertexes, faces, normals, textures, points, indices);
     }
 
-    private Vec3 handleTexture(String line) {
+    private Vector3f handleTexture(String line) {
         float x, y, z;
         ObjInstruction normal = makeInstruction(line);
         String params[] = new String[normal.params.size()];
@@ -136,7 +136,7 @@ public class ObjLoader implements IModelLoader {
         if (params.length == 3)
             z = Float.parseFloat(params[2]);
 
-        return new Vec3(x, y, z);
+        return new Vector3f(x, y, z);
     }
 
     @Override
@@ -151,24 +151,24 @@ public class ObjLoader implements IModelLoader {
 
     private Face handleFace(String line) {
         ObjInstruction instruction = makeInstruction(line);
-        Vec3 vec = new Vec3();
+        Vector3f vec = new Vector3f();
         for (int i = 0; i < 3; i++) {
             String param = instruction.params.get(i);
             if (!param.contains("/")) {
                 if (i == 0)
-                    vec = new Vec3(Integer.parseInt(param), vec.getY(), vec.getZ());
+                    vec = new Vector3f(Integer.parseInt(param), vec.y, vec.z);
                 if (i == 1)
-                    vec = new Vec3(vec.getX(), Integer.parseInt(param), vec.getZ());
+                    vec = new Vector3f(vec.x, Integer.parseInt(param), vec.z);
                 if (i == 2)
-                    vec = new Vec3(vec.getX(), vec.getY(), Integer.parseInt(param));
+                    vec = new Vector3f(vec.x, vec.y, Integer.parseInt(param));
             } else {
                 int value = Integer.parseInt(param.split("/")[0]);
                 if (i == 0)
-                    vec = new Vec3(value, vec.getY(), vec.getZ());
+                    vec = new Vector3f(value, vec.y, vec.z);
                 if (i == 1)
-                    vec = new Vec3(vec.getX(), value, vec.getZ());
+                    vec = new Vector3f(vec.x, value, vec.z);
                 if (i == 2)
-                    vec = new Vec3(vec.getX(), vec.getY(), value);
+                    vec = new Vector3f(vec.x, vec.y, value);
             }
         }
         indices.add(vec);
@@ -191,14 +191,14 @@ public class ObjLoader implements IModelLoader {
             if (parts.length == 1) {
                 int var1 = Integer.parseInt(parts[0]) - 1;
                 FacePoint point = new FacePoint(vertexes.get(var1), null, null);
-                point.color = new Vec3(Constants.random.nextFloat(), Constants.random.nextFloat(), Constants.random.nextFloat());
+                point.color = new Vector3f(Constants.random.nextFloat(), Constants.random.nextFloat(), Constants.random.nextFloat());
                 poligons.add(point);
             }
             if (parts.length == 2) {
                 int var1 = Integer.parseInt(parts[0]) - 1;
                 int var2 = Integer.parseInt(parts[1]) - 1;
                 FacePoint point = new FacePoint(vertexes.get(var1), textures.get(var2), null);
-                point.color = new Vec3(Constants.random.nextFloat(), Constants.random.nextFloat(), Constants.random.nextFloat());
+                point.color = new Vector3f(Constants.random.nextFloat(), Constants.random.nextFloat(), Constants.random.nextFloat());
 
                 poligons.add(point);
             }
@@ -207,13 +207,13 @@ public class ObjLoader implements IModelLoader {
                 if (parts[1].isEmpty()) {
                     int var3 = Integer.parseInt(parts[2]) - 1;
                     FacePoint point = new FacePoint(vertexes.get(var1), null, normals.get(var3));
-                    point.color = new Vec3(Constants.random.nextFloat(), Constants.random.nextFloat(), Constants.random.nextFloat());
+                    point.color = new Vector3f(Constants.random.nextFloat(), Constants.random.nextFloat(), Constants.random.nextFloat());
                     poligons.add(point);
                 } else {
                     int var2 = Integer.parseInt(parts[1]) - 1;
                     int var3 = Integer.parseInt(parts[2]) - 1;
                     FacePoint point = new FacePoint(vertexes.get(var1), textures.get(var2), normals.get(var3));
-                    point.color = new Vec3(Constants.random.nextFloat(), Constants.random.nextFloat(), Constants.random.nextFloat());
+                    point.color = new Vector3f(Constants.random.nextFloat(), Constants.random.nextFloat(), Constants.random.nextFloat());
 
                     poligons.add(point);
                 }

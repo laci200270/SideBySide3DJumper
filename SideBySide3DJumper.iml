@@ -23,7 +23,7 @@
     <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-core:2.5" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl:3.0.0a" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-platform:3.0.0a" level="project" />
-    <orderEntry type="library" name="Gradle: com.hackoeur:jglm:1.0.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.joml:joml:1.6.5" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-platform:3.0.0a" level="project" />
     <orderEntry type="library" name="Gradle: org.lwjgl:lwjgl-platform:3.0.0a" level="project" />
   </component>

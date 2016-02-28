@@ -1,44 +1,42 @@
 package hu.laci200270.games.sbs3djumper.obj;
 
-import com.hackoeur.jglm.Vec3;
-import com.hackoeur.jglm.Vec4;
-import hu.laci200270.games.sbs3djumper.Constants;
-import hu.laci200270.games.sbs3djumper.utils.GLUtils;
+
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
 
 /**
  * Created by Laci on 2016. 01. 31..
  */
 public class FacePoint {
 
-    public Vec4 point;
+    public Vector4f point;
 
-    public Vec3 texture;
+    public Vector3f texture;
 
-    public Vec3 normal;
+    public Vector3f normal;
 
-    public Vec3 color;
+    public Vector3f color;
 
-    public FacePoint(Vec4 point, Vec3 texture, Vec3 normal) {
+    public FacePoint(Vector4f point, Vector3f texture, Vector3f normal) {
         this.point = point;
         this.texture = texture;
         this.normal = normal;
     }
 
     public void render() {
-        //GL11.glColor3f(color.getX(), color.getY(), color.getX());
+        //GL11.glColor3f(color.x, color.y, color.x);
         if (this.texture != null) {
             //TODO do texture loading
-            // GL11.glTexCoord3f(texture.getX(),texture.getY(),texture.getZ());
+            // GL11.glTexCoord3f(texture.x,texture.y,texture.z);
         }
         if (this.normal != null) {
-            GL11.glNormal3f(normal.getX(), normal.getY(), normal.getY());
+            GL11.glNormal3f(normal.x, normal.y, normal.y);
         }
-        GL11.glVertex4f(point.getX(), point.getY(), point.getZ(), point.getW());
+        GL11.glVertex4f(point.x, point.y, point.z, point.w);
 
 
-        GL20.glUniformMatrix4fv(Constants.vertexVecPos, true, GLUtils.makeGoodBuffer(point.getBuffer()));
+        //GL20.glUniformMatrix4fv(Constants.vertexVecPos, true, GLUtils.makeGoodBuffer(point.getBuffer()));
 
     }
 

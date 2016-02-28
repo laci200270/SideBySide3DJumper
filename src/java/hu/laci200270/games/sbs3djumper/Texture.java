@@ -6,61 +6,57 @@ import org.lwjgl.opengl.GL11;
  * Created by Laci on 2016. 02. 07..
  */
 public class Texture {
-    /** The GL target type */
+    /**
+     * The GL target type
+     */
     private int target;
-    /** The GL texture ID */
+    /**
+     * The GL texture ID
+     */
     private int textureID;
-    /** The height of the image */
+    /**
+     * The height of the image
+     */
     private int height;
-    /** The width of the image */
+    /**
+     * The width of the image
+     */
     private int width;
-    /** The width of the texture */
+    /**
+     * The width of the texture
+     */
     private int texWidth;
-    /** The height of the texture */
+    /**
+     * The height of the texture
+     */
     private int texHeight;
-    /** The ratio of the width of the image to the texture */
+    /**
+     * The ratio of the width of the image to the texture
+     */
     private float widthRatio;
-    /** The ratio of the height of the image to the texture */
+    /**
+     * The ratio of the height of the image to the texture
+     */
     private float heightRatio;
 
     /**
      * Create a new texture
      *
-     * @param target The GL target
+     * @param target    The GL target
      * @param textureID The GL texture ID
      */
-    public Texture(int target,int textureID) {
+    public Texture(int target, int textureID) {
         this.target = target;
         this.textureID = textureID;
     }
 
     /**
      * Bind the specified GL context to a texture
-     *
+     * <p>
      * The GL context to bind to
      */
     public void bind() {
         GL11.glBindTexture(target, textureID);
-    }
-
-    /**
-     * Set the height of the image
-     *
-     * @param height The height of the image
-     */
-    public void setHeight(int height) {
-        this.height = height;
-        setHeight();
-    }
-
-    /**
-     * Set the width of the image
-     *
-     * @param width The width of the image
-     */
-    public void setWidth(int width) {
-        this.width = width;
-        setWidth();
     }
 
     /**
@@ -91,12 +87,32 @@ public class Texture {
     }
 
     /**
+     * Set the height of the image
+     *
+     * @param height The height of the image
+     */
+    public void setHeight(int height) {
+        this.height = height;
+        setHeight();
+    }
+
+    /**
      * Get the width of the physical texture
      *
      * @return The width of physical texture
      */
     public float getWidth() {
         return widthRatio;
+    }
+
+    /**
+     * Set the width of the image
+     *
+     * @param width The width of the image
+     */
+    public void setWidth(int width) {
+        this.width = width;
+        setWidth();
     }
 
     /**
@@ -125,7 +141,7 @@ public class Texture {
      */
     private void setHeight() {
         if (texHeight != 0) {
-            heightRatio = ((float) height)/texHeight;
+            heightRatio = ((float) height) / texHeight;
         }
     }
 
@@ -135,7 +151,7 @@ public class Texture {
      */
     private void setWidth() {
         if (texWidth != 0) {
-            widthRatio = ((float) width)/texWidth;
+            widthRatio = ((float) width) / texWidth;
         }
     }
 }

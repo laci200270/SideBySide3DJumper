@@ -1,7 +1,7 @@
 package hu.laci200270.games.sbs3djumper.utils;
 
-import com.hackoeur.jglm.Vec3;
 import hu.laci200270.games.sbs3djumper.Constants;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -23,7 +23,7 @@ public class GLUtils {
         BufferedImage texImage;
 
         ColorModel glAlphaColorModel = new ComponentColorModel(ColorSpace
-                .getInstance(ColorSpace.CS_sRGB), new int[] { 8, 8, 8, 8 },
+                .getInstance(ColorSpace.CS_sRGB), new int[]{8, 8, 8, 8},
                 true, false, Transparency.TRANSLUCENT, DataBuffer.TYPE_BYTE);
 
         raster = Raster.createInterleavedRaster(DataBuffer.TYPE_BYTE,
@@ -49,11 +49,11 @@ public class GLUtils {
         return imageBuffer;
     }
 
-    public static void drawFloor(float y){
+    public static void drawFloor(float y) {
         GL11.glBegin(GL11.GL_TRIANGLES);
-        GL11.glVertex3f(-10000,y,-10000);
-        GL11.glVertex3f(-10000,y,10000);
-        GL11.glVertex3f(10000,y,10000);
+        GL11.glVertex3f(-10000, y, -10000);
+        GL11.glVertex3f(-10000, y, 10000);
+        GL11.glVertex3f(10000, y, 10000);
         GL11.glEnd();
     }
 
@@ -64,7 +64,7 @@ public class GLUtils {
         return retBuff;
     }
 
-    public void translate(Vec3 trans) {
+    public void translate(Vector3f trans) {
         if (Constants.useShaders) {
 
         }

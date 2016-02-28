@@ -9,7 +9,9 @@ import java.awt.image.BufferedImage;
  */
 public interface IModel {
     public void render();
+
     public BufferedImage getTexture();
+
     public void setTexture(Texture texture);
 
 }

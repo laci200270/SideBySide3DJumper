@@ -18,13 +18,13 @@ import java.util.HashMap;
  * Created by Laci on 2016. 02. 06..
  */
 public class ModelLoaderRegistry {
-    private static ArrayList<IModelLoader> loaders=new ArrayList<IModelLoader>();
-    private static HashMap<IModel,Texture> textures=new HashMap<>();
-    private static IntBuffer textureIntBuffer= BufferUtils.createIntBuffer(1024);
+    private static ArrayList<IModelLoader> loaders = new ArrayList<IModelLoader>();
+    private static HashMap<IModel, Texture> textures = new HashMap<>();
+    private static IntBuffer textureIntBuffer = BufferUtils.createIntBuffer(1024);
 
-    public static void registerModelLoader(IModelLoader loader) throws RuntimeException{
-        for(IModelLoader current:loaders){
-            if(current.getTypeFormat().equals(loader.getTypeFormat())){
+    public static void registerModelLoader(IModelLoader loader) throws RuntimeException {
+        for (IModelLoader current : loaders) {
+            if (current.getTypeFormat().equals(loader.getTypeFormat())) {
                 throw new RuntimeException("A model loader with this type is already registered!");
             }
         }
@@ -45,17 +45,16 @@ public class ModelLoaderRegistry {
 
 
     public static Texture getTexture(IModel model,
-                              int target,
-                              int dstPixelFormat,
-                              int minFilter,
-                              int magFilter) throws IOException
-    {
+                                     int target,
+                                     int dstPixelFormat,
+                                     int minFilter,
+                                     int magFilter) throws IOException {
         int srcPixelFormat = 0;
 
         // create the texture ID for this texture
 
         int textureID = textureIntBuffer.get();
-        Texture texture = new Texture(target,textureID);
+        Texture texture = new Texture(target, textureID);
 
         // bind this texture
 
@@ -75,8 +74,7 @@ public class ModelLoaderRegistry {
 
         ByteBuffer textureBuffer = GLUtils.convertImageData(bufferedImage);
 
-        if (target == GL11.GL_TEXTURE_2D)
-        {
+        if (target == GL11.GL_TEXTURE_2D) {
             GL11.glTexParameteri(target, GL11.GL_TEXTURE_MIN_FILTER, minFilter);
             GL11.glTexParameteri(target, GL11.GL_TEXTURE_MAG_FILTER, magFilter);
         }
@@ -91,10 +89,11 @@ public class ModelLoaderRegistry {
                 0,
                 srcPixelFormat,
                 GL11.GL_UNSIGNED_BYTE,
-                textureBuffer );
+                textureBuffer);
 
         return texture;
     }
+
     private static int get2Fold(int fold) {
         int ret = 2;
         while (ret < fold) {
@@ -102,6 +101,7 @@ public class ModelLoaderRegistry {
         }
         return ret;
     }
+
     public static Texture getTexture(IModel model) throws IOException {
         Texture tex = textures.get(model);
 
@@ -115,7 +115,7 @@ public class ModelLoaderRegistry {
                 GL11.GL_LINEAR, // min filter (unused)
                 GL11.GL_LINEAR);
 
-        textures.put(model,tex);
+        textures.put(model, tex);
 
         return tex;
     }
