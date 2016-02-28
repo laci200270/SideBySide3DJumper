@@ -4,21 +4,17 @@ import hu.laci200270.games.sbs3djumper.models.IModel;
 import hu.laci200270.games.sbs3djumper.models.ModelLoaderRegistry;
 import hu.laci200270.games.sbs3djumper.obj.ObjLoader;
 import org.joml.Matrix4f;
-import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_TRUE;
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 /**
@@ -31,7 +27,7 @@ public class Starter {
     final static String[] classPathElements = classPath.split(System.getProperty("path.separator"));
 
     public static long window;
-
+    public static boolean shouldRun = true;
     private static long lastFrame;
 
     public static void main(String[] args) throws IOException {
@@ -41,32 +37,6 @@ public class Starter {
         init();
         GLContext.createFromCurrent();
         GL.createCapabilities(true);
-
-
-        float[] vertices = {
-                // Left bottom triangle
-                -0.5f, 0.5f, 0.5f, 1f,
-                -0.5f, -0.5f, 0f, 1f,
-                0.5f, -0.5f, 0f, 1f,
-                // Right top triangle
-                0.5f, -0.5f, 0f, 1f,
-                0.5f, 0.5f, 0f, 1f,
-                -0.5f, 0.5f, 0f, 1f
-        };
-
-        float[] colors = new float[18];
-        Random r = new Random();
-        for (int i = 0; i < colors.length; i++) {
-            colors[i] = r.nextFloat();
-        }
-        FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(vertices.length);
-        verticesBuffer.put(vertices);
-        verticesBuffer.flip();
-
-        FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(colors.length);
-        colorBuffer.put(colors);
-        colorBuffer.flip();
-
         int vertexCount = 6;
         int vaoId = GL30.glGenVertexArrays();
         GL30.glBindVertexArray(vaoId);
@@ -85,23 +55,27 @@ public class Starter {
         ModelLoaderRegistry.registerModelLoader(new ObjLoader());
         IModel model = ModelLoaderRegistry.getModel(new ResourceLocation("stanfordbunny.obj"), "obj");
         Camera camera = new Camera();
-        camera.init();
+        camera.init(window);
         GL11.glEnable(GL_DEPTH_TEST);
-        float distance = -0.5f;
-        while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE) {
+        float distance = -0.3f;
+        float rot = 0f;
+        GL11.glMatrixMode(GL_PROJECTION);
+        while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE && shouldRun) {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+            GLFW.glfwPollEvents();
             Matrix4f modelMat = new Matrix4f().scale(1f);
-            //distance--;
-            modelMat.translation(0, 0f, distance);
-            //camera.fov++;
+            rot++;
+            modelMat.translation(0, -0.10f, distance);
+            modelMat.rotate((float) Math.toRadians(rot) * 1f, 0, 1, 0);
             shader.bind();
             shader.setUnifromMatrix("modelMatrix", modelMat);
+            camera.handleKeys(window);
             camera.apply(shader);
             GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINES);
             model.render();
             shader.unbind();
             GLFW.glfwSwapBuffers(window);
-            GLFW.glfwPollEvents();
+
         }
         GLFW.glfwDestroyWindow(window);
         System.exit(0);

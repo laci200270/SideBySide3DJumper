@@ -9,7 +9,10 @@ import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;*/
 
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWCursorPosCallback;
 
 /**
  * Created by Laci on 2016. 02. 06..
@@ -17,19 +20,34 @@ import org.joml.Vector3f;
 public class Camera {
 
     public static final Vector3f UP = new Vector3f(0, 1, 0);
+    public static final float maxHeadAngle = 30f;
     private static final float Z_NEAR = 0.01f;
     private static final float Z_FAR = 1000.f;
     public float fov = 60f;
     Vector3f pos;
     Vector3f rot;
-    float movementMultipplier = 0.25f;
+    float movementMultipplier = 0.05f;
+    float mouseMultiplier = 0.05f;
+    Vector2f currentPosCursor = new Vector2f();
+    Vector2f prevPosCursor = new Vector2f();
     private Matrix4f projectionMatrix;
     private Matrix4f viewMatrix;
     private Vector3f up = new Vector3f(0, 1, 0);
+    private float yaw;
+    private float pitch;
 
-    public void init() {
-        pos = new Vector3f(0, 0, 0);
+    public void init(long window) {
+        pos = new Vector3f(0, 0, -1);
         rot = new Vector3f(0, 0, 0);
+        GLFW.glfwSetCursor(window, GLFW.GLFW_CURSOR_HIDDEN);
+        GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
+        GLFW.glfwSetCursorPosCallback(window, new GLFWCursorPosCallback() {
+            @Override
+            public void invoke(long window, double xpos, double ypos) {
+                currentPosCursor = new Vector2f((float) xpos, (float) ypos);
+                //GLFW.glfwSetCursorPos(window,350,350);
+            }
+        });
 
 
     }
@@ -40,18 +58,74 @@ public class Camera {
 
     public void apply(ShaderProgram prog) {
 
+
         float aspectRatio = (float) 700 / 700;
         projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(fov), aspectRatio,
                 Z_NEAR, Z_FAR);
 
-        viewMatrix = new Matrix4f().lookAt(rot, pos, up);
+        if (currentPosCursor.x != prevPosCursor.x) {
+
+            yaw += (currentPosCursor.x - prevPosCursor.x) * mouseMultiplier;
+        }
+        if (currentPosCursor.y != prevPosCursor.y) {
+            if (!((pitch + (currentPosCursor.y - prevPosCursor.y)) * mouseMultiplier < -maxHeadAngle || (((currentPosCursor.y - prevPosCursor.y) + pitch) * mouseMultiplier) > maxHeadAngle))
+                pitch += (currentPosCursor.y - prevPosCursor.y) * mouseMultiplier;
+        }
+
+
+        viewMatrix = new Matrix4f();
+        viewMatrix.rotate((float) Math.toRadians(pitch), 1.0f, 0.0f, 0.0f);
+        viewMatrix.rotate((float) Math.toRadians(yaw), 0.0f, 1.0f, 0.0f);
+        viewMatrix.translate(pos);
+
+
         prog.setUnifromMatrix("projectionMatrix", projectionMatrix);
         prog.setUnifromMatrix("viewMatrix", viewMatrix);
+        prevPosCursor = currentPosCursor;
 
     }
 
     public void handleKeys(long window) {
 
+        if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_W) == 1)
+            walkForward(movementMultipplier);
+        if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_S) == 1)
+            walkBackwards(movementMultipplier);
+        if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_A) == 1)
+            strafeLeft(movementMultipplier);
+        if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_D) == 1)
+            strafeRight(movementMultipplier);
+        if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_KP_ADD) == 1)
+            fov++;
+        if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_KP_SUBTRACT) == 1)
+            fov--;
+        if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_ESCAPE) == 1)
+            Starter.shouldRun = false;
+
+    }
+
+    //moves the camera forward relative to its current rotation (yaw)
+    public void walkForward(float distance) {
+        pos.x -= distance * (float) Math.sin(Math.toRadians(yaw));
+        pos.z += distance * (float) Math.cos(Math.toRadians(yaw));
+    }
+
+    //moves the camera backward relative to its current rotation (yaw)
+    public void walkBackwards(float distance) {
+        pos.x += distance * (float) Math.sin(Math.toRadians(yaw));
+        pos.z -= distance * (float) Math.cos(Math.toRadians(yaw));
+    }
+
+    //strafes the camera left relitive to its current rotation (yaw)
+    public void strafeLeft(float distance) {
+        pos.x -= distance * (float) Math.sin(Math.toRadians(yaw - 90));
+        pos.z += distance * (float) Math.cos(Math.toRadians(yaw - 90));
+    }
+
+    //strafes the camera right relitive to its current rotation (yaw)
+    public void strafeRight(float distance) {
+        pos.x -= distance * (float) Math.sin(Math.toRadians(yaw + 90));
+        pos.z += distance * (float) Math.cos(Math.toRadians(yaw + 90));
     }
 }
 
