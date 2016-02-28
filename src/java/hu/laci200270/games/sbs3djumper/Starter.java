@@ -1,5 +1,9 @@
 package hu.laci200270.games.sbs3djumper;
 
+import hu.laci200270.games.sbs3djumper.models.IModel;
+import hu.laci200270.games.sbs3djumper.models.ModelLoaderRegistry;
+import hu.laci200270.games.sbs3djumper.obj.ObjLoader;
+import org.joml.Matrix4f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.*;
@@ -13,6 +17,7 @@ import java.util.List;
 import java.util.Random;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
@@ -77,29 +82,23 @@ public class Starter {
             e.printStackTrace();
         }
         Constants.projMatPos = GL20.glGetUniformLocation(shader.getProgramId(), "projModViewMat");
-        int vboId = GL15.glGenBuffers();
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboId);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(0, 4, GL11.GL_FLOAT, false, 0, 0);
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-        int colorVboId = GL15.glGenBuffers();
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, colorVboId);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colorBuffer, GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0);
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-        GL30.glBindVertexArray(0);
+        ModelLoaderRegistry.registerModelLoader(new ObjLoader());
+        IModel model = ModelLoaderRegistry.getModel(new ResourceLocation("spehreandcube.obj"), "obj");
         Camera camera = new Camera();
         camera.init();
+        GL11.glEnable(GL_DEPTH_TEST);
+        float distance = 1f;
         while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE) {
-            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-            camera.apply(shader);
+            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+            Matrix4f modelMat = new Matrix4f().scale(0.02f);
+            distance--;
+            modelMat.translation(0, -1f, distance);
+            //camera.fov++;
             shader.bind();
-            GL30.glBindVertexArray(vaoId);
-            GL20.glEnableVertexAttribArray(0);
-            GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, vertexCount);
-            GL20.glDisableVertexAttribArray(0);
-            GL20.glEnableVertexAttribArray(1);
-            GL30.glBindVertexArray(0);
+            shader.setUnifromMatrix("modelMatrix", modelMat);
+            camera.apply(shader);
+            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINES);
+            model.render();
             shader.unbind();
             GLFW.glfwSwapBuffers(window);
             GLFW.glfwPollEvents();

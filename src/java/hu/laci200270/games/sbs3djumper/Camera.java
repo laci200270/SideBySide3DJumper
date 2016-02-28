@@ -8,6 +8,7 @@ import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glTranslatef;*/
 
+import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 /**
@@ -16,17 +17,20 @@ import org.joml.Vector3f;
 public class Camera {
 
     public static final Vector3f UP = new Vector3f(0, 1, 0);
-
+    private static final float Z_NEAR = 0.01f;
+    private static final float Z_FAR = 1000.f;
+    public float fov = 60f;
     Vector3f pos;
-
     Vector3f rot;
+    private Matrix4f projectionMatrix;
+
 
     public void init() {
         pos = new Vector3f(0, 0, 0);
         rot = new Vector3f(0, 0, 0);
 
 
-        //new Mat4().getBuffer()
+
     }
 
     public void setPos(Vector3f pos) {
@@ -35,10 +39,12 @@ public class Camera {
 
     public void apply(ShaderProgram prog) {
 
+        float aspectRatio = (float) 700 / 700;
+        projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(fov), aspectRatio,
+                Z_NEAR, Z_FAR);
 
-        prog.setUnifromMatrix("projectionMatrix", projMatBuff);
-        prog.setUnifromMatrix("viewMatrix", viewMatBuff);
-        prog.setUnifromMatrix("modelMatrix", modelMatBuff);
+
+        prog.setUnifromMatrix("projectionMatrix", projectionMatrix);
 
 
 

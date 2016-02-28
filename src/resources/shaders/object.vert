@@ -10,6 +10,6 @@ out vec4 passColor;
 void main()
 {
     gl_Position = pos;
-    gl_Position = projectionMatrix * viewMatrix * modelMatrix * pos;
+    gl_Position = projectionMatrix*modelMatrix* pos;
     passColor=vec4(color,1);
 }

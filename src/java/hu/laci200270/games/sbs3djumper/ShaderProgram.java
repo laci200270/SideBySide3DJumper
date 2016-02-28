@@ -1,6 +1,7 @@
 package hu.laci200270.games.sbs3djumper;
 
-import hu.laci200270.games.sbs3djumper.utils.GLUtils;
+import org.joml.Matrix4f;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
 import java.io.BufferedReader;
@@ -133,10 +134,12 @@ public class ShaderProgram {
         return GL20.glGetUniformLocation(programId, uniformName);
     }
 
-    public void setUnifromMatrix(String name, FloatBuffer value) {
+    public void setUnifromMatrix(String name, Matrix4f value) {
         bind();
         if (!unformLocations.containsKey(name))
             unformLocations.put(name, getUniformLocation(name));
-        GL20.glUniformMatrix4fv(unformLocations.get(name), false, GLUtils.makeGoodBuffer(value));
+        FloatBuffer fb = BufferUtils.createFloatBuffer(16);
+        value.get(fb);
+        glUniformMatrix4fv(unformLocations.get(name), false, fb);
     }
 }
