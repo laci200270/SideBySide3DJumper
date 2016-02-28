@@ -83,16 +83,16 @@ public class Starter {
         }
         Constants.projMatPos = GL20.glGetUniformLocation(shader.getProgramId(), "projModViewMat");
         ModelLoaderRegistry.registerModelLoader(new ObjLoader());
-        IModel model = ModelLoaderRegistry.getModel(new ResourceLocation("spehreandcube.obj"), "obj");
+        IModel model = ModelLoaderRegistry.getModel(new ResourceLocation("stanfordbunny.obj"), "obj");
         Camera camera = new Camera();
         camera.init();
         GL11.glEnable(GL_DEPTH_TEST);
-        float distance = 1f;
+        float distance = -0.5f;
         while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE) {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-            Matrix4f modelMat = new Matrix4f().scale(0.02f);
-            distance--;
-            modelMat.translation(0, -1f, distance);
+            Matrix4f modelMat = new Matrix4f().scale(1f);
+            //distance--;
+            modelMat.translation(0, 0f, distance);
             //camera.fov++;
             shader.bind();
             shader.setUnifromMatrix("modelMatrix", modelMat);

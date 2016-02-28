@@ -22,13 +22,14 @@ public class Camera {
     public float fov = 60f;
     Vector3f pos;
     Vector3f rot;
+    float movementMultipplier = 0.25f;
     private Matrix4f projectionMatrix;
-
+    private Matrix4f viewMatrix;
+    private Vector3f up = new Vector3f(0, 1, 0);
 
     public void init() {
         pos = new Vector3f(0, 0, 0);
         rot = new Vector3f(0, 0, 0);
-
 
 
     }
@@ -43,11 +44,16 @@ public class Camera {
         projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(fov), aspectRatio,
                 Z_NEAR, Z_FAR);
 
-
+        viewMatrix = new Matrix4f().lookAt(rot, pos, up);
         prog.setUnifromMatrix("projectionMatrix", projectionMatrix);
+        prog.setUnifromMatrix("viewMatrix", viewMatrix);
 
+    }
 
-
+    public void handleKeys(long window) {
 
     }
 }
+
+
+

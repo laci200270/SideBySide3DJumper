@@ -11,5 +11,5 @@ void main()
 {
     gl_Position = pos;
     gl_Position = projectionMatrix*modelMatrix* pos;
-    passColor=vec4(color,1);
+    passColor=pos*20;
 }
