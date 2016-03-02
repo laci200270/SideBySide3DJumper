@@ -107,25 +107,27 @@ public class Camera {
 
     }
 
-    //moves the camera forward relative to its current rotation (yaw)
+
     public void walkForward(float distance) {
         pos.x -= distance * (float) Math.sin(Math.toRadians(yaw));
         pos.z += distance * (float) Math.cos(Math.toRadians(yaw));
+        pos.y += distance * (float) Math.sin(Math.toRadians(pitch));
     }
 
-    //moves the camera backward relative to its current rotation (yaw)
+
     public void walkBackwards(float distance) {
         pos.x += distance * (float) Math.sin(Math.toRadians(yaw));
         pos.z -= distance * (float) Math.cos(Math.toRadians(yaw));
+        pos.y -= distance * (float) Math.sin(Math.toRadians(pitch));
     }
 
-    //strafes the camera left relitive to its current rotation (yaw)
+
     public void strafeLeft(float distance) {
         pos.x -= distance * (float) Math.sin(Math.toRadians(yaw - 90));
         pos.z += distance * (float) Math.cos(Math.toRadians(yaw - 90));
     }
 
-    //strafes the camera right relitive to its current rotation (yaw)
+
     public void strafeRight(float distance) {
         pos.x -= distance * (float) Math.sin(Math.toRadians(yaw + 90));
         pos.z += distance * (float) Math.cos(Math.toRadians(yaw + 90));
