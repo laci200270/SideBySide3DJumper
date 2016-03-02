@@ -1,12 +1,4 @@
-package hu.laci200270.games.sbs3djumper;/*package hu.laci200270.games.sbs3djumper;
-
-import hu.laci200270.games.sbs3djumper.obj.Vertex3F;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-
-import static org.lwjgl.opengl.GL11.glLoadIdentity;
-import static org.lwjgl.opengl.GL11.glRotatef;
-import static org.lwjgl.opengl.GL11.glTranslatef;*/
+package hu.laci200270.games.sbs3djumper;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -19,7 +11,7 @@ import org.lwjgl.glfw.GLFWCursorPosCallback;
  */
 public class Camera {
 
-    public static final Vector3f UP = new Vector3f(0, 1, 0);
+
     public static final float maxHeadAngle = 30f;
     private static final float Z_NEAR = 0.01f;
     private static final float Z_FAR = 1000.f;
@@ -47,7 +39,7 @@ public class Camera {
             @Override
             public void invoke(long window, double xpos, double ypos) {
                 currentPosCursor = new Vector2f((float) xpos, (float) ypos);
-                //GLFW.glfwSetCursorPos(window,350,350);
+
             }
         };
         GLFW.glfwSetCursorPosCallback(window, cursorPosCallback);

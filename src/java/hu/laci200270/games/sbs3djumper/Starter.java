@@ -5,13 +5,13 @@ import hu.laci200270.games.sbs3djumper.models.ModelLoaderRegistry;
 import hu.laci200270.games.sbs3djumper.obj.ObjLoader;
 import org.joml.Matrix4f;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.GL;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GLContext;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -32,7 +32,6 @@ public class Starter {
 
     public static void main(String[] args) throws IOException {
 
-        //FileUtils.unzipIt(new ResourceLocation("natives.zip").getInputStream(), Constants.lwjgl_natives_dir);
         System.setProperty("org.lwjgl.librarypath", Object.class.getResource("/natives/windows/").getFile());
         init();
         GLContext.createFromCurrent();
