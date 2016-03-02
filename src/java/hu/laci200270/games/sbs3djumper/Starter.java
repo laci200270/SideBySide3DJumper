@@ -58,6 +58,7 @@ public class Starter {
         float distance = -0.3f;
         float rot = 0f;
         GL11.glMatrixMode(GL_PROJECTION);
+        GL11.glEnable(GL_BLEND);
         while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE && shouldRun) {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
             GLFW.glfwPollEvents();
