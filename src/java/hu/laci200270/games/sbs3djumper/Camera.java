@@ -82,6 +82,10 @@ public class Camera {
 
     public void handleKeys(long window) {
 
+        if(GLFW.glfwGetKey(window,GLFW.GLFW_KEY_LEFT_SHIFT)==1)
+            movementMultipplier=0.0025f;
+        else
+            movementMultipplier=0.05f;
         if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_W) == 1)
             walkForward(movementMultipplier);
         if (GLFW.glfwGetKey(window, GLFW.GLFW_KEY_S) == 1)
