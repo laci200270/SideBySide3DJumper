@@ -37,9 +37,8 @@ public class Starter {
         init();
         GLContext.createFromCurrent();
         GL.createCapabilities(true);
-        int vertexCount = 6;
-        int vaoId = GL30.glGenVertexArrays();
-        GL30.glBindVertexArray(vaoId);
+
+
         ShaderProgram shader = null;
         try {
             shader = new ShaderProgram("object");
@@ -81,23 +80,6 @@ public class Starter {
         System.exit(0);
     }
 
-    private static void handleDir(File file) {
-        File[] elements = file.listFiles();
-        for (int i = 0; i < elements.length; i++) {
-            if (elements[i].isDirectory())
-                handleDir(elements[i]);
-            else System.out.println(elements[i].getAbsolutePath());
-        }
-    }
-
-    public static int getDelta() {
-        long time = System.nanoTime();
-        int delta = (int) (time - lastFrame);
-        lastFrame = time;
-
-        return delta;
-    }
-
     public static void init() {
 
         if (glfwInit() != GL_TRUE)
@@ -116,15 +98,6 @@ public class Starter {
         glfwShowWindow(window);
     }
 
-    public static void processGlError() {
-        int errCode = GL11.glGetError();
-        if (errCode != 0) {
-            List<StackTraceElement> strElemets = Arrays.asList(Thread.currentThread().getStackTrace());
-            for (StackTraceElement elemt : strElemets)
-                System.err.println(elemt.toString());
-            System.err.println(errCode);
-        }
-    }
 
 
 }
