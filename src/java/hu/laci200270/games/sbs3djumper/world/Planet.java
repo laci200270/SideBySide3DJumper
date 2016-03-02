@@ -7,7 +7,7 @@ import org.joml.Vector3f;
 /**
  * Created by Laci on 2016. 02. 19..
  */
-public class Planet implements IWorldPart {
+public abstract class Planet implements IWorldPart {
 
     private final String texName;
 

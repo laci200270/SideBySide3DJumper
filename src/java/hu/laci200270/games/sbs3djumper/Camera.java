@@ -36,18 +36,21 @@ public class Camera {
     private float yaw;
     private float pitch;
 
+    GLFWCursorPosCallback cursorPosCallback=null;
+
     public void init(long window) {
         pos = new Vector3f(0, 0, -1);
         rot = new Vector3f(0, 0, 0);
         GLFW.glfwSetCursor(window, GLFW.GLFW_CURSOR_HIDDEN);
         GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
-        GLFW.glfwSetCursorPosCallback(window, new GLFWCursorPosCallback() {
+        cursorPosCallback=new GLFWCursorPosCallback() {
             @Override
             public void invoke(long window, double xpos, double ypos) {
                 currentPosCursor = new Vector2f((float) xpos, (float) ypos);
                 //GLFW.glfwSetCursorPos(window,350,350);
             }
-        });
+        };
+        GLFW.glfwSetCursorPosCallback(window, cursorPosCallback);
 
 
     }
