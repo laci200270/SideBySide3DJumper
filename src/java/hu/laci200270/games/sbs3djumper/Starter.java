@@ -2,8 +2,12 @@ package hu.laci200270.games.sbs3djumper;
 
 import hu.laci200270.games.sbs3djumper.models.IModel;
 import hu.laci200270.games.sbs3djumper.models.ModelLoaderRegistry;
+import hu.laci200270.games.sbs3djumper.models.ModelRegistry;
 import hu.laci200270.games.sbs3djumper.obj.ObjLoader;
+import hu.laci200270.games.sbs3djumper.world.Bunny;
+import hu.laci200270.games.sbs3djumper.world.World;
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
@@ -49,32 +53,26 @@ public class Starter {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Constants.projMatPos = GL20.glGetUniformLocation(shader.getProgramId(), "projModViewMat");
         ModelLoaderRegistry.registerModelLoader(new ObjLoader());
-        IModel model = ModelLoaderRegistry.getModel(new ResourceLocation("stanfordbunny.obj"), "obj");
         Camera camera = new Camera();
         camera.init(window);
         GL11.glEnable(GL_DEPTH_TEST);
-        float distance = -0.3f;
-        float rot = 0f;
+        World world=new World(shader);
+        Bunny bunny1=new Bunny();
+        Bunny bunny2=new Bunny();
+        bunny1.setWorldPos(new Vector3f(1f,1f,5f));
+        bunny2.setWorldPos(new Vector3f(3f,0f,2f));
+        world.addWorldPart(bunny1);
+        world.addWorldPart(bunny2);
         GL11.glMatrixMode(GL_PROJECTION);
         GL11.glEnable(GL_BLEND);
         while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE && shouldRun) {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
             GLFW.glfwPollEvents();
-            Matrix4f modelMat = new Matrix4f().scale(1f);
-            rot++;
-            modelMat.translation(0, -0.10f, distance);
-            modelMat.rotate((float) Math.toRadians(rot) * 1f, 0, 1, 0);
-            shader.bind();
-            shader.setUnifromMatrix("modelMatrix", modelMat);
             camera.handleKeys(window);
             camera.apply(shader);
-            GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINES);
-            model.render();
-            shader.unbind();
+            world.render();
             GLFW.glfwSwapBuffers(window);
-
         }
         GLFW.glfwDestroyWindow(window);
         System.exit(0);
