@@ -1,20 +1,21 @@
 package hu.laci200270.games.sbs3djumper.threading;
 
 import hu.laci200270.games.sbs3djumper.utils.Sync;
-import hu.laci200270.games.sbs3djumper.world.WorldPart;
 import hu.laci200270.games.sbs3djumper.world.World;
-
+import hu.laci200270.games.sbs3djumper.world.WorldPart;
 
 /**
- * Created by Laci on 2016. 02. 19..
+ * Created by diak on 2016.03.04..
  */
-public class AnimationThread extends Thread {
+public class WorldTickingThread extends Thread {
+
     World world;
     Sync sync = new Sync();
     Boolean canRun=true;
 
-    public AnimationThread(World world) {
-         this.world=world;
+
+    public WorldTickingThread(World world) {
+        this.world=world;
     }
 
     @Override
@@ -22,9 +23,9 @@ public class AnimationThread extends Thread {
         while (canRun) {
             for(WorldPart currentPart:world.getParts())
             {
-               currentPart.onAnimationTick();
+                currentPart.onWorldTick(world);
             }
-            sync.sync(60);
+            sync.sync(20);
 
         }
     }

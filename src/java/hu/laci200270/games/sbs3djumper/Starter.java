@@ -4,6 +4,8 @@ import hu.laci200270.games.sbs3djumper.models.IModel;
 import hu.laci200270.games.sbs3djumper.models.ModelLoaderRegistry;
 import hu.laci200270.games.sbs3djumper.models.ModelRegistry;
 import hu.laci200270.games.sbs3djumper.obj.ObjLoader;
+import hu.laci200270.games.sbs3djumper.threading.AnimationThread;
+import hu.laci200270.games.sbs3djumper.threading.WorldTickingThread;
 import hu.laci200270.games.sbs3djumper.world.Bunny;
 import hu.laci200270.games.sbs3djumper.world.World;
 import org.joml.Matrix4f;
@@ -64,6 +66,10 @@ public class Starter {
         bunny2.setWorldPos(new Vector3f(3f,0f,2f));
         world.addWorldPart(bunny1);
         world.addWorldPart(bunny2);
+        AnimationThread animationThread=new AnimationThread(world);
+        WorldTickingThread worldTickingThread=new WorldTickingThread(world);
+        animationThread.start();
+        worldTickingThread.start();
         GL11.glMatrixMode(GL_PROJECTION);
         GL11.glEnable(GL_BLEND);
         while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE && shouldRun) {
@@ -71,6 +77,7 @@ public class Starter {
             GLFW.glfwPollEvents();
             camera.handleKeys(window);
             camera.apply(shader);
+
             world.render();
             GLFW.glfwSwapBuffers(window);
         }
@@ -82,15 +89,15 @@ public class Starter {
 
         if (glfwInit() != GL_TRUE)
             throw new IllegalStateException("Unable to initialize GLFW");
-        glfwDefaultWindowHints(); // optional, the current window hints are already the default
-        glfwWindowHint(GLFW_VISIBLE, GL_TRUE); // the window will stay hidden after creation
-        glfwWindowHint(GLFW_RESIZABLE, GL_TRUE); // the window will be resizable
+        glfwDefaultWindowHints();
+        glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
+        glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
         int WIDTH = 700;
         int HEIGHT = 700;
         window = glfwCreateWindow(WIDTH, HEIGHT, "Hello World!", NULL, NULL);
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
-        ByteBuffer vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
         glfwMakeContextCurrent(window);
         glfwSwapInterval(1);
         glfwShowWindow(window);

@@ -12,8 +12,9 @@ public abstract class WorldPart {
 
     Vector3f pos=new Vector3f();
     AxisAngle4f rot=new AxisAngle4f();
-    Matrix4f modelMat=new Matrix4f();
     Vector3f scaling=new Vector3f();
+    Matrix4f modelMat=new Matrix4f();
+
     int uniqueId=-1;
     public int getUniqueId(){
         return uniqueId;
@@ -25,7 +26,9 @@ public abstract class WorldPart {
 
     public abstract void render(ShaderProgram shader);
 
-    public abstract void onAnimationTick();
+    public void onAnimationTick(){
+
+    }
 
     public abstract void onWorldTick(World world);
 

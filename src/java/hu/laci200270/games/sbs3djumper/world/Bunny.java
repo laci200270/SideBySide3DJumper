@@ -5,6 +5,7 @@ import com.sun.prism.ps.Shader;
 import hu.laci200270.games.sbs3djumper.ShaderProgram;
 import hu.laci200270.games.sbs3djumper.models.IModel;
 import hu.laci200270.games.sbs3djumper.models.ModelRegistry;
+import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
 
 
@@ -15,6 +16,7 @@ public class Bunny extends WorldPart {
 
     IModel bunnyModel=null;
     ShaderProgram shaderProgram=null;
+    float rot=0f;
     public Bunny(){
 
         bunnyModel= ModelRegistry.getModel("stanfordbunny.obj");
@@ -36,6 +38,8 @@ public class Bunny extends WorldPart {
 
     @Override
     public void onAnimationTick() {
+        rot+=0.2;
+        this.setRotation(new AxisAngle4f(rot,0,1,0));
 
     }
 

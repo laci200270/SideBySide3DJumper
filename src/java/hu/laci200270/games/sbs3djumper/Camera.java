@@ -27,6 +27,7 @@ public class Camera {
     private Vector3f up = new Vector3f(0, 1, 0);
     private float yaw;
     private float pitch;
+    private boolean canFly=false;
 
     GLFWCursorPosCallback cursorPosCallback=null;
 
@@ -69,6 +70,7 @@ public class Camera {
 
 
         viewMatrix = new Matrix4f();
+
         viewMatrix.rotate((float) Math.toRadians(pitch), 1.0f, 0.0f, 0.0f);
         viewMatrix.rotate((float) Math.toRadians(yaw), 0.0f, 1.0f, 0.0f);
         viewMatrix.translate(pos);
@@ -107,14 +109,16 @@ public class Camera {
     public void walkForward(float distance) {
         pos.x -= distance * (float) Math.sin(Math.toRadians(yaw));
         pos.z += distance * (float) Math.cos(Math.toRadians(yaw));
-        pos.y += distance * (float) Math.sin(Math.toRadians(pitch));
+        if(canFly)
+            pos.y += distance * (float) Math.sin(Math.toRadians(pitch));
     }
 
 
     public void walkBackwards(float distance) {
         pos.x += distance * (float) Math.sin(Math.toRadians(yaw));
         pos.z -= distance * (float) Math.cos(Math.toRadians(yaw));
-        pos.y -= distance * (float) Math.sin(Math.toRadians(pitch));
+        if(canFly)
+            pos.y -= distance * (float) Math.sin(Math.toRadians(pitch));
     }
 
 
