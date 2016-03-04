@@ -19,9 +19,9 @@ public class Bunny extends WorldPart {
     float rot=0f;
     public Bunny(){
 
-        bunnyModel= ModelRegistry.getModel("stanfordbunny.obj");
+        bunnyModel= ModelRegistry.getModel("ak.obj");
         setWorldPos(new Vector3f(0,-0.10f,-10));
-        setScaling(new Vector3f(1f));
+        setScaling(new Vector3f(0.25f));
 
 
     }

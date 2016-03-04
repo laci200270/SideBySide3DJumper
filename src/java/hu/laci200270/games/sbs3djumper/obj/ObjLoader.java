@@ -90,29 +90,36 @@ public class ObjLoader implements IModelLoader {
         System.out.println("Parsing");
         while (line != null) {
             String[] words = line.split(" ");
-            InstructionType instructionType = ObjInstruction.keySetInstructions.get(words[0]);
-            try {
-                switch (instructionType) {
-                    case VERTEX:
-                        vertexes.add(handleVertex(line));
-                        break;
-                    case FACE:
-                        faces.add(handleFace(line));
-                        break;
-                    case NORMAL:
-                        normals.add(handleNormal(line));
-                        break;
-                    case TEXTURE:
-                        textures.add(handleTexture(line));
+            if(line!="") {
+                InstructionType instructionType = ObjInstruction.keySetInstructions.get(words[0]);
+                try {
+                    if(instructionType!=null) {
+                        switch (instructionType) {
+                            case VERTEX:
+                                vertexes.add(handleVertex(line));
+                                break;
+                            case FACE:
+                                faces.add(handleFace(line));
+                                break;
+                            case NORMAL:
+                                normals.add(handleNormal(line));
+                                break;
+                            case TEXTURE:
+                                textures.add(handleTexture(line));
 
+                        }
+                    }
+
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                    System.out.println(words[0]);
                 }
-            } catch (NullPointerException e) {
-                System.out.println(words[0]);
+                ObjInstruction instruction = new ObjInstruction(instructionType);
+                for (int i = 1; i < words.length; i++) {
+                    instruction.addParam(words[i]);
+                }
             }
-            ObjInstruction instruction = new ObjInstruction(instructionType);
-            for (int i = 1; i < words.length; i++) {
-                instruction.addParam(words[i]);
-            }
+
             // instructions.add(instruction);
 
             line = fileReader.readLine();

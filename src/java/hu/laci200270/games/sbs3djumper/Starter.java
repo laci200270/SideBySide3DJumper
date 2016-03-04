@@ -47,14 +47,11 @@ public class Starter {
         ShaderProgram shader = null;
         try {
             shader = new ShaderProgram("object");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
             shader.link();
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         ModelLoaderRegistry.registerModelLoader(new ObjLoader());
         Camera camera = new Camera();
         camera.init(window);
@@ -62,16 +59,17 @@ public class Starter {
         World world=new World(shader);
         Bunny bunny1=new Bunny();
         Bunny bunny2=new Bunny();
-        bunny1.setWorldPos(new Vector3f(1f,1f,5f));
+        bunny1.setWorldPos(new Vector3f(1f,60f,-15f));
         bunny2.setWorldPos(new Vector3f(3f,0f,2f));
         world.addWorldPart(bunny1);
-        world.addWorldPart(bunny2);
-        AnimationThread animationThread=new AnimationThread(world);
-        WorldTickingThread worldTickingThread=new WorldTickingThread(world);
-        animationThread.start();
-        worldTickingThread.start();
+      //  world.addWorldPart(bunny2);
+       /* AnimationThread animationThread=new AnimationThread(world);
+        WorldTickingThread worldTickingThread=new WorldTickingThread(world);*/
+        /*animationThread.start();
+        worldTickingThread.start();*/
         GL11.glMatrixMode(GL_PROJECTION);
         GL11.glEnable(GL_BLEND);
+        System.out.println(GL20.glGetProgramInfoLog(shader.getProgramId()));
         while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE && shouldRun) {
             GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
             GLFW.glfwPollEvents();

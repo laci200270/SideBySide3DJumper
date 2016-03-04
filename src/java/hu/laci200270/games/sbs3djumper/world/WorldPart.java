@@ -85,4 +85,12 @@ public abstract class WorldPart {
         return scaling;
     }
 
+    public void regenModelMatrix(){
+        modelMat = new Matrix4f();
+        modelMat.translate(pos);
+        modelMat.rotate(rot);
+        modelMat.scale(scaling);
+
+    }
+
 }
