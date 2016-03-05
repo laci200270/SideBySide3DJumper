@@ -37,52 +37,36 @@ public abstract class WorldPart {
         return modelMat;
     }
 
-    public void setWorldPos(Vector3f pos){
+    public Vector3f getWorldPos() {
+        return pos;
+    }
 
-        if(!pos.equals(this.pos)) {
-            modelMat = new Matrix4f();
-            modelMat.translate(pos);
-            modelMat.rotate(rot);
-            modelMat.scale(scaling);
-        }
+    public void setWorldPos(Vector3f pos) {
 
         this.pos=pos;
+        regenModelMatrix();
 
-    }
-
-    public void setRotation(AxisAngle4f rotation){
-        if(!rotation.equals(this.rot)) {
-            modelMat = new Matrix4f();
-            modelMat.translate(pos);
-            modelMat.rotate(rotation);
-            modelMat.scale(scaling);
-        }
-
-        this.rot=rotation;
-    }
-
-    public Vector3f getWorldPos(){
-        return pos;
     }
 
     public AxisAngle4f getRotation(){
         return rot;
     }
 
-    public void setScaling(Vector3f scaling){
-        if(!this.scaling.equals(scaling)) {
-            modelMat = new Matrix4f();
-            modelMat.translate(pos);
-            modelMat.rotate(rot);
-            modelMat.scale(scaling);
+    public void setRotation(AxisAngle4f rotation) {
 
-        }
-
-        this.scaling=scaling;
+        this.rot = rotation;
+        regenModelMatrix();
     }
 
-    public Vector3f getScaling(){
+    public Vector3f getScaling() {
         return scaling;
+    }
+
+    public void setScaling(Vector3f scaling){
+
+
+        this.scaling=scaling;
+        regenModelMatrix();
     }
 
     public void regenModelMatrix(){

@@ -1,14 +1,9 @@
 package hu.laci200270.games.sbs3djumper;
 
-import hu.laci200270.games.sbs3djumper.models.IModel;
 import hu.laci200270.games.sbs3djumper.models.ModelLoaderRegistry;
-import hu.laci200270.games.sbs3djumper.models.ModelRegistry;
 import hu.laci200270.games.sbs3djumper.obj.ObjLoader;
-import hu.laci200270.games.sbs3djumper.threading.AnimationThread;
-import hu.laci200270.games.sbs3djumper.threading.WorldTickingThread;
 import hu.laci200270.games.sbs3djumper.world.Bunny;
 import hu.laci200270.games.sbs3djumper.world.World;
-import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
@@ -17,7 +12,6 @@ import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GLContext;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -59,15 +53,12 @@ public class Starter {
         World world=new World(shader);
         Bunny bunny1=new Bunny();
         Bunny bunny2=new Bunny();
-        bunny1.setWorldPos(new Vector3f(1f,60f,-15f));
-        bunny2.setWorldPos(new Vector3f(3f,0f,2f));
+        bunny1.setWorldPos(new Vector3f(1f, 0f, -2f));
+        //bunny1.setScaling(new Vector3f(0.001f));
         world.addWorldPart(bunny1);
-      //  world.addWorldPart(bunny2);
-       /* AnimationThread animationThread=new AnimationThread(world);
-        WorldTickingThread worldTickingThread=new WorldTickingThread(world);*/
-        /*animationThread.start();
-        worldTickingThread.start();*/
+
         GL11.glMatrixMode(GL_PROJECTION);
+
         GL11.glEnable(GL_BLEND);
         System.out.println(GL20.glGetProgramInfoLog(shader.getProgramId()));
         while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE && shouldRun) {
@@ -77,6 +68,7 @@ public class Starter {
             camera.apply(shader);
 
             world.render();
+
             GLFW.glfwSwapBuffers(window);
         }
         GLFW.glfwDestroyWindow(window);
