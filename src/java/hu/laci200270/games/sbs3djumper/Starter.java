@@ -5,6 +5,7 @@ import hu.laci200270.games.sbs3djumper.obj.ObjLoader;
 import hu.laci200270.games.sbs3djumper.threading.AnimationThread;
 import hu.laci200270.games.sbs3djumper.threading.WorldTickingThread;
 import hu.laci200270.games.sbs3djumper.world.Bunny;
+import hu.laci200270.games.sbs3djumper.world.Weapon;
 import hu.laci200270.games.sbs3djumper.world.World;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
@@ -54,20 +55,21 @@ public class Starter {
         GL11.glEnable(GL_DEPTH_TEST);
         World world=new World(shader);
         Bunny bunny1=new Bunny();
-        Bunny bunny2=new Bunny();
-        bunny1.setWorldPos(new Vector3f(1f, 0f, -2f));
+        Weapon ak = new Weapon(camera, "ak.obj", new Vector3f(0.0001f));
+        bunny1.setWorldPos(new Vector3f(0f, 0f, -2f));
         //bunny1.setScaling(new Vector3f(0.001f));
         world.addWorldPart(bunny1);
+        world.addWorldPart(ak);
         AnimationThread animationThread = new AnimationThread(world);
         WorldTickingThread worldTickingThread = new WorldTickingThread(world);
         animationThread.start();
         worldTickingThread.start();
         GL11.glMatrixMode(GL_PROJECTION);
-
+        GL11.glEnable(GL_CULL_FACE);
         GL11.glEnable(GL_BLEND);
         System.out.println(GL20.glGetProgramInfoLog(shader.getProgramId()));
         while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE && shouldRun) {
-            GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+            GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             GLFW.glfwPollEvents();
             camera.handleKeys(window);
             camera.apply(shader);

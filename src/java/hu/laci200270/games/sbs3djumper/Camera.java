@@ -9,7 +9,7 @@ import org.lwjgl.glfw.GLFWCursorPosCallback;
 /**
  * Created by Laci on 2016. 02. 06..
  */
-public class Camera {
+public class Camera implements Cloneable {
 
 
     public static final float maxHeadAngle = 30f;
@@ -22,14 +22,13 @@ public class Camera {
     float mouseMultiplier = 0.05f;
     Vector2f currentPosCursor = new Vector2f();
     Vector2f prevPosCursor = new Vector2f();
+    GLFWCursorPosCallback cursorPosCallback = null;
     private Matrix4f projectionMatrix;
     private Matrix4f viewMatrix;
     private Vector3f up = new Vector3f(0, 1, 0);
     private float yaw;
     private float pitch;
-    private boolean canFly=false;
-
-    GLFWCursorPosCallback cursorPosCallback=null;
+    private boolean canFly = true;
 
     public void init(long window) {
         pos = new Vector3f(0, 0, -1);
@@ -46,10 +45,6 @@ public class Camera {
         GLFW.glfwSetCursorPosCallback(window, cursorPosCallback);
 
 
-    }
-
-    public void setPos(Vector3f pos) {
-        this.pos = pos;
     }
 
     public void apply(ShaderProgram prog) {
@@ -105,14 +100,12 @@ public class Camera {
 
     }
 
-
     public void walkForward(float distance) {
         pos.x -= distance * (float) Math.sin(Math.toRadians(yaw));
         pos.z += distance * (float) Math.cos(Math.toRadians(yaw));
         if(canFly)
             pos.y += distance * (float) Math.sin(Math.toRadians(pitch));
     }
-
 
     public void walkBackwards(float distance) {
         pos.x += distance * (float) Math.sin(Math.toRadians(yaw));
@@ -121,16 +114,39 @@ public class Camera {
             pos.y -= distance * (float) Math.sin(Math.toRadians(pitch));
     }
 
-
     public void strafeLeft(float distance) {
         pos.x -= distance * (float) Math.sin(Math.toRadians(yaw - 90));
         pos.z += distance * (float) Math.cos(Math.toRadians(yaw - 90));
     }
 
-
     public void strafeRight(float distance) {
         pos.x -= distance * (float) Math.sin(Math.toRadians(yaw + 90));
         pos.z += distance * (float) Math.cos(Math.toRadians(yaw + 90));
+    }
+
+    public Vector3f getPos() {
+        return new Vector3f(pos);
+    }
+
+    public void setPos(Vector3f pos) {
+        this.pos = pos;
+    }
+
+    public float getPitch() {
+        return pitch;
+    }
+
+    public float getYaw() {
+        return yaw;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    public Matrix4f getViewMatrix() {
+        return new Matrix4f(viewMatrix);
     }
 }
 
