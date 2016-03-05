@@ -2,6 +2,8 @@ package hu.laci200270.games.sbs3djumper;
 
 import hu.laci200270.games.sbs3djumper.models.ModelLoaderRegistry;
 import hu.laci200270.games.sbs3djumper.obj.ObjLoader;
+import hu.laci200270.games.sbs3djumper.threading.AnimationThread;
+import hu.laci200270.games.sbs3djumper.threading.WorldTickingThread;
 import hu.laci200270.games.sbs3djumper.world.Bunny;
 import hu.laci200270.games.sbs3djumper.world.World;
 import org.joml.Vector3f;
@@ -56,7 +58,10 @@ public class Starter {
         bunny1.setWorldPos(new Vector3f(1f, 0f, -2f));
         //bunny1.setScaling(new Vector3f(0.001f));
         world.addWorldPart(bunny1);
-
+        AnimationThread animationThread = new AnimationThread(world);
+        WorldTickingThread worldTickingThread = new WorldTickingThread(world);
+        animationThread.start();
+        worldTickingThread.start();
         GL11.glMatrixMode(GL_PROJECTION);
 
         GL11.glEnable(GL_BLEND);
