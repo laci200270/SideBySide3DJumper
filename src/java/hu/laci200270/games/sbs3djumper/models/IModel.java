@@ -13,5 +13,6 @@ public interface IModel {
     public String getTextureName();
     public void setTextureName(String name);
     public void setTexture(Texture texture);
+    public void loadTexture();
 
 }
