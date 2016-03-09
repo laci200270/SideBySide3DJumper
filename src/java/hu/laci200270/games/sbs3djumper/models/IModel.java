@@ -10,8 +10,8 @@ import java.awt.image.BufferedImage;
 public interface IModel {
     public void render();
 
-    public BufferedImage getTexture();
-
+    public String getTextureName();
+    public void setTextureName(String name);
     public void setTexture(Texture texture);
 
 }

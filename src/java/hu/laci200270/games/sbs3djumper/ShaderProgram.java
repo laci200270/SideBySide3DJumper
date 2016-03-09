@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL20.*;
@@ -131,15 +132,21 @@ public class ShaderProgram {
 
     public int getUniformLocation(String uniformName) {
         bind();
-        return GL20.glGetUniformLocation(programId, uniformName);
+        if (!unformLocations.containsKey(uniformName))
+            unformLocations.put(uniformName, GL20.glGetUniformLocation(programId, uniformName));
+        return unformLocations.get(uniformName) ;
     }
 
     public void setUnifromMatrix(String name, Matrix4f value) {
         bind();
-        if (!unformLocations.containsKey(name))
-            unformLocations.put(name, getUniformLocation(name));
+
         FloatBuffer fb = BufferUtils.createFloatBuffer(16);
         value.get(fb);
-        glUniformMatrix4fv(unformLocations.get(name), false, fb);
+        glUniformMatrix4fv(getUniformLocation(name), false, fb);
     }
+
+    public void setUniformInteger(String name,int value){
+        GL20.glUniform1i(getUniformLocation(name),value);
+    }
+
 }

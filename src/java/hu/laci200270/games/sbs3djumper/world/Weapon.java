@@ -28,12 +28,12 @@ public class Weapon extends WorldPart {
 
         Matrix4f matrix = new Matrix4f().identity();
         matrix.scale(new Vector3f(0.000005f));
-        /*matrix.rotate((float) Math.toRadians(180), 0, 1, 0);
-        matrix.rotate((float) Math.toRadians(camera.getPitch()), 1.0f, 0.0f, 0.0f);*/
+        matrix.rotate((float) Math.toRadians(180), 0, 1, 0);
+
         matrix.rotate((float) Math.toRadians(camera.getYaw()), 0.0f, 1.0f, 0.0f);
         matrix.setTranslation(camera.getPos().mul(-1));
 
-        // matrix.setTranslation(camera.getPos().mul(-1f).add(-0.003f, -0.0004f, -0.03f));
+        matrix.setTranslation(camera.getPos().mul(-1f).add(-0.003f, -0.0004f, -0.03f));
         shader.setUnifromMatrix("modelMatrix", matrix);
         model.render();
         shader.unbind();

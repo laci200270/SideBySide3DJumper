@@ -1,157 +1,80 @@
 package hu.laci200270.games.sbs3djumper;
 
-import org.lwjgl.opengl.GL11;
-
-/**
- * Created by Laci on 2016. 02. 07..
+/***
+ *
+ * @author TheCherno
+ * @link https://github.com/TheCherno/Flappy/blob/master/src/com/thecherno/flappy/graphics/Texture.java
+ *
  */
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.stb.STBEasyFont;
+
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.IntBuffer;
+
+import javax.imageio.ImageIO;
+
+
+
+
+
+import static org.lwjgl.opengl.GL11.*;
+
 public class Texture {
-    /**
-     * The GL target type
-     */
-    private int target;
-    /**
-     * The GL texture ID
-     */
-    private int textureID;
-    /**
-     * The height of the image
-     */
-    private int height;
-    /**
-     * The width of the image
-     */
-    private int width;
-    /**
-     * The width of the texture
-     */
-    private int texWidth;
-    /**
-     * The height of the texture
-     */
-    private int texHeight;
-    /**
-     * The ratio of the width of the image to the texture
-     */
-    private float widthRatio;
-    /**
-     * The ratio of the height of the image to the texture
-     */
-    private float heightRatio;
 
-    /**
-     * Create a new texture
-     *
-     * @param target    The GL target
-     * @param textureID The GL texture ID
-     */
-    public Texture(int target, int textureID) {
-        this.target = target;
-        this.textureID = textureID;
+    private int width, height;
+    private int texture;
+
+    public Texture(String path) {
+        texture = load(path);
     }
 
-    /**
-     * Bind the specified GL context to a texture
-     * <p>
-     * The GL context to bind to
-     */
+    private int load(String path) {
+        int[] pixels = null;
+        try {
+            BufferedImage image = ImageIO.read(new FileInputStream(path));
+            width = image.getWidth();
+            height = image.getHeight();
+            pixels = new int[width * height];
+            image.getRGB(0, 0, width, height, pixels, 0, width);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        int[] data = new int[width * height];
+        for (int i = 0; i < width * height; i++) {
+            int a = (pixels[i] & 0xff000000) >> 24;
+            int r = (pixels[i] & 0xff0000) >> 16;
+            int g = (pixels[i] & 0xff00) >> 8;
+            int b = (pixels[i] & 0xff);
+
+            data[i] = a << 24 | b << 16 | g << 8 | r;
+        }
+
+        IntBuffer intBuffer= BufferUtils.createIntBuffer(data.length);
+        intBuffer.put(data);
+        intBuffer.flip();
+
+        int result = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, result);
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, intBuffer);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        return result;
+    }
+
     public void bind() {
-        GL11.glBindTexture(target, textureID);
+        glBindTexture(GL_TEXTURE_2D, texture);
     }
 
-    /**
-     * Get the height of the original image
-     *
-     * @return The height of the original image
-     */
-    public int getImageHeight() {
-        return height;
+    public void unbind() {
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    /**
-     * Get the width of the original image
-     *
-     * @return The width of the original image
-     */
-    public int getImageWidth() {
-        return width;
-    }
-
-    /**
-     * Get the height of the physical texture
-     *
-     * @return The height of physical texture
-     */
-    public float getHeight() {
-        return heightRatio;
-    }
-
-    /**
-     * Set the height of the image
-     *
-     * @param height The height of the image
-     */
-    public void setHeight(int height) {
-        this.height = height;
-        setHeight();
-    }
-
-    /**
-     * Get the width of the physical texture
-     *
-     * @return The width of physical texture
-     */
-    public float getWidth() {
-        return widthRatio;
-    }
-
-    /**
-     * Set the width of the image
-     *
-     * @param width The width of the image
-     */
-    public void setWidth(int width) {
-        this.width = width;
-        setWidth();
-    }
-
-    /**
-     * Set the height of this texture
-     *
-     * @param texHeight The height of the texture
-     */
-    public void setTextureHeight(int texHeight) {
-        this.texHeight = texHeight;
-        setHeight();
-    }
-
-    /**
-     * Set the width of this texture
-     *
-     * @param texWidth The width of the texture
-     */
-    public void setTextureWidth(int texWidth) {
-        this.texWidth = texWidth;
-        setWidth();
-    }
-
-    /**
-     * Set the height of the texture. This will update the
-     * ratio also.
-     */
-    private void setHeight() {
-        if (texHeight != 0) {
-            heightRatio = ((float) height) / texHeight;
-        }
-    }
-
-    /**
-     * Set the width of the texture. This will update the
-     * ratio also.
-     */
-    private void setWidth() {
-        if (texWidth != 0) {
-            widthRatio = ((float) width) / texWidth;
-        }
-    }
 }
+

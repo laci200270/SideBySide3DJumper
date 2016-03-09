@@ -20,19 +20,10 @@ import java.util.List;
  */
 public class ObjModel implements IModel {
 
-    int vertexBufferId = 0;
-
-    int indicesBufferId = 0;
-    int colorBufferId = 0;
     int numberOfVerts = 0;
-
-    int numberOfPoint = 0;
-
     int vertexSize = 3;
-
     int colorSize = 2;
 
-    int stride = (vertexSize + colorSize) * 4;
     int vboId = GL15.glGenBuffers();
     int colorVboId = GL15.glGenBuffers();
     int vaoId = GL30.glGenVertexArrays();
@@ -45,7 +36,7 @@ public class ObjModel implements IModel {
     private BufferedImage textureBuffImg;
     private int texId;
     private Texture texture;
-
+    private String texName;
 
 
     public ObjModel(ArrayList<Vector4f> vertexes, ArrayList<Face> faces, ArrayList<Vector3f> normals, ArrayList<Vector3f> textures, ArrayList<Vector3f> points, ArrayList<Vector3f> indices) {
@@ -56,6 +47,7 @@ public class ObjModel implements IModel {
 
         List<Float> verts = new ArrayList<>();
         List<Float> colors = new ArrayList<>();
+        List<Float> texCoords=new ArrayList<>();
         GL30.glBindVertexArray(vaoId);
         for (Face face : faces) {
             for (FacePoint fpoint : face.elements) {
@@ -66,6 +58,8 @@ public class ObjModel implements IModel {
                 colors.add(fpoint.color.x);
                 colors.add(fpoint.color.y);
                 colors.add(fpoint.color.z);
+                texCoords.add(fpoint.texture.x);
+                texCoords.add(fpoint.texture.y);
                 numberOfVerts++;
             }
         }
@@ -73,6 +67,7 @@ public class ObjModel implements IModel {
 
         FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(verts.size());
         FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(colors.size());
+        FloatBuffer texBuffer=BufferUtils.createFloatBuffer(texCoords.size());
 
         for (float f : verts) {
             verticesBuffer.put(f);
@@ -80,10 +75,13 @@ public class ObjModel implements IModel {
         for (float f : colors) {
             colorBuffer.put(f);
         }
+        for(float f: texCoords){
+            texBuffer.put(f);
+        }
 
         colorBuffer.flip();
         verticesBuffer.flip();
-
+        texBuffer.flip();
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboId);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
         GL20.glVertexAttribPointer(0, 4, GL11.GL_FLOAT, false, 0, 0);
@@ -112,11 +110,15 @@ public class ObjModel implements IModel {
     }
 
     @Override
-    public BufferedImage getTexture() {
-
-
-        return textureBuffImg;
+    public String getTextureName() {
+        return texName;
     }
+
+    @Override
+    public void setTextureName(String name) {
+        texName=name;
+    }
+
 
     @Override
     public void setTexture(Texture texture) {

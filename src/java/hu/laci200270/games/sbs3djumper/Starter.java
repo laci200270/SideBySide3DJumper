@@ -49,8 +49,10 @@ public class Starter {
             e.printStackTrace();
         }
 
+        shader.setUniformInteger("tex",1);
         ModelLoaderRegistry.registerModelLoader(new ObjLoader());
         Camera camera = new Camera();
+
         camera.init(window);
         GL11.glEnable(GL_DEPTH_TEST);
         World world=new World(shader);

@@ -76,7 +76,7 @@ public class ObjLoader implements IModelLoader {
         return new Vector4f(x, y, z, normal);
     }
 
-    public IModel loadModel(InputStream inputStream) throws IOException {
+    public IModel loadModel(InputStream inputStream, String location) throws IOException {
         this.fileReader = new BufferedReader(new InputStreamReader(inputStream));
         vertexes = new ArrayList<>();
         faces = new ArrayList<>();
@@ -126,8 +126,10 @@ public class ObjLoader implements IModelLoader {
 
         }
         fileReader.close();
+        IModel model= new ObjModel(vertexes, faces, normals, textures, points, indices);
 
-        return new ObjModel(vertexes, faces, normals, textures, points, indices);
+        model.setTextureName(location+".png");
+        return model ;
     }
 
     private Vector3f handleTexture(String line) {
@@ -148,7 +150,7 @@ public class ObjLoader implements IModelLoader {
 
     @Override
     public IModel loadModel(ResourceLocation loc) throws IOException {
-        return loadModel(loc.getInputStream());
+        return loadModel(loc.getInputStream(),loc.getFileNameWithoutExtension());
     }
 
     @Override
