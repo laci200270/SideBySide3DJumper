@@ -27,7 +27,7 @@ public class Weapon extends WorldPart {
         shader.bind();
 
         Matrix4f matrix = new Matrix4f().identity();
-        matrix.scale(new Vector3f(0.000005f));
+        //matrix.scale(new Vector3f(0.000005f));
         matrix.rotate((float) Math.toRadians(180), 0, 1, 0);
 
         matrix.rotate((float) Math.toRadians(camera.getYaw()), 0.0f, 1.0f, 0.0f);

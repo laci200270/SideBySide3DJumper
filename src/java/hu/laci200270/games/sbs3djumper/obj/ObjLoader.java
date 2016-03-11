@@ -128,7 +128,7 @@ public class ObjLoader implements IModelLoader {
         fileReader.close();
         IModel model= new ObjModel(vertexes, faces, normals, textures, points, indices);
 
-        model.setTextureName(location+".png");
+        //model.setTextureName(location+".png");
         return model ;
     }
 

@@ -8,6 +8,7 @@ package hu.laci200270.games.sbs3djumper;
  */
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -47,7 +48,7 @@ public class Texture {
             data[i] = a << 24 | b << 16 | g << 8 | r;
         }
 
-        IntBuffer intBuffer= BufferUtils.createIntBuffer(data.length);
+        IntBuffer intBuffer = BufferUtils.createIntBuffer(data.length);
         intBuffer.put(data);
         intBuffer.flip();
 
@@ -69,5 +70,9 @@ public class Texture {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        GL11.glDeleteTextures(texture);
+    }
 }
 

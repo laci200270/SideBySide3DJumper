@@ -5,14 +5,10 @@ import hu.laci200270.games.sbs3djumper.obj.ObjLoader;
 import hu.laci200270.games.sbs3djumper.threading.AnimationThread;
 import hu.laci200270.games.sbs3djumper.threading.WorldTickingThread;
 import hu.laci200270.games.sbs3djumper.world.Bunny;
-import hu.laci200270.games.sbs3djumper.world.Weapon;
 import hu.laci200270.games.sbs3djumper.world.World;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GLContext;
+import org.lwjgl.opengl.*;
 
 import java.io.IOException;
 
@@ -49,7 +45,7 @@ public class Starter {
             e.printStackTrace();
         }
 
-        shader.setUniformInteger("tex",1);
+        shader.setUniformInteger("tex", 0);
         ModelLoaderRegistry.registerModelLoader(new ObjLoader());
         Camera camera = new Camera();
 
@@ -57,11 +53,12 @@ public class Starter {
         GL11.glEnable(GL_DEPTH_TEST);
         World world=new World(shader);
         Bunny bunny1=new Bunny();
-        Weapon ak = new Weapon(camera, "ak.obj", new Vector3f(0.0001f));
+        //Weapon ak = new Weapon(camera, "eye.obj", new Vector3f(100f));
         bunny1.setWorldPos(new Vector3f(0f, 0f, -2f));
         //bunny1.setScaling(new Vector3f(0.001f));
         world.addWorldPart(bunny1);
-        world.addWorldPart(ak);
+        bunny1.setScaling(new Vector3f(50f));
+        //world.addWorldPart(ak);
         AnimationThread animationThread = new AnimationThread(world);
         WorldTickingThread worldTickingThread = new WorldTickingThread(world);
         animationThread.start();
@@ -69,6 +66,7 @@ public class Starter {
         GL11.glMatrixMode(GL_PROJECTION);
         GL11.glEnable(GL_CULL_FACE);
         GL11.glEnable(GL_BLEND);
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
         System.out.println(GL20.glGetProgramInfoLog(shader.getProgramId()));
         while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE && shouldRun) {
             GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -79,6 +77,7 @@ public class Starter {
             world.render();
 
             GLFW.glfwSwapBuffers(window);
+            lastFrame = 0;
         }
         GLFW.glfwDestroyWindow(window);
         System.exit(0);

@@ -1,5 +1,6 @@
 package hu.laci200270.games.sbs3djumper.obj;
 
+import hu.laci200270.games.sbs3djumper.ResourceLocation;
 import hu.laci200270.games.sbs3djumper.Texture;
 import hu.laci200270.games.sbs3djumper.models.IModel;
 import org.joml.Vector3f;
@@ -21,11 +22,10 @@ import java.util.List;
 public class ObjModel implements IModel {
 
     int numberOfVerts = 0;
-    int vertexSize = 3;
-    int colorSize = 2;
 
     int vboId = GL15.glGenBuffers();
     int colorVboId = GL15.glGenBuffers();
+    int texVboId = GL15.glGenBuffers();
     int vaoId = GL30.glGenVertexArrays();
     private ArrayList<Vector4f> vertexes = new ArrayList<>();
     private ArrayList<Face> faces = new ArrayList<>();
@@ -55,11 +55,13 @@ public class ObjModel implements IModel {
                 verts.add(fpoint.point.y);
                 verts.add(fpoint.point.z);
                 verts.add(fpoint.point.w);
-                colors.add(fpoint.color.x);
+               /* colors.add(fpoint.color.x);
                 colors.add(fpoint.color.y);
-                colors.add(fpoint.color.z);
-                texCoords.add(fpoint.texture.x);
-                texCoords.add(fpoint.texture.y);
+                colors.add(fpoint.color.z);*/
+                if (fpoint.texture != null) {
+                    texCoords.add(fpoint.texture.x);
+                    texCoords.add(fpoint.texture.y);
+                }
                 numberOfVerts++;
             }
         }
@@ -87,10 +89,16 @@ public class ObjModel implements IModel {
         GL20.glVertexAttribPointer(0, 4, GL11.GL_FLOAT, false, 0, 0);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, colorVboId);
+        /*GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, colorVboId);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colorBuffer, GL15.GL_STATIC_DRAW);
         GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);*/
+
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, texVboId);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, texBuffer, GL15.GL_STATIC_DRAW);
+        GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 0, 0);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
         GL30.glBindVertexArray(0);
 
 
@@ -100,12 +108,16 @@ public class ObjModel implements IModel {
 
 
         GL30.glBindVertexArray(vaoId);
+        if (this.texture != null)
+            texture.bind();
 
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(1);
+        //GL20.glEnableVertexAttribArray(2);
         GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, numberOfVerts);
         GL20.glDisableVertexAttribArray(0);
-
+        GL20.glDisableVertexAttribArray(1);
+        //GL20.glDisableVertexAttribArray(2);
         GL30.glBindVertexArray(0);
     }
 
@@ -126,8 +138,20 @@ public class ObjModel implements IModel {
     }
 
     @Override
-    protected void finalize() throws Throwable {
+    public void loadTexture() {
+        if (!this.texName.equals("")) {
+            if (new ResourceLocation(String.format("textures/%s.png", texName)).getInputStream() != null)
+                setTexture(new Texture(new ResourceLocation(String.format("textures/%s.png", texName))));
+        }
+    }
 
+    @Override
+    protected void finalize() throws Throwable {
+        GL30.glBindVertexArray(vaoId);
+        GL15.glDeleteBuffers(vboId);
+        GL15.glDeleteBuffers(colorVboId);
+        GL15.glDeleteBuffers(texVboId);
+        GL30.glDeleteVertexArrays(vaoId);
         super.finalize();
     }
 }

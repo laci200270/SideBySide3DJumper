@@ -18,6 +18,8 @@ public class ModelRegistry {
                 String ext = name.substring(name.lastIndexOf(".") + 1);
 
                 IModel model = ModelLoaderRegistry.getModel(new ResourceLocation(name), ext);
+                model.setTextureName(getFileNameWithoutExtension(name));
+                model.loadTexture();
                 modelHashMap.put(name, model);
             }
 
@@ -29,5 +31,21 @@ public class ModelRegistry {
         return null;
     }
 
+    private static String getExtension(String file) {
+        String returnable = "";
+        String[] sepWithDots = file.split(".");
+        returnable = sepWithDots[sepWithDots.length - 1];
+        return returnable;
+    }
+
+    private static String getFileNameWithoutExtension(String file) {
+        String returnable = "";
+        int lastDotPos = file.lastIndexOf(".");
+        for (int i = 0; i < lastDotPos; i++) {
+            returnable += file.charAt(i);
+
+        }
+        return returnable;
+    }
 
 }

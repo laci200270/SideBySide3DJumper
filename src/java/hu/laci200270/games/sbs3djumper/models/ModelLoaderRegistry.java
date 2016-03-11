@@ -3,13 +3,9 @@ package hu.laci200270.games.sbs3djumper.models;
 
 import hu.laci200270.games.sbs3djumper.ResourceLocation;
 import hu.laci200270.games.sbs3djumper.Texture;
-import hu.laci200270.games.sbs3djumper.utils.GLUtils;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
 
-import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,18 +41,6 @@ public class ModelLoaderRegistry {
 
 
 
-    public static Texture getTexture(IModel model) throws IOException {
-        Texture tex = textures.get(model);
 
-        if (tex != null) {
-            return tex;
-        }
-
-        tex = new Texture(model.getTextureName());
-
-        textures.put(model, tex);
-
-        return tex;
-    }
 
 }
