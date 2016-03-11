@@ -8,18 +8,11 @@ package hu.laci200270.games.sbs3djumper;
  */
 
 import org.lwjgl.BufferUtils;
-import org.lwjgl.stb.STBEasyFont;
-
-import java.awt.image.BufferedImage;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.IntBuffer;
 
 import javax.imageio.ImageIO;
-
-
-
-
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -28,14 +21,14 @@ public class Texture {
     private int width, height;
     private int texture;
 
-    public Texture(String path) {
+    public Texture(ResourceLocation path) {
         texture = load(path);
     }
 
-    private int load(String path) {
+    private int load(ResourceLocation path) {
         int[] pixels = null;
         try {
-            BufferedImage image = ImageIO.read(new FileInputStream(path));
+            BufferedImage image = ImageIO.read(path.inputStream);
             width = image.getWidth();
             height = image.getHeight();
             pixels = new int[width * height];
