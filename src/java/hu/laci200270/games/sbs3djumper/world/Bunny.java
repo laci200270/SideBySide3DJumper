@@ -37,7 +37,7 @@ public class Bunny extends WorldPart {
 
     @Override
     public void onAnimationTick() {
-        //rot+=0.15f;
+        rot+=0.01f;
         this.setRotation(new AxisAngle4f(rot,0,1,0));
         regenModelMatrix();
 

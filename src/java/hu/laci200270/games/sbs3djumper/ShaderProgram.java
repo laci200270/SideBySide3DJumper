@@ -1,6 +1,7 @@
 package hu.laci200270.games.sbs3djumper;
 
 import org.joml.Matrix4f;
+import org.joml.Vector3f;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL20;
 
@@ -147,6 +148,13 @@ public class ShaderProgram {
 
     public void setUniformInteger(String name,int value){
         GL20.glUniform1i(getUniformLocation(name),value);
+    }
+
+    public void setUniformVector3(String name,Vector3f value){
+        bind();
+        FloatBuffer fb=BufferUtils.createFloatBuffer(3);
+        value.get(fb);
+        glUniform3fv(getUniformLocation(name),fb);
     }
 
 }

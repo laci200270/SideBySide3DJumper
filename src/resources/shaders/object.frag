@@ -5,32 +5,29 @@ out vec4 fragColor;
 vec4 color;
 uniform sampler2D tex;
 uniform mat4 modelMatrix;
+in vec3 fragVert;
+uniform vec3 lightColour;
+
 in vec3 normalOut;
-
-uniform struct Light {
-   vec3 position;
-   vec3 intensities; //a.k.a the color of the light
-} light;
-
-
+in vec3 toLightVector;
 void main()
 {
     color = texture(tex, texOut);
     	if (color.w < 1.0)
     		discard;
      if(texOut==vec2(0,0))
-        fragColor=vec4(1,0,1,1);
+        fragColor=vec4(1);
        else
         fragColor=color;
 
-    mat3 normalMatrix = transpose(inverse(mat3(modelMatrix)));
-    vec3 normal = normalize(normalMatrix * normalOut);
-    vec3 fragPosition = vec3(modelMatrix * vec4(fragVert, 1));
-    vec3 surfaceToLight = light.position - fragPosition;
 
-    float brightness = dot(normal, surfaceToLight) / (length(surfaceToLight) * length(normal));
-    brightness = clamp(brightness, 0, 1);
+    vec3 normalVector=normalize(normalOut);
+    vec3 normalLightVector=normalize(toLightVector);
 
-   vec4 finalColor = vec4(brightness * light.intensities * color.rgb, color.a);
+    float dotOut=dot(normalLightVector,normalVector);
+    float brightness=max(dotOut,0)*2;
+    vec3 diffuse=brightness*lightColour;
+
+   vec4 finalColor = color*vec4(diffuse,1);
    fragColor=finalColor;
 }

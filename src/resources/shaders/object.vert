@@ -6,14 +6,16 @@ layout (location=2) in vec3 vertNormal;
 uniform mat4 projectionMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 modelMatrix;
-out vec4 passColor;
-out vec2 texOut;
+uniform vec3 lightPos;
+
 out vec3 normalOut;
-out vec3
+out vec3 toLightVector;
+out vec2 texOut;
 void main()
 {
-
-    gl_Position = projectionMatrix*viewMatrix*modelMatrix* pos;
-    normalOut=vertNormal;
+    vec4 worldPos=modelMatrix* pos;
+    gl_Position = projectionMatrix*viewMatrix*worldPos;
+    normalOut=(vec4(vertNormal,0)*modelMatrix).xyz;
     texOut=texIn;
+    toLightVector=-lightPos-worldPos.xyz;
 }

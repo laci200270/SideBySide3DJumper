@@ -26,6 +26,7 @@ public class ObjModel implements IModel {
     int vboId = GL15.glGenBuffers();
     int colorVboId = GL15.glGenBuffers();
     int texVboId = GL15.glGenBuffers();
+    int normalVboId = GL15.glGenBuffers();
     int vaoId = GL30.glGenVertexArrays();
     private ArrayList<Vector4f> vertexes = new ArrayList<>();
     private ArrayList<Face> faces = new ArrayList<>();
@@ -48,6 +49,7 @@ public class ObjModel implements IModel {
         List<Float> verts = new ArrayList<>();
         List<Float> colors = new ArrayList<>();
         List<Float> texCoords=new ArrayList<>();
+        List<Float> normalsArray=new ArrayList<>();
         GL30.glBindVertexArray(vaoId);
         for (Face face : faces) {
             for (FacePoint fpoint : face.elements) {
@@ -62,6 +64,16 @@ public class ObjModel implements IModel {
                     texCoords.add(fpoint.texture.x);
                     texCoords.add(fpoint.texture.y);
                 }
+               if(fpoint.normal!=null){
+                    normalsArray.add(fpoint.normal.x);
+                    normalsArray.add(fpoint.normal.y);
+                    normalsArray.add(fpoint.normal.z);
+                }
+                else{
+                    normalsArray.add(1f);
+                    normalsArray.add(1f);
+                    normalsArray.add(1f);
+                }
                 numberOfVerts++;
             }
         }
@@ -69,8 +81,8 @@ public class ObjModel implements IModel {
 
         FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(verts.size());
         FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(colors.size());
+        FloatBuffer normalBuffer=BufferUtils.createFloatBuffer(normalsArray.size());
         FloatBuffer texBuffer=BufferUtils.createFloatBuffer(texCoords.size());
-
         for (float f : verts) {
             verticesBuffer.put(f);
         }
@@ -80,23 +92,28 @@ public class ObjModel implements IModel {
         for(float f: texCoords){
             texBuffer.put(f);
         }
-
+        for(float f: normalsArray){
+            normalBuffer.put(f);
+        }
         colorBuffer.flip();
         verticesBuffer.flip();
         texBuffer.flip();
+        normalBuffer.flip();
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboId);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
         GL20.glVertexAttribPointer(0, 4, GL11.GL_FLOAT, false, 0, 0);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
-        /*GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, colorVboId);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colorBuffer, GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(1, 3, GL11.GL_FLOAT, false, 0, 0);
-        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);*/
+
 
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, texVboId);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, texBuffer, GL15.GL_STATIC_DRAW);
         GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 0, 0);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, normalVboId);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, normalBuffer, GL15.GL_STATIC_DRAW);
+        GL20.glVertexAttribPointer(2, 3, GL11.GL_FLOAT, false, 0, 0);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
         GL30.glBindVertexArray(0);
@@ -112,7 +129,7 @@ public class ObjModel implements IModel {
             texture.bind();
 
         GL20.glEnableVertexAttribArray(0);
-
+        GL20.glEnableVertexAttribArray(2);
         if(texture!=null)
          GL20.glEnableVertexAttribArray(1);
 
@@ -120,7 +137,7 @@ public class ObjModel implements IModel {
         GL20.glDisableVertexAttribArray(0);
         if(texture!=null)
          GL20.glDisableVertexAttribArray(1);
-        //GL20.glDisableVertexAttribArray(2);
+        GL20.glDisableVertexAttribArray(2);
         GL30.glBindVertexArray(0);
     }
 

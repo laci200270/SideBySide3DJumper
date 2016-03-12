@@ -65,18 +65,16 @@ public class Starter {
         World world=new World(shader);
         Bunny bunny1=new Bunny();
         //Weapon ak = new Weapon(camera, "eye.obj", new Vector3f(100f));
-        bunny1.setWorldPos(new Vector3f(0f, 0f, -2f));
-       // bunny1.setScaling(new Vector3f(10f));
-        bunny1.setScaling(new Vector3f(1f));
+        bunny1.setWorldPos(new Vector3f(0f, -0.5f, 0f));
+        bunny1.setScaling(new Vector3f(0.1f));
+        shader.setUniformVector3("lightColour", new Vector3f(.5f,0.25f,1f));
+        shader.setUniformVector3("lightPos",new Vector3f(0,0,-1));
         world.addWorldPart(bunny1);
-
-        //world.addWorldPart(ak);
         AnimationThread animationThread = new AnimationThread(world);
         WorldTickingThread worldTickingThread = new WorldTickingThread(world);
         animationThread.start();
         worldTickingThread.start();
         GL11.glMatrixMode(GL_PROJECTION);
-        //GL11.glEnable(GL_CULL_FACE);
         GL11.glEnable(GL_BLEND);
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK,GL11.GL_LINES);
