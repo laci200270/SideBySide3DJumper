@@ -7,7 +7,9 @@ import hu.laci200270.games.sbs3djumper.threading.WorldTickingThread;
 import hu.laci200270.games.sbs3djumper.world.Bunny;
 import hu.laci200270.games.sbs3djumper.world.World;
 import org.joml.Vector3f;
+import org.lwjgl.Sys;
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.*;
 
 import java.io.IOException;
@@ -31,7 +33,16 @@ public class Starter {
 
     public static void main(String[] args) throws IOException {
 
+
         System.setProperty("org.lwjgl.librarypath", Object.class.getResource("/natives/windows/").getFile());
+        GLFWErrorCallback errorCallback;
+        errorCallback=GLFWErrorCallback(new GLFWErrorCallback.SAM() {
+            @Override
+            public void invoke(int error, long description) {
+                System.out.println("E "+error+"D "+description);
+            }
+        });
+        glfwSetErrorCallback(errorCallback);
         init();
         GLContext.createFromCurrent();
         GL.createCapabilities(true);
@@ -55,27 +66,30 @@ public class Starter {
         Bunny bunny1=new Bunny();
         //Weapon ak = new Weapon(camera, "eye.obj", new Vector3f(100f));
         bunny1.setWorldPos(new Vector3f(0f, 0f, -2f));
-        //bunny1.setScaling(new Vector3f(0.001f));
+       // bunny1.setScaling(new Vector3f(10f));
+        bunny1.setScaling(new Vector3f(1f));
         world.addWorldPart(bunny1);
-        bunny1.setScaling(new Vector3f(50f));
+
         //world.addWorldPart(ak);
         AnimationThread animationThread = new AnimationThread(world);
         WorldTickingThread worldTickingThread = new WorldTickingThread(world);
         animationThread.start();
         worldTickingThread.start();
         GL11.glMatrixMode(GL_PROJECTION);
-        GL11.glEnable(GL_CULL_FACE);
+        //GL11.glEnable(GL_CULL_FACE);
         GL11.glEnable(GL_BLEND);
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
+        GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK,GL11.GL_LINES);
         System.out.println(GL20.glGetProgramInfoLog(shader.getProgramId()));
         while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE && shouldRun) {
             GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            GL11.glClearColor(0.2f,0f,1f,1);
             GLFW.glfwPollEvents();
             camera.handleKeys(window);
             camera.apply(shader);
 
             world.render();
-
+            //System.out.println("SwapBuffer"+GL11.glGetError());
             GLFW.glfwSwapBuffers(window);
             lastFrame = 0;
         }

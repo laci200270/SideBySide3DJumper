@@ -18,7 +18,7 @@ public class Bunny extends WorldPart {
     float rot=0f;
     public Bunny(){
 
-        bunnyModel = ModelRegistry.getModel("stanfordbunny.obj");
+        bunnyModel = ModelRegistry.getModel("eye.obj");
         setScaling(new Vector3f(1f));
 
 
@@ -37,7 +37,7 @@ public class Bunny extends WorldPart {
 
     @Override
     public void onAnimationTick() {
-        rot+=0.15f;
+        //rot+=0.15f;
         this.setRotation(new AxisAngle4f(rot,0,1,0));
         regenModelMatrix();
 

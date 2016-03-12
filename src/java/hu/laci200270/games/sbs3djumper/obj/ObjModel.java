@@ -112,11 +112,14 @@ public class ObjModel implements IModel {
             texture.bind();
 
         GL20.glEnableVertexAttribArray(0);
-        GL20.glEnableVertexAttribArray(1);
-        //GL20.glEnableVertexAttribArray(2);
+
+        if(texture!=null)
+         GL20.glEnableVertexAttribArray(1);
+
         GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, numberOfVerts);
         GL20.glDisableVertexAttribArray(0);
-        GL20.glDisableVertexAttribArray(1);
+        if(texture!=null)
+         GL20.glDisableVertexAttribArray(1);
         //GL20.glDisableVertexAttribArray(2);
         GL30.glBindVertexArray(0);
     }
