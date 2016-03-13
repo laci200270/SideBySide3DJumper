@@ -65,10 +65,10 @@ public class Starter {
         World world=new World(shader);
         Bunny bunny1=new Bunny();
         //Weapon ak = new Weapon(camera, "eye.obj", new Vector3f(100f));
-        bunny1.setWorldPos(new Vector3f(0f, -0.5f, 0f));
+        bunny1.setWorldPos(new Vector3f(-0f, -0.25f, -4f));
         bunny1.setScaling(new Vector3f(0.1f));
-        shader.setUniformVector3("lightColour", new Vector3f(.5f,0.25f,1f));
-        shader.setUniformVector3("lightPos",new Vector3f(0,0,-1));
+        shader.setUniformVector3("lightColour", new Vector3f(1f));
+        shader.setUniformVector3("lightPos",new Vector3f(.05f,1,-1));
         world.addWorldPart(bunny1);
         AnimationThread animationThread = new AnimationThread(world);
         WorldTickingThread worldTickingThread = new WorldTickingThread(world);
@@ -87,7 +87,7 @@ public class Starter {
             camera.apply(shader);
 
             world.render();
-            //System.out.println("SwapBuffer"+GL11.glGetError());
+
             GLFW.glfwSwapBuffers(window);
             lastFrame = 0;
         }
@@ -102,9 +102,9 @@ public class Starter {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
         glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
-        int WIDTH = 700;
-        int HEIGHT = 700;
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Hello World!", NULL, NULL);
+        int WIDTH = 1024;
+        int HEIGHT = 768;
+        window = glfwCreateWindow(WIDTH, HEIGHT, "Hello World!", glfwGetPrimaryMonitor(), NULL);
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
 

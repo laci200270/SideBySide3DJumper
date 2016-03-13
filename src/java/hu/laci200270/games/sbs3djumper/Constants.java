@@ -50,4 +50,5 @@ public class Constants {
     public static int vertexVecPos;
 
 
+    public static Texture errorTexture=new Texture(new ResourceLocation("textures/error.png"));
 }

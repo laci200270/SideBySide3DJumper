@@ -1,5 +1,6 @@
 package hu.laci200270.games.sbs3djumper.obj;
 
+import hu.laci200270.games.sbs3djumper.Constants;
 import hu.laci200270.games.sbs3djumper.ResourceLocation;
 import hu.laci200270.games.sbs3djumper.Texture;
 import hu.laci200270.games.sbs3djumper.models.IModel;
@@ -52,11 +53,16 @@ public class ObjModel implements IModel {
         List<Float> normalsArray=new ArrayList<>();
         GL30.glBindVertexArray(vaoId);
         for (Face face : faces) {
-            for (FacePoint fpoint : face.elements) {
+            for (int i=0;i<face.elements.size();i++) {
+                FacePoint fpoint=face.elements.get(i);
                 verts.add(fpoint.point.x);
                 verts.add(fpoint.point.y);
                 verts.add(fpoint.point.z);
                 verts.add(fpoint.point.w);
+
+                if(fpoint.normal==null)
+                    fpoint.normal=getNormal(face.elements.get(0).point,face.elements.get(1).point,face.elements.get(2).point);
+
                /* colors.add(fpoint.color.x);
                 colors.add(fpoint.color.y);
                 colors.add(fpoint.color.z);*/
@@ -64,16 +70,23 @@ public class ObjModel implements IModel {
                     texCoords.add(fpoint.texture.x);
                     texCoords.add(fpoint.texture.y);
                 }
-               if(fpoint.normal!=null){
+                else{
+                    if(i%2==0) {
+                        texCoords.add(0f);
+                        texCoords.add(1f);
+                    }
+                    else{
+                        texCoords.add(1f);
+                        texCoords.add(1f);
+                    }
+
+                }
+
                     normalsArray.add(fpoint.normal.x);
                     normalsArray.add(fpoint.normal.y);
                     normalsArray.add(fpoint.normal.z);
-                }
-                else{
-                    normalsArray.add(1f);
-                    normalsArray.add(1f);
-                    normalsArray.add(1f);
-                }
+
+
                 numberOfVerts++;
             }
         }
@@ -127,16 +140,19 @@ public class ObjModel implements IModel {
         GL30.glBindVertexArray(vaoId);
         if (this.texture != null)
             texture.bind();
+        else
+            Constants.errorTexture.bind();
 
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(2);
-        if(texture!=null)
+
          GL20.glEnableVertexAttribArray(1);
 
         GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, numberOfVerts);
         GL20.glDisableVertexAttribArray(0);
         if(texture!=null)
          GL20.glDisableVertexAttribArray(1);
+
         GL20.glDisableVertexAttribArray(2);
         GL30.glBindVertexArray(0);
     }
@@ -173,5 +189,23 @@ public class ObjModel implements IModel {
         GL15.glDeleteBuffers(texVboId);
         GL30.glDeleteVertexArrays(vaoId);
         super.finalize();
+    }
+
+    public Vector3f getNormal(Vector4f p1, Vector4f p2, Vector4f p3) {
+
+        //Create normal vector we are going to output.
+        Vector3f output = new Vector3f();
+
+        //Calculate vectors used for creating normal (these are the edges of the triangle).
+        Vector3f calU = new Vector3f(p2.x-p1.x, p2.y-p1.y, p2.z-p1.z);
+        Vector3f calV = new Vector3f(p3.x-p1.x, p3.y-p1.y, p3.z-p1.z);
+
+        //The output vector is equal to the cross products of the two edges of the triangle
+        output.x = calU.y*calV.z - calU.z*calV.y;
+        output.y = calU.z*calV.x - calU.x*calV.z;
+        output.z = calU.x*calV.y - calU.y*calV.x;
+
+        //Return the resulting vector.
+        return output.normalize();
     }
 }

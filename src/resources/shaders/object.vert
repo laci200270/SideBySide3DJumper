@@ -15,7 +15,7 @@ void main()
 {
     vec4 worldPos=modelMatrix* pos;
     gl_Position = projectionMatrix*viewMatrix*worldPos;
-    normalOut=(vec4(vertNormal,0)*modelMatrix).xyz;
+    normalOut=(modelMatrix*vec4(vertNormal,0)).xyz;
     texOut=texIn;
-    toLightVector=-lightPos-worldPos.xyz;
+    toLightVector=lightPos-worldPos.xyz;
 }

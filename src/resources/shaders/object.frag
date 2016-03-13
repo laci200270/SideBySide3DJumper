@@ -28,6 +28,6 @@ void main()
     float brightness=max(dotOut,0)*2;
     vec3 diffuse=brightness*lightColour;
 
-   vec4 finalColor = color*vec4(diffuse,1);
+   vec4 finalColor = vec4(diffuse,1)*color;
    fragColor=finalColor;
 }
