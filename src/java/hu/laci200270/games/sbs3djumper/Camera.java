@@ -51,7 +51,7 @@ public class Camera implements Cloneable {
     public void apply(ShaderProgram prog) {
 
 
-        float aspectRatio = ((float) 1024) /((float) 768);
+        float aspectRatio = ((float) Constants.width) /((float) Constants.height);
         projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(fov), aspectRatio,
                 Z_NEAR, Z_FAR);
 

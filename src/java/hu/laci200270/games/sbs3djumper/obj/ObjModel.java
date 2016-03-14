@@ -60,7 +60,7 @@ public class ObjModel implements IModel {
                 verts.add(fpoint.point.z);
                 verts.add(fpoint.point.w);
 
-                if(fpoint.normal==null)
+                //if(fpoint.normal==null)
                     fpoint.normal=getNormal(face.elements.get(0).point,face.elements.get(1).point,face.elements.get(2).point);
 
                /* colors.add(fpoint.color.x);

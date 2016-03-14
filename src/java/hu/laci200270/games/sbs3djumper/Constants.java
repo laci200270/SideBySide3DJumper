@@ -40,14 +40,8 @@ public class Constants {
     public static boolean useVBOs = true;
 
     public static boolean useShaders = true;
-
-    public static int viewMatPos;
-
-    public static int projMatPos;
-
-    public static int modelMatPos;
-
-    public static int vertexVecPos;
+    public static int width=640;
+    public static int height=480;
 
 
     public static Texture errorTexture=new Texture(new ResourceLocation("textures/error.png"));

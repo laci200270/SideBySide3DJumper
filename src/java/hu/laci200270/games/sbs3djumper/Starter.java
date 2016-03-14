@@ -102,9 +102,9 @@ public class Starter {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
         glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
-        int WIDTH = 1024;
-        int HEIGHT = 768;
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Hello World!", glfwGetPrimaryMonitor(), NULL);
+        int WIDTH = 640;
+        int HEIGHT = 480;
+        window = glfwCreateWindow(WIDTH, HEIGHT, "Hello World!", NULL, NULL);
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
 

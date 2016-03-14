@@ -1,5 +1,11 @@
 #version 330
 
+struct Light{
+    vec3 color;
+    vec4 location;
+    int type;
+    };
+#define MAXLIGHTS 256
 in vec2 texOut;
 out vec4 fragColor;
 vec4 color;
@@ -7,7 +13,8 @@ uniform sampler2D tex;
 uniform mat4 modelMatrix;
 in vec3 fragVert;
 uniform vec3 lightColour;
-
+uniform int lightCount;
+uniform Light lights[MAXLIGHTS];
 in vec3 normalOut;
 in vec3 toLightVector;
 void main()

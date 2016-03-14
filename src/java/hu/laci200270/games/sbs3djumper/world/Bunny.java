@@ -6,6 +6,7 @@ import hu.laci200270.games.sbs3djumper.models.IModel;
 import hu.laci200270.games.sbs3djumper.models.ModelRegistry;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
+import org.lwjgl.opengl.GL20;
 
 
 /**

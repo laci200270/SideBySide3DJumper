@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class World {
     List<WorldPart> parts = new ArrayList<>();
+    List<Light> lights=new ArrayList<>();
     ShaderProgram normalShader;
 
     public World(ShaderProgram shader) {
@@ -18,6 +19,7 @@ public class World {
 
     public void render() {
         for (WorldPart part : parts) {
+            normalShader.setUniformInteger("lightCount",lights.size());
             part.render(normalShader);
         }
     }

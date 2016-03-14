@@ -11,9 +11,13 @@ uniform vec3 lightPos;
 out vec3 normalOut;
 out vec3 toLightVector;
 out vec2 texOut;
+out vec4 worldOutPos;
+out vec3 outNormal;
 void main()
 {
+
     vec4 worldPos=modelMatrix* pos;
+
     gl_Position = projectionMatrix*viewMatrix*worldPos;
     normalOut=(modelMatrix*vec4(vertNormal,0)).xyz;
     texOut=texIn;
