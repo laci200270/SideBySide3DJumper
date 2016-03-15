@@ -20,6 +20,10 @@ public class World {
     public void render() {
         for (WorldPart part : parts) {
             normalShader.setUniformInteger("lightCount",lights.size());
+            for(int i=0;i<lights.size();i++){
+                normalShader.setUniformVector3("lights["+i+"].color",lights.get(i).color);
+                normalShader.setUniformVector3("lights["+i+"].location",lights.get(i).pos);
+            }
             part.render(normalShader);
         }
     }
@@ -36,6 +40,11 @@ public class World {
             parts.set(index,part);
     }
 
+
+    public void addLight(Light light){
+        if(light!=null)
+            lights.add(light);
+    }
 
 
 }

@@ -30,6 +30,7 @@ public class Camera implements Cloneable {
     private float yaw;
     private float pitch;
     private boolean canFly = true;
+    private long window;
 
     public void init(long window) {
         pos = new Vector3f(0, 0, -1);
@@ -44,13 +45,13 @@ public class Camera implements Cloneable {
             }
         };
         GLFW.glfwSetCursorPosCallback(window, cursorPosCallback);
-
+        this.window=window;
 
     }
 
     public void apply(ShaderProgram prog) {
 
-
+        GLFW.glfwSetWindowTitle(window,String.format("X %s Y %s Z%s",pos.x,pos.y,pos.z));
         float aspectRatio = ((float) Constants.width) /((float) Constants.height);
         projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(fov), aspectRatio,
                 Z_NEAR, Z_FAR);
