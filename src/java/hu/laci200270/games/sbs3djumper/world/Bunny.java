@@ -19,7 +19,7 @@ public class Bunny extends WorldPart {
     float rot=0f;
     public Bunny(){
 
-        bunnyModel = ModelRegistry.getModel("dragon.obj");
+        bunnyModel = ModelRegistry.getModel("eye.obj");
         setScaling(new Vector3f(1f));
 
 

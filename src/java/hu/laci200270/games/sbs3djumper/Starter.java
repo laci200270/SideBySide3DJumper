@@ -73,7 +73,7 @@ public class Starter {
         shader.setUniformVector3("lightColour", new Vector3f(1f));
         shader.setUniformVector3("lightPos",new Vector3f(.05f,1,-1));
         //world.addWorldPart(bunny1);
-        fillWorldWithRandom(world,100,20,10);
+        fillWorldWithRandom(world,1000,128,15);
         AnimationThread animationThread = new AnimationThread(world);
         WorldTickingThread worldTickingThread = new WorldTickingThread(world);
         animationThread.start();
