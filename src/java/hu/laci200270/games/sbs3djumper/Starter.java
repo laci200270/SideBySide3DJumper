@@ -73,7 +73,7 @@ public class Starter {
         shader.setUniformVector3("lightColour", new Vector3f(1f));
         shader.setUniformVector3("lightPos",new Vector3f(.05f,1,-1));
         //world.addWorldPart(bunny1);
-        fillWorldWithRandom(world,1000,128,15);
+        fillWorldWithRandom(world,1,8,1);
         AnimationThread animationThread = new AnimationThread(world);
         WorldTickingThread worldTickingThread = new WorldTickingThread(world);
         animationThread.start();
@@ -91,6 +91,8 @@ public class Starter {
             //GL11.glClearColor(0.2f,0f,1f,1);
             GLFW.glfwPollEvents();
             camera.handleKeys(window);
+            if(GLFW.glfwGetKey(window,GLFW_KEY_LEFT_CONTROL)==1)
+                animationThread.shouldRun=!animationThread.shouldRun;
             camera.apply(shader);
 
             world.render();
@@ -124,13 +126,18 @@ public class Starter {
         for (int i=0;i<bunnyCount;i++){
             Bunny bunny=new Bunny();
             bunny.setWorldPos(new Vector3f(Constants.random.nextFloat()*range,Constants.random.nextFloat()*range,Constants.random.nextFloat()*range));
-            bunny.setScaling(new Vector3f(0.1f));
+            bunny.setScaling(new Vector3f(0.001f));
             world.addWorldPart(bunny);
         }
         for (int i=0;i<lightCount;i++)
-            world.addLight(new Light(new Vector3f(Constants.random.nextFloat(),Constants.random.nextFloat(),Constants.random.nextFloat()),new Vector3f(Constants.random.nextFloat()*range,Constants.random.nextFloat()*range,Constants.random.nextFloat()*range)));
+            world.addLight(new Light(new Vector3f(Constants.random.nextFloat(),Constants.random.nextFloat(),Constants.random.nextFloat()),new Vector3f(Constants.random.nextFloat()*getRandomMultiplier(range),Constants.random.nextFloat()*getRandomMultiplier(range),Constants.random.nextFloat()*getRandomMultiplier(range))));
 
     }
 
+    public static int getRandomMultiplier(int range){
+        if(Constants.random.nextBoolean())
+            range=-range;
+        return range;
+    }
 
 }

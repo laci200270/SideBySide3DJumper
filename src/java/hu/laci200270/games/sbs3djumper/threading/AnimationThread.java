@@ -12,6 +12,7 @@ public class AnimationThread extends Thread {
     World world;
     Sync sync = new Sync();
     Boolean canRun=true;
+    public boolean shouldRun=true;
 
     public AnimationThread(World world) {
          this.world=world;
@@ -20,9 +21,12 @@ public class AnimationThread extends Thread {
     @Override
     public void run() {
         while (canRun) {
-            for(WorldPart currentPart:world.getParts())
+            if(shouldRun)
             {
-               currentPart.onAnimationTick();
+                for(WorldPart currentPart:world.getParts())
+                {
+                    currentPart.onAnimationTick();
+                }
             }
             sync.sync(60);
 
