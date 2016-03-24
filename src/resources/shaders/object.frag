@@ -38,8 +38,23 @@ void main()
         float brightness=max(dotOut,0);
         diffuse+=currentLight.color*brightness;
     }
-    diffuse=min(diffuse,1);
-
+    float multiplier=1;
+    if(diffuse.r>1){
+        float tempMultiplier=1/diffuse.r;
+        if(tempMultiplier<multiplier)
+            multiplier=tempMultiplier;
+    }
+    if(diffuse.g>1){
+            float tempMultiplier=1/diffuse.g;
+            if(tempMultiplier<multiplier)
+                multiplier=tempMultiplier;
+    }
+    if(diffuse.b>1){
+            float tempMultiplier=1/diffuse.b;
+            if(tempMultiplier<multiplier)
+                multiplier=tempMultiplier;
+    }
+    diffuse=diffuse*multiplier;
     color= color*vec4(diffuse,1);
 
 
