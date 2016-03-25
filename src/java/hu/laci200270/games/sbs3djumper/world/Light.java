@@ -9,11 +9,26 @@ public class Light {
 
     Vector3f color;
     Vector3f pos;
+    Float strenght;
+    EnumLightType type;
 
-    public Light(Vector3f color, Vector3f pos) {
+    public Light(Vector3f color, Vector3f pos, Float strenght,EnumLightType type) {
         this.color = color;
         this.pos = pos;
+        this.strenght = strenght;
+        this.type=type;
     }
+
+    public Light(Vector3f color, Vector3f pos) {
+        this(color, pos, 5f,EnumLightType.POINT);
+
+    }
+
+    public Light(Vector3f pos) {
+        this(new Vector3f(1),pos,1f,EnumLightType.POINT);
+
+    }
+
 
     public Vector3f getColor() {
         return color;

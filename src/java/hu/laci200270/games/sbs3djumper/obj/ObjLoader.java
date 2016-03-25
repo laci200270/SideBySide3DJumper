@@ -2,8 +2,7 @@ package hu.laci200270.games.sbs3djumper.obj;
 
 import hu.laci200270.games.sbs3djumper.Constants;
 import hu.laci200270.games.sbs3djumper.ResourceLocation;
-import hu.laci200270.games.sbs3djumper.models.IModel;
-import hu.laci200270.games.sbs3djumper.models.IModelLoader;
+import hu.laci200270.games.sbs3djumper.models.*;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
@@ -12,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Laci on 2016. 02. 06..
@@ -22,7 +22,7 @@ public class ObjLoader implements IModelLoader {
 
     private ArrayList<Vector4f> vertexes = new ArrayList<>();
 
-    private ArrayList<Face> faces = new ArrayList<>();
+    private List<Face> faces = new ArrayList<>();
 
     private ArrayList<Vector3f> normals = new ArrayList<>();
 
@@ -126,9 +126,8 @@ public class ObjLoader implements IModelLoader {
 
         }
         fileReader.close();
-        IModel model= new ObjModel(vertexes, faces, normals, textures, points, indices);
+        IModel model= new FaceModel(faces);
 
-        //model.setTextureName(location+".png");
         return model ;
     }
 

@@ -31,7 +31,9 @@ public class Camera implements Cloneable {
     private float pitch;
     private boolean canFly = true;
     private long window;
-
+    long lastMeasure;
+    int frames;
+    int prevFrames;
     public void init(long window) {
         pos = new Vector3f(0, 0, -1);
         rot = new Vector3f(0, 0, 0);
@@ -50,8 +52,14 @@ public class Camera implements Cloneable {
     }
 
     public void apply(ShaderProgram prog) {
+        frames++;
+        if(System.nanoTime()>lastMeasure+1000000000){
+            lastMeasure=System.nanoTime();
+            prevFrames=frames;
+            frames=0;
+        }
 
-        GLFW.glfwSetWindowTitle(window,String.format("X %s Y %s Z%s",pos.x,pos.y,pos.z));
+        GLFW.glfwSetWindowTitle(window,String.format("X %s Y %s Z%s; %s FPS",pos.x,pos.y,pos.z,prevFrames));
         float aspectRatio = ((float) Constants.width) /((float) Constants.height);
         projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(fov), aspectRatio,
                 Z_NEAR, Z_FAR);
@@ -71,6 +79,7 @@ public class Camera implements Cloneable {
         viewMatrix.rotate((float) Math.toRadians(pitch), 1.0f, 0.0f, 0.0f);
         viewMatrix.rotate((float) Math.toRadians(yaw), 0.0f, 1.0f, 0.0f);
         viewMatrix.translate(pos);
+
 
 
         prog.setUnifromMatrix("projectionMatrix", projectionMatrix);
@@ -149,7 +158,10 @@ public class Camera implements Cloneable {
 
     public Matrix4f getViewMatrix() {
         return new Matrix4f(viewMatrix);
+
     }
+
+
 }
 
 

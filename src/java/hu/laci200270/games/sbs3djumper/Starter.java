@@ -1,20 +1,19 @@
 package hu.laci200270.games.sbs3djumper;
 
-import com.sun.xml.internal.bind.v2.runtime.reflect.opt.Const;
 import hu.laci200270.games.sbs3djumper.models.ModelLoaderRegistry;
+import hu.laci200270.games.sbs3djumper.models.Terrain;
 import hu.laci200270.games.sbs3djumper.obj.ObjLoader;
 import hu.laci200270.games.sbs3djumper.threading.AnimationThread;
 import hu.laci200270.games.sbs3djumper.threading.WorldTickingThread;
 import hu.laci200270.games.sbs3djumper.world.Bunny;
 import hu.laci200270.games.sbs3djumper.world.Light;
+import hu.laci200270.games.sbs3djumper.world.TerrainWorldObject;
 import hu.laci200270.games.sbs3djumper.world.World;
 import org.joml.Vector3f;
-import org.lwjgl.Sys;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.*;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -73,7 +72,8 @@ public class Starter {
         shader.setUniformVector3("lightColour", new Vector3f(1f));
         shader.setUniformVector3("lightPos",new Vector3f(.05f,1,-1));
         //world.addWorldPart(bunny1);
-        fillWorldWithRandom(world,1,8,1);
+        fillWorldWithRandom(world,0,32,10);
+        world.addWorldPart(new TerrainWorldObject("szany"));
         AnimationThread animationThread = new AnimationThread(world);
         WorldTickingThread worldTickingThread = new WorldTickingThread(world);
         animationThread.start();
@@ -81,9 +81,11 @@ public class Starter {
 
         GL11.glMatrixMode(GL_PROJECTION);
         GL11.glEnable(GL_BLEND);
+
         GL11.glEnable(GL_CULL_FACE);
         GL11.glCullFace(GL11.GL_FRONT_FACE);
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
+
         //GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK,GL11.GL_LINES);
         System.out.println(GL20.glGetProgramInfoLog(shader.getProgramId()));
         while (GLFW.glfwWindowShouldClose(window) == GL11.GL_FALSE && shouldRun) {
@@ -111,14 +113,13 @@ public class Starter {
         glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
         glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
-        int WIDTH = 640;
-        int HEIGHT = 480;
-        window = glfwCreateWindow(WIDTH, HEIGHT, "Hello World!", NULL, NULL);
+
+        window = glfwCreateWindow(640, 480, "Hello World!", NULL, NULL);
         if (window == NULL)
             throw new RuntimeException("Failed to create the GLFW window");
 
         glfwMakeContextCurrent(window);
-        glfwSwapInterval(1);
+        glfwSwapInterval(0);
         glfwShowWindow(window);
     }
 
@@ -126,7 +127,7 @@ public class Starter {
         for (int i=0;i<bunnyCount;i++){
             Bunny bunny=new Bunny();
             bunny.setWorldPos(new Vector3f(Constants.random.nextFloat()*range,Constants.random.nextFloat()*range,Constants.random.nextFloat()*range));
-            bunny.setScaling(new Vector3f(0.001f));
+            bunny.setScaling(new Vector3f(Constants.random.nextFloat(),Constants.random.nextFloat(),Constants.random.nextFloat()));
             world.addWorldPart(bunny);
         }
         for (int i=0;i<lightCount;i++)
@@ -139,5 +140,6 @@ public class Starter {
             range=-range;
         return range;
     }
+
 
 }

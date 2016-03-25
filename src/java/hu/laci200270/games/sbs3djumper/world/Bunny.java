@@ -15,11 +15,11 @@ import org.lwjgl.opengl.GL20;
 public class Bunny extends WorldPart {
 
     IModel bunnyModel=null;
-    ShaderProgram shaderProgram=null;
+
     float rot=0f;
     public Bunny(){
 
-        bunnyModel = ModelRegistry.getModel("iphone.obj");
+        bunnyModel = ModelRegistry.getModel("eye.obj");
         setScaling(new Vector3f(1f));
 
 

@@ -3,6 +3,7 @@ package hu.laci200270.games.sbs3djumper.world;
 import hu.laci200270.games.sbs3djumper.ShaderProgram;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -12,19 +13,28 @@ public class World {
     List<WorldPart> parts = new ArrayList<>();
     List<Light> lights=new ArrayList<>();
     ShaderProgram normalShader;
+    private boolean lighChaned;
 
     public World(ShaderProgram shader) {
         normalShader=shader;
     }
 
     public void render() {
-        for (WorldPart part : parts) {
+
+            for (WorldPart part : parts) {
             normalShader.setUniformInteger("lightCount",lights.size());
-            for(int i=0;i<lights.size();i++){
-                normalShader.setUniformVector3("lights["+i+"].color",lights.get(i).color);
-                normalShader.setUniformVector3("lights["+i+"].location",lights.get(i).pos);
-            }
+                if(lighChaned){
+                    lighChaned=false;
+                     for(int i=0;i<lights.size();i++){
+                         normalShader.setUniformVector3("lights["+i+"].color",lights.get(i).color);
+                         normalShader.setUniformVector3("lights["+i+"].location",lights.get(i).pos);
+                         normalShader.setUniformInteger("lights[" + i + "].type", Arrays.asList(EnumLightType.values()).indexOf(lights.get(i)));
+                         normalShader.setUniformFloat("lights["+i+"].strenght",lights.get(i).strenght);
+                }
+                }
             part.render(normalShader);
+
+
         }
     }
 
@@ -42,6 +52,7 @@ public class World {
 
 
     public void addLight(Light light){
+        lighChaned=true;
         if(light!=null)
             lights.add(light);
     }

@@ -3,9 +3,10 @@
 struct Light{
     vec3 color;
     vec3 location;
+    float strenght;
     int type;
     };
-#define MAXLIGHTS 128
+#define MAXLIGHTS 64
 in vec2 texOut;
 out vec4 fragColor;
 vec4 color;
@@ -15,48 +16,61 @@ in vec3 fragVert;
 
 uniform int lightCount=0;
 uniform Light lights[MAXLIGHTS];
-uniform Light lights2[MAXLIGHTS];
+uniform Light[MAXLIGHTS] array;
+uniform Light[MAXLIGHTS] array2;
+uniform Light[MAXLIGHTS] array3;
+
 in vec4 worldOutPos;
 in vec3 outNormal;
+
+vec3 hdr(vec3 input){
+    float multiplier=1;
+        if(input.r>1){
+            float tempMultiplier=1/input.r;
+            if(tempMultiplier<multiplier)
+                multiplier=tempMultiplier;
+        }
+        if(input.g>1){
+                float tempMultiplier=1/input.g;
+                if(tempMultiplier<multiplier)
+                    multiplier=tempMultiplier;
+        }
+        if(input.b>1){
+                float tempMultiplier=1/input.b;
+                if(tempMultiplier<multiplier)
+                    multiplier=tempMultiplier;
+        }
+       return input*multiplier;
+}
+
 void main()
 {
     color = texture(tex, texOut);
     	if (color.w < 1.0)
     		discard;
-     if(texOut==vec2(0,0))
-        fragColor=vec4(1);
-       else
-        fragColor=color;
+
     vec3 diffuse=vec3(0);
     for(int i=0;i<lightCount;i++){
         Light currentLight=lights[i];
-        vec3 normalOut=(modelMatrix*vec4(outNormal,0)).xyz;
-        vec3 toLightVector=currentLight.location-worldOutPos.xyz;
-        vec3 normalVector=normalize(normalOut);
-        vec3 normalLightVector=normalize(toLightVector);
-        float dotOut=dot(normalLightVector,normalVector);
-        float brightness=max(dotOut,0);
-        diffuse+=currentLight.color*brightness;
+        float dist=distance(vec4(currentLight.location,1),worldOutPos);
+        if(dist<currentLight.strenght){
+            vec3 normalOut=(modelMatrix*vec4(outNormal,0)).xyz;
+            vec3 toLightVector=currentLight.location-worldOutPos.xyz;
+            vec3 normalVector=normalize(normalOut);
+            vec3 normalLightVector=normalize(toLightVector);
+            float dotOut=dot(normalLightVector,normalVector);
+            float brightness=max(dotOut,0);
+            float strMult=1/(dist/currentLight.strenght);
+
+            diffuse+=currentLight.color*brightness*strMult;
+        }
     }
     float multiplier=1;
-    if(diffuse.r>1){
-        float tempMultiplier=1/diffuse.r;
-        if(tempMultiplier<multiplier)
-            multiplier=tempMultiplier;
-    }
-    if(diffuse.g>1){
-            float tempMultiplier=1/diffuse.g;
-            if(tempMultiplier<multiplier)
-                multiplier=tempMultiplier;
-    }
-    if(diffuse.b>1){
-            float tempMultiplier=1/diffuse.b;
-            if(tempMultiplier<multiplier)
-                multiplier=tempMultiplier;
-    }
-    diffuse=diffuse*multiplier;
+
+    diffuse=hdr(diffuse);
     color= color*vec4(diffuse,1);
 
 
     fragColor=color;
 }
+

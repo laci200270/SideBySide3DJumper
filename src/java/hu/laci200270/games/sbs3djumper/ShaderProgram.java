@@ -157,4 +157,8 @@ public class ShaderProgram {
         glUniform3fv(getUniformLocation(name),fb);
     }
 
+    public void setUniformFloat(String name, Float value) {
+        bind();
+        glUniform1f(getUniformLocation(name),value);
+    }
 }
