@@ -1,5 +1,7 @@
 package hu.laci200270.games.sbs3djumper;
 
+import hu.laci200270.games.sbs3djumper.renderer.ITitleInfoProvider;
+import hu.laci200270.games.sbs3djumper.renderer.MainRenderManager;
 import org.joml.AxisAngle4d;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -10,16 +12,16 @@ import org.lwjgl.glfw.GLFWCursorPosCallback;
 /**
  * Created by Laci on 2016. 02. 06..
  */
-public class Camera implements Cloneable {
+public class Camera implements ITitleInfoProvider {
 
 
     public static final float maxHeadAngle = 30f;
     private static final float Z_NEAR = 0.01f;
-    private static final float Z_FAR = 1000.f;
+    private static final float Z_FAR = 1000000.f;
     public float fov = 60f;
     Vector3f pos;
     Vector3f rot;
-    float movementMultipplier = 0.05f;
+    float movementMultipplier = 500f;
     float mouseMultiplier = 0.05f;
     Vector2f currentPosCursor = new Vector2f();
     Vector2f prevPosCursor = new Vector2f();
@@ -51,7 +53,7 @@ public class Camera implements Cloneable {
 
     }
 
-    public void apply(ShaderProgram prog) {
+    public void apply(MainRenderManager manager) {
         frames++;
         if(System.nanoTime()>lastMeasure+1000000000){
             lastMeasure=System.nanoTime();
@@ -59,8 +61,7 @@ public class Camera implements Cloneable {
             frames=0;
         }
 
-        GLFW.glfwSetWindowTitle(window,String.format("X %s Y %s Z%s; %s FPS",pos.x,pos.y,pos.z,prevFrames));
-        float aspectRatio = ((float) Constants.width) /((float) Constants.height);
+        float aspectRatio = (manager.getResolution().x/manager.getResolution().y);
         projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(fov), aspectRatio,
                 Z_NEAR, Z_FAR);
 
@@ -82,8 +83,8 @@ public class Camera implements Cloneable {
 
 
 
-        prog.setUnifromMatrix("projectionMatrix", projectionMatrix);
-        prog.setUnifromMatrix("viewMatrix", viewMatrix);
+        manager.getMainShader().setUnifromMatrix("projectionMatrix", projectionMatrix);
+        manager.getMainShader().setUnifromMatrix("viewMatrix", viewMatrix);
         prevPosCursor = currentPosCursor;
 
     }
@@ -162,6 +163,11 @@ public class Camera implements Cloneable {
     }
 
 
+    @Override
+    public String[] getInfo() {
+        String[] info={String.format("X: %s",pos.x),String.format("Y: %s",pos.y),String.format("Z: %s",pos.z),String.format("Yaw: %s",yaw),String.format("Pitch: %s",pitch),String.format("Fov: %s",fov)};
+        return info;
+    }
 }
 
 

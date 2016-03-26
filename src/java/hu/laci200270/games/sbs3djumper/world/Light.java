@@ -20,7 +20,7 @@ public class Light {
     }
 
     public Light(Vector3f color, Vector3f pos) {
-        this(color, pos, 5f,EnumLightType.POINT);
+        this(color, pos, 50000f,EnumLightType.POINT);
 
     }
 

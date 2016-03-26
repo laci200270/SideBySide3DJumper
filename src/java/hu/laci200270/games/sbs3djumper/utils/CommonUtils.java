@@ -3,7 +3,12 @@ package hu.laci200270.games.sbs3djumper.utils;
 import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import hu.laci200270.games.sbs3djumper.Constants;
+import hu.laci200270.games.sbs3djumper.world.Bunny;
+import hu.laci200270.games.sbs3djumper.world.EnumLightType;
+import hu.laci200270.games.sbs3djumper.world.Light;
+import hu.laci200270.games.sbs3djumper.world.World;
 import net.lingala.zip4j.exception.ZipException;
+import org.joml.Vector3f;
 
 import java.io.IOException;
 
@@ -38,6 +43,22 @@ public class CommonUtils {
         }
     }
 
+    public static void fillWorldWithRandom(World world,int bunnyCount,int lightCount,int range){
+        for (int i=0;i<bunnyCount;i++){
+            Bunny bunny=new Bunny();
+            bunny.setWorldPos(new Vector3f(Constants.random.nextFloat()*range,Constants.random.nextFloat()*range,Constants.random.nextFloat()*range));
+            bunny.setScaling(new Vector3f(Constants.random.nextFloat(),Constants.random.nextFloat(),Constants.random.nextFloat()));
+            world.addWorldPart(bunny);
+        }
+        for (int i=0;i<lightCount;i++)
+            world.addLight(new Light(new Vector3f(Constants.random.nextFloat(),Constants.random.nextFloat(),Constants.random.nextFloat()),new Vector3f(Constants.random.nextFloat()*getRandomMultiplier(range),Constants.random.nextFloat()*getRandomMultiplier(range),Constants.random.nextFloat()*getRandomMultiplier(range)),Float.MAX_VALUE, EnumLightType.POINT));
 
+    }
+
+    public static int getRandomMultiplier(int range){
+        if(Constants.random.nextBoolean())
+            range=-range;
+        return range;
+    }
 
 }

@@ -29,19 +29,21 @@ public class Terrain extends AbstractModel{
     float minY,maxY;
     private static final int MAX_COLOUR = 255 * 255 * 255;
 
-    private static final float STARTX = -0.5f;
+    private static final float STARTX = -5f;
 
-    private static final float STARTZ = -0.5f;
+    private static final float STARTZ = -5f;
     public Terrain(String name,float minY,float maxY, int textInc){
         List<Face> faceList=new ArrayList<>();
 
-
+            this.maxY=maxY;
+            this.minY=minY;
         BufferedImage buffImage = null;
         try {
             buffImage = ImageIO.read(new ResourceLocation(String.format("heightmaps/%s.png", name)).getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("Loading image done.");
         int height = buffImage.getHeight();
         int width = buffImage.getWidth();
 
@@ -53,14 +55,14 @@ public class Terrain extends AbstractModel{
         List<Float> positions = new ArrayList();
         List<Float> textCoords = new ArrayList();
         List<Integer> indices = new ArrayList();
-
+        System.out.println("Constructing positons");
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 // Create vertex for current position
                 positions.add(STARTX + col * incx); // x
                 positions.add(getHeight(col, row, buffImage)); //y
                 positions.add(STARTZ + row * incz); //z
-
+                positions.add(1f);
                 // Set texture coordinates
                 textCoords.add((float) textInc * (float) col / (float) width);
                 textCoords.add((float) textInc * (float) row / (float) height);
@@ -82,6 +84,7 @@ public class Terrain extends AbstractModel{
                 }
             }
         }
+        System.out.println("Constructiong positions done.");
         float[] posArr = new float[positions.size()];
         for (int i = 0; i < positions.size() ; i++) {
             posArr[i]=positions.get(i);
@@ -93,7 +96,7 @@ public class Terrain extends AbstractModel{
         }
         float[] normalsArr = calcNormals(posArr, width, height);
 
-        model=new PrimitiveModel(posArr,indicesArr,texcoordarray,normalsArr, new ResourceLocation("textures/eye.png"));
+        model=new PrimitiveModel(posArr,indicesArr,texcoordarray,normalsArr, new ResourceLocation("textures/terrain.png"));
 
 
     }

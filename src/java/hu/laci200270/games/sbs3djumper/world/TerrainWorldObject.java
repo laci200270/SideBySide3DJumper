@@ -11,7 +11,7 @@ public class TerrainWorldObject extends WorldPart {
     private final IModel model;
 
     public TerrainWorldObject(String name){
-        this.model=new Terrain("szany",0,50,1);
+        this.model=new Terrain(name,0,1f,1);
     }
 
     @Override

@@ -23,4 +23,5 @@ void main()
     worldOutPos=modelMatrix*pos;
     texOut=texIn;
     toLightVector=lightPos-worldPos.xyz;
+
 }

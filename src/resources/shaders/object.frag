@@ -53,22 +53,22 @@ void main()
     for(int i=0;i<lightCount;i++){
         Light currentLight=lights[i];
         float dist=distance(vec4(currentLight.location,1),worldOutPos);
-        if(dist<currentLight.strenght){
+        //if(dist<currentLight.strenght){
             vec3 normalOut=(modelMatrix*vec4(outNormal,0)).xyz;
             vec3 toLightVector=currentLight.location-worldOutPos.xyz;
             vec3 normalVector=normalize(normalOut);
             vec3 normalLightVector=normalize(toLightVector);
             float dotOut=dot(normalLightVector,normalVector);
             float brightness=max(dotOut,0);
-            float strMult=1/(dist/currentLight.strenght);
+           // float strMult=1/(dist/currentLight.strenght);
 
-            diffuse+=currentLight.color*brightness*strMult;
+            diffuse+=currentLight.color*brightness/**strMult*/;
         }
-    }
+
     float multiplier=1;
 
-    diffuse=hdr(diffuse);
-    color= color*vec4(diffuse,1);
+   // diffuse=hdr(diffuse);
+    //color=color*vec4(diffuse,1);
 
 
     fragColor=color;

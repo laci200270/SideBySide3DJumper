@@ -13,7 +13,7 @@ public class World {
     List<WorldPart> parts = new ArrayList<>();
     List<Light> lights=new ArrayList<>();
     ShaderProgram normalShader;
-    private boolean lighChaned;
+    private boolean lighChanged =true;
 
     public World(ShaderProgram shader) {
         normalShader=shader;
@@ -23,8 +23,8 @@ public class World {
 
             for (WorldPart part : parts) {
             normalShader.setUniformInteger("lightCount",lights.size());
-                if(lighChaned){
-                    lighChaned=false;
+                if(lighChanged){
+                    lighChanged =false;
                      for(int i=0;i<lights.size();i++){
                          normalShader.setUniformVector3("lights["+i+"].color",lights.get(i).color);
                          normalShader.setUniformVector3("lights["+i+"].location",lights.get(i).pos);
@@ -52,7 +52,7 @@ public class World {
 
 
     public void addLight(Light light){
-        lighChaned=true;
+        lighChanged =true;
         if(light!=null)
             lights.add(light);
     }

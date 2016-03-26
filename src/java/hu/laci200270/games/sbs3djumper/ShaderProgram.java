@@ -34,13 +34,18 @@ public class ShaderProgram {
         link();
     }
 
-    public ShaderProgram(String shaderName) throws Exception {
+    public ShaderProgram(String shaderName) {
 
         programId = glCreateProgram();
-        if (programId == 0)
-            throw new Exception("Could not create Shader");
-        createVertexShader(readResourceUntilEnd(new ResourceLocation(String.format("shaders/%s.vert", shaderName)).getInputStream()));
-        createFragmentShader(readResourceUntilEnd(new ResourceLocation(String.format("shaders/%s.frag", shaderName)).getInputStream()));
+
+
+        try {
+            createVertexShader(readResourceUntilEnd(new ResourceLocation(String.format("shaders/%s.vert", shaderName)).getInputStream()));
+            createFragmentShader(readResourceUntilEnd(new ResourceLocation(String.format("shaders/%s.frag", shaderName)).getInputStream()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     public int getProgramId() {
