@@ -11,7 +11,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GLContext;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +32,10 @@ public class MainRenderManager {
     private long window;
     private List<ITitleInfoProvider> providers;
     private String sepChar;
+    boolean wireframe;
+    private boolean isInWireFrameMode;
+    private FpsCounter counter;
+    private boolean optimazitainsEnabled=true;
 
     public void init() {
 
@@ -66,6 +69,8 @@ public class MainRenderManager {
         sepChar="|";
         GL11.glEnable(GL_CULL_FACE);
         GL11.glCullFace(GL11.GL_FRONT_FACE);
+        counter=new FpsCounter();
+        addTitleInfoProvider(counter);
     }
 
     public void render(World world,Camera camera,AnimationThread animationThread){
@@ -73,11 +78,12 @@ public class MainRenderManager {
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GLFW.glfwPollEvents();
         camera.handleKeys(window);
+        counter.increaseCounter();
         if(GLFW.glfwGetKey(window,GLFW_KEY_LEFT_CONTROL)==1)
             animationThread.shouldRun=!animationThread.shouldRun;
         camera.apply(this);
-
-        world.render();
+        GL11.glRenderMode(GL11.GL_LINE);
+        world.render(this,optimazitainsEnabled);
         String windowTitle="";
         for (int i = 0; i < providers.size(); i++) {
             ITitleInfoProvider currProvider=providers.get(i);
@@ -106,5 +112,9 @@ public class MainRenderManager {
 
     public ShaderProgram getMainShader() {
         return mainShader;
+    }
+
+    public boolean isInWireFrameMode() {
+        return isInWireFrameMode;
     }
 }

@@ -1,6 +1,8 @@
 package hu.laci200270.games.sbs3djumper.models;
 
 import hu.laci200270.games.sbs3djumper.Texture;
+import hu.laci200270.games.sbs3djumper.renderer.EnumRenderState;
+import hu.laci200270.games.sbs3djumper.renderer.MainRenderManager;
 
 import java.awt.image.BufferedImage;
 
@@ -12,7 +14,7 @@ public interface IModel {
      * Renders the model
      * Called each frame
     */
-    public void render();
+    public void render(MainRenderManager renderManager,EnumRenderState state);
 
     /***
      *

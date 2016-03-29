@@ -4,6 +4,8 @@ import hu.laci200270.games.sbs3djumper.Constants;
 import hu.laci200270.games.sbs3djumper.ResourceLocation;
 import hu.laci200270.games.sbs3djumper.Starter;
 import hu.laci200270.games.sbs3djumper.Texture;
+import hu.laci200270.games.sbs3djumper.renderer.EnumRenderState;
+import hu.laci200270.games.sbs3djumper.renderer.MainRenderManager;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
@@ -77,24 +79,52 @@ public class PrimitiveModel extends AbstractModel {
     }
 
     @Override
-    public void render() {
-        GL30.glBindVertexArray(vaoId);
-        if (this.texture != null)
-            texture.bind();
-        else
-            Constants.errorTexture.bind();
+    public void render(MainRenderManager manager,EnumRenderState state) {
+       switch (state) {
+           case PRE:
+               GL30.glBindVertexArray(vaoId);
+           if (this.texture != null)
+               texture.bind();
+           else
+               Constants.errorTexture.bind();
 
-        GL20.glEnableVertexAttribArray(0);
-        GL20.glEnableVertexAttribArray(2);
+           GL20.glEnableVertexAttribArray(0);
+           GL20.glEnableVertexAttribArray(2);
 
-        GL20.glEnableVertexAttribArray(1);
+           GL20.glEnableVertexAttribArray(1);
+            break;
+          case DRAW:
+              if (manager.isInWireFrameMode())
+               GL11.glDrawElements(GL11.GL_LINE_STRIP, numberOfVerts, GL11.GL_UNSIGNED_INT, 0);
+           else
+               GL11.glDrawElements(GL11.GL_TRIANGLES, numberOfVerts, GL11.GL_UNSIGNED_INT, 0);
+           break;
+            case POST:
+           GL20.glDisableVertexAttribArray(0);
+           GL20.glDisableVertexAttribArray(1);
+           GL20.glDisableVertexAttribArray(2);
+           GL30.glBindVertexArray(0);
+                break;
+       }
+    }
 
-        GL11.glDrawElements(GL11.GL_TRIANGLES, numberOfVerts/3, GL11.GL_UNSIGNED_INT, 0);
-        GL20.glDisableVertexAttribArray(0);
-        GL20.glDisableVertexAttribArray(1);
-        GL20.glDisableVertexAttribArray(2);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PrimitiveModel)) return false;
 
+        PrimitiveModel that = (PrimitiveModel) o;
 
-        GL30.glBindVertexArray(0);
+        if (indicesVboId != that.indicesVboId) return false;
+        if (numberOfVerts != that.numberOfVerts) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = numberOfVerts;
+        result = 31 * result + indicesVboId;
+        return result;
     }
 }

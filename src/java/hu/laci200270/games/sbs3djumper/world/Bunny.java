@@ -4,6 +4,8 @@ package hu.laci200270.games.sbs3djumper.world;
 import hu.laci200270.games.sbs3djumper.ShaderProgram;
 import hu.laci200270.games.sbs3djumper.models.IModel;
 import hu.laci200270.games.sbs3djumper.models.ModelRegistry;
+import hu.laci200270.games.sbs3djumper.renderer.EnumRenderState;
+import hu.laci200270.games.sbs3djumper.renderer.MainRenderManager;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL20;
@@ -27,12 +29,12 @@ public class Bunny extends WorldPart {
 
 
     @Override
-    public void render(ShaderProgram shader) {
+    public void render(ShaderProgram shader,MainRenderManager manager,EnumRenderState state) {
 
         shader.bind();
         regenModelMatrix();
         shader.setUnifromMatrix("modelMatrix",modelMat);
-        bunnyModel.render();
+        bunnyModel.render(manager,state);
         shader.unbind();
     }
 
@@ -47,5 +49,10 @@ public class Bunny extends WorldPart {
     @Override
     public void onWorldTick(World world) {
 
+    }
+
+    @Override
+    public IModel getModel() {
+        return bunnyModel;
     }
 }

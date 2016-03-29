@@ -4,6 +4,8 @@ import hu.laci200270.games.sbs3djumper.Constants;
 import hu.laci200270.games.sbs3djumper.models.AbstractModel;
 import hu.laci200270.games.sbs3djumper.models.Face;
 import hu.laci200270.games.sbs3djumper.models.FacePoint;
+import hu.laci200270.games.sbs3djumper.renderer.EnumRenderState;
+import hu.laci200270.games.sbs3djumper.renderer.MainRenderManager;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
@@ -97,7 +99,7 @@ public class FaceModel extends AbstractModel {
 
     }
 
-    public void render() {
+    public void render(MainRenderManager manager,EnumRenderState state) {
 
 
         GL30.glBindVertexArray(vaoId);

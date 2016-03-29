@@ -1,6 +1,9 @@
 package hu.laci200270.games.sbs3djumper.world;
 
 import hu.laci200270.games.sbs3djumper.ShaderProgram;
+import hu.laci200270.games.sbs3djumper.models.IModel;
+import hu.laci200270.games.sbs3djumper.renderer.EnumRenderState;
+import hu.laci200270.games.sbs3djumper.renderer.MainRenderManager;
 import org.joml.AxisAngle4f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
@@ -24,7 +27,7 @@ public abstract class WorldPart {
         this.uniqueId=id;
     }
 
-    public abstract void render(ShaderProgram shader);
+    public abstract void render(ShaderProgram shader,MainRenderManager manager,EnumRenderState state);
 
     public void onAnimationTick(){
 
@@ -76,5 +79,8 @@ public abstract class WorldPart {
         modelMat.scale(scaling);
 
     }
+
+    public abstract IModel getModel();
+
 
 }

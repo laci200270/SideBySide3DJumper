@@ -18,8 +18,7 @@ public abstract class AbstractModel implements IModel {
     protected int vaoId = GL30.glGenVertexArrays();
     protected String texName;
     protected Texture texture;
-    @Override
-    public abstract void render();
+
 
 
 

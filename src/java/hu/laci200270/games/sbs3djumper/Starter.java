@@ -59,9 +59,9 @@ public class Starter {
         bunny1.setScaling(new Vector3f(0.1f));
 
 
-        WorldPart part=new TerrainWorldObject("heightmap");
-        part.setScaling(new Vector3f(500));
-        part.setWorldPos(new Vector3f(0,-500,1000));
+        WorldPart part=new TerrainWorldObject("rsz_earth");
+        part.setScaling(new Vector3f(150));
+        part.setWorldPos(new Vector3f(0,-0,0));
         world.addWorldPart(part);
         AnimationThread animationThread = new AnimationThread(world);
         WorldTickingThread worldTickingThread = new WorldTickingThread(world);

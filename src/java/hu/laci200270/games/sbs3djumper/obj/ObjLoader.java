@@ -126,8 +126,10 @@ public class ObjLoader implements IModelLoader {
 
         }
         fileReader.close();
-        IModel model= new FaceModel(faces);
-
+        IModel model;
+        //TODO finish moving to primitivemodel system
+        //IModel model= new PrimitiveModel(toArray(vertexes),in)
+        model=new FaceModel(faces);
         return model ;
     }
 
@@ -183,6 +185,32 @@ public class ObjLoader implements IModelLoader {
         return handleNormalFace(line);
     }
 
+   /* private int[] handleFace(String line) {
+        ObjInstruction instruction = makeInstruction(line);
+        Vector3f vec = new Vector3f();
+        for (int i = 0; i < 3; i++) {
+            String param = instruction.params.get(i);
+            if (!param.contains("/")) {
+                if (i == 0)
+                    vec = new Vector3f(Integer.parseInt(param), vec.y, vec.z);
+                if (i == 1)
+                    vec = new Vector3f(vec.x, Integer.parseInt(param), vec.z);
+                if (i == 2)
+                    vec = new Vector3f(vec.x, vec.y, Integer.parseInt(param));
+            } else {
+                int value = Integer.parseInt(param.split("/")[0]);
+                if (i == 0)
+                    vec = new Vector3f(value, vec.y, vec.z);
+                if (i == 1)
+                    vec = new Vector3f(vec.x, value, vec.z);
+                if (i == 2)
+                    vec = new Vector3f(vec.x, vec.y, value);
+            }
+        }
+        indices.add(vec);
+      //  return handleNormalFace(line);
+    }*/
+
     public Face handleNormalFace(String line) {
         float x, y, z, normal;
         ObjInstruction faceobjstr = makeInstruction(line);
@@ -233,5 +261,16 @@ public class ObjLoader implements IModelLoader {
         return new Face(poligons);
     }
 
+    public float[] toArray(ArrayList<Vector4f> coords){
+        float[] vals=new float[ coords.size()*4];
+        for(int i=0;i<coords.size()*4;i+=4){
+            Vector4f currentVec=coords.get(i/4);
+            vals[i]=currentVec.x;
+            vals[i+1]=currentVec.y;
+            vals[i+2]=currentVec.z;
+            vals[i+3]=currentVec.w;
+        }
+        return vals;
+    }
 
 }

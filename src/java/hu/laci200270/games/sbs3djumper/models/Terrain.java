@@ -3,6 +3,8 @@ package hu.laci200270.games.sbs3djumper.models;
 import hu.laci200270.games.sbs3djumper.Constants;
 import hu.laci200270.games.sbs3djumper.ResourceLocation;
 import hu.laci200270.games.sbs3djumper.models.*;
+import hu.laci200270.games.sbs3djumper.renderer.EnumRenderState;
+import hu.laci200270.games.sbs3djumper.renderer.MainRenderManager;
 import hu.laci200270.games.sbs3djumper.world.Light;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
@@ -104,8 +106,8 @@ public class Terrain extends AbstractModel{
 
 
     @Override
-    public void render() {
-       model.render();
+    public void render(MainRenderManager manager,EnumRenderState state) {
+       model.render(manager,state);
     }
 
 

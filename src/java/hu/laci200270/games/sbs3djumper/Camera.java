@@ -54,12 +54,7 @@ public class Camera implements ITitleInfoProvider {
     }
 
     public void apply(MainRenderManager manager) {
-        frames++;
-        if(System.nanoTime()>lastMeasure+1000000000){
-            lastMeasure=System.nanoTime();
-            prevFrames=frames;
-            frames=0;
-        }
+
 
         float aspectRatio = (manager.getResolution().x/manager.getResolution().y);
         projectionMatrix = new Matrix4f().perspective((float) Math.toRadians(fov), aspectRatio,
