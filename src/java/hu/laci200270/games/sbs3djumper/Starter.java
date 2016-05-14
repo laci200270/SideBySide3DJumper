@@ -1,22 +1,26 @@
 package hu.laci200270.games.sbs3djumper;
 
 import hu.laci200270.games.sbs3djumper.models.ModelLoaderRegistry;
-import hu.laci200270.games.sbs3djumper.models.Terrain;
 import hu.laci200270.games.sbs3djumper.obj.ObjLoader;
 import hu.laci200270.games.sbs3djumper.renderer.MainRenderManager;
 import hu.laci200270.games.sbs3djumper.threading.AnimationThread;
 import hu.laci200270.games.sbs3djumper.threading.WorldTickingThread;
-import hu.laci200270.games.sbs3djumper.world.*;
+import hu.laci200270.games.sbs3djumper.utils.CommonUtils;
+import hu.laci200270.games.sbs3djumper.world.Bunny;
+import hu.laci200270.games.sbs3djumper.world.TerrainWorldObject;
+import hu.laci200270.games.sbs3djumper.world.World;
+import hu.laci200270.games.sbs3djumper.world.WorldPart;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
+import java.io.File;
 import java.io.IOException;
 
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryUtil.NULL;
+import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 
 /**
  * Created by Laci on 2016. 01. 29..
@@ -32,18 +36,21 @@ public class Starter {
     private static long lastFrame;
 
     public static void main(String[] args) throws IOException {
-
+       // System.out.println(CommonUtils.genSystemInfo());
+        CommonUtils.setupLwjgl();
         MainRenderManager manager=new MainRenderManager();
-        System.setProperty("org.lwjgl.librarypath", Object.class.getResource("/natives/windows/").getFile());
-        GLFWErrorCallback errorCallback;
-        errorCallback=GLFWErrorCallback(new GLFWErrorCallback.SAM() {
+
+        System.out.println(Constants.lwjgl_natives_dir.exists()+" "+Constants.lwjgl_natives_dir.isDirectory());
+        System.setProperty("org.lwjgl.librarypath", Constants.lwjgl_natives_dir.getAbsolutePath()+File.separator);
+        /*GLFWErrorCallback errorCallback;
+        errorCallback= new GLFWErrorCallback() {
             @Override
             public void invoke(int error, long description) {
                 System.out.println("E "+error+"D "+description);
             }
-        });
+        };*/
 
-        glfwSetErrorCallback(errorCallback);
+        //glfwSetErrorCallback(errorCallback);
 
         manager.init();
 

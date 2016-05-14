@@ -106,7 +106,7 @@ public class FaceModel extends AbstractModel {
         if (this.texture != null)
             texture.bind();
         else
-            Constants.errorTexture.bind();
+            //Constants.errorTexture.bind();
 
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(2);

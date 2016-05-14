@@ -20,5 +20,9 @@
         <processorPath useClasspath="true" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="SideBySide3DJumper_main" target="1.8" />
+      <module name="SideBySide3DJumper_test" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

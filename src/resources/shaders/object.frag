@@ -45,10 +45,12 @@ vec3 hdr(vec3 input){
 
 void main()
 {
-    color = texture(tex, texOut);
+
+   /* color = texture(tex, texOut);
     	if (color.w < 1.0)
     		discard;
-
+*/
+color=vec4(1);
     vec3 diffuse=vec3(0);
     for(int i=0;i<lightCount;i++){
         Light currentLight=lights[i];

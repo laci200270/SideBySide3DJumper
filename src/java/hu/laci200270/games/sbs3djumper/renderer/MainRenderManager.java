@@ -9,7 +9,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
-import org.lwjgl.opengl.GLContext;
+//import org.lwjgl.opengl.GLContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +53,8 @@ public class MainRenderManager {
 
         glfwMakeContextCurrent(window);
 
-        GLContext.createFromCurrent();
-        GL.createCapabilities(true);
+
+        GL.createCapabilities();
         glfwSwapInterval(0);
         glfwShowWindow(window);
         mainShader=new ShaderProgram("object");

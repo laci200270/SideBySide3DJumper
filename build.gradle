@@ -29,7 +29,7 @@ idea {
 }
 
 
-project.ext.lwjglVersion = "3.0.0a"
+project.ext.lwjglVersion = "3.0.0b"
 
 dependencies {
     compile "org.lwjgl:lwjgl:${lwjglVersion}"
@@ -42,6 +42,7 @@ dependencies {
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.5'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.5'
     compile group: 'org.joml', name: 'joml', version: '1.6.5'
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.9'
 }
 
 sourceSets {

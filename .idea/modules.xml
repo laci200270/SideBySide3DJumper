@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SideBySide3DJumper.iml" filepath="$PROJECT_DIR$/SideBySide3DJumper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SideBySide3DJumper.iml" filepath="$PROJECT_DIR$/.idea/modules/SideBySide3DJumper.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SideBySide3DJumper_main.iml" filepath="$PROJECT_DIR$/.idea/modules/SideBySide3DJumper_main.iml" group="SideBySide3DJumper" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/SideBySide3DJumper_test.iml" filepath="$PROJECT_DIR$/.idea/modules/SideBySide3DJumper_test.iml" group="SideBySide3DJumper" />
     </modules>
   </component>
 </project>

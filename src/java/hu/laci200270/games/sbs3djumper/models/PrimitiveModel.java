@@ -1,13 +1,10 @@
 package hu.laci200270.games.sbs3djumper.models;
 
-import hu.laci200270.games.sbs3djumper.Constants;
 import hu.laci200270.games.sbs3djumper.ResourceLocation;
-import hu.laci200270.games.sbs3djumper.Starter;
 import hu.laci200270.games.sbs3djumper.Texture;
 import hu.laci200270.games.sbs3djumper.renderer.EnumRenderState;
 import hu.laci200270.games.sbs3djumper.renderer.MainRenderManager;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.Sys;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
@@ -86,7 +83,7 @@ public class PrimitiveModel extends AbstractModel {
            if (this.texture != null)
                texture.bind();
            else
-               Constants.errorTexture.bind();
+               //Constants.errorTexture.bind();
 
            GL20.glEnableVertexAttribArray(0);
            GL20.glEnableVertexAttribArray(2);

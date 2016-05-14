@@ -39,7 +39,7 @@ public class Camera implements ITitleInfoProvider {
     public void init(long window) {
         pos = new Vector3f(0, 0, -1);
         rot = new Vector3f(0, 0, 0);
-        GLFW.glfwSetCursor(window, GLFW.GLFW_CURSOR_HIDDEN);
+       //GLFW.glfwSetCursor(window, GLFW.GLFW_CURSOR_HIDDEN);
         GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_DISABLED);
         cursorPosCallback=new GLFWCursorPosCallback() {
             @Override

@@ -49,7 +49,7 @@ public class FileUtils {
     }
 
     public static File getRootDir() {
-        File rootDir = new File(System.getProperty("java.user.home"), String.format("%s/%s", Constants.devName, Constants.gameCodeName));
+        File rootDir = new File(System.getProperty("java.user.home"), String.format("%s%s%s", Constants.devName, File.separator, Constants.gameCodeName));
         rootDir.mkdirs();
 
         return rootDir;
