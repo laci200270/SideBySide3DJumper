@@ -45,5 +45,4 @@ public class Constants {
     public static int height=480;
 
 
-//    public static Texture errorTexture=new Texture(new ResourceLocation("textures/error.png"));
 }

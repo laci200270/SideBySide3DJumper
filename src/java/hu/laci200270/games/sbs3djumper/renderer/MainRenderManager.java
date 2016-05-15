@@ -35,7 +35,7 @@ public class MainRenderManager {
     boolean wireframe;
     private boolean isInWireFrameMode;
     private FpsCounter counter;
-    private boolean optimazitainsEnabled=true;
+    private boolean optimazitainsEnabled=false;
 
     public void init() {
 
@@ -82,7 +82,7 @@ public class MainRenderManager {
         if(GLFW.glfwGetKey(window,GLFW_KEY_LEFT_CONTROL)==1)
             animationThread.shouldRun=!animationThread.shouldRun;
         camera.apply(this);
-        GL11.glRenderMode(GL11.GL_LINE);
+        //GL11.glRenderMode(GL11.GL_LINE);
         world.render(this,optimazitainsEnabled);
         String windowTitle="";
         for (int i = 0; i < providers.size(); i++) {

@@ -42,15 +42,15 @@ public class Starter {
 
         System.out.println(Constants.lwjgl_natives_dir.exists()+" "+Constants.lwjgl_natives_dir.isDirectory());
         System.setProperty("org.lwjgl.librarypath", Constants.lwjgl_natives_dir.getAbsolutePath()+File.separator);
-        /*GLFWErrorCallback errorCallback;
+        GLFWErrorCallback errorCallback;
         errorCallback= new GLFWErrorCallback() {
             @Override
             public void invoke(int error, long description) {
                 System.out.println("E "+error+"D "+description);
             }
-        };*/
+        };
 
-        //glfwSetErrorCallback(errorCallback);
+        glfwSetErrorCallback(errorCallback);
 
         manager.init();
 
@@ -66,10 +66,11 @@ public class Starter {
         bunny1.setScaling(new Vector3f(0.1f));
 
 
-        WorldPart part=new TerrainWorldObject("rsz_earth");
+        /*WorldPart part=new TerrainWorldObject("rsz_earth");
         part.setScaling(new Vector3f(150));
-        part.setWorldPos(new Vector3f(0,-0,0));
-        world.addWorldPart(part);
+        part.setWorldPos(new Vector3f(0,-0,0));*/
+        //world.addWorldPart(part);
+        world.addWorldPart(bunny1);
         AnimationThread animationThread = new AnimationThread(world);
         WorldTickingThread worldTickingThread = new WorldTickingThread(world);
         animationThread.start();

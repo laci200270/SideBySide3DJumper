@@ -1,6 +1,8 @@
 package hu.laci200270.games.sbs3djumper.models;
 
 import hu.laci200270.games.sbs3djumper.Constants;
+import hu.laci200270.games.sbs3djumper.ResourceLocation;
+import hu.laci200270.games.sbs3djumper.Texture;
 import hu.laci200270.games.sbs3djumper.models.AbstractModel;
 import hu.laci200270.games.sbs3djumper.models.Face;
 import hu.laci200270.games.sbs3djumper.models.FacePoint;
@@ -20,6 +22,8 @@ import java.util.List;
  * Created by Laci on 2016. 01. 30..
  */
 public class FaceModel extends AbstractModel {
+
+    public static Texture errorTexture=new Texture(new ResourceLocation("textures/error.png"));
 
     int numberOfVerts = 0;
 
@@ -101,12 +105,12 @@ public class FaceModel extends AbstractModel {
 
     public void render(MainRenderManager manager,EnumRenderState state) {
 
-
-        GL30.glBindVertexArray(vaoId);
+        System.out.format("Rendering FaceModel at state %s \n",state);
+         GL30.glBindVertexArray(vaoId);
         if (this.texture != null)
             texture.bind();
         else
-            //Constants.errorTexture.bind();
+           errorTexture.bind();
 
         GL20.glEnableVertexAttribArray(0);
         GL20.glEnableVertexAttribArray(2);
