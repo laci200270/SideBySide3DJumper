@@ -83,7 +83,7 @@ public class PrimitiveModel extends AbstractModel {
                GL30.glBindVertexArray(vaoId);
            if (this.texture != null)
                texture.bind();
-           else
+           //else
                //Constants.errorTexture.bind();
 
            GL20.glEnableVertexAttribArray(0);
@@ -91,12 +91,13 @@ public class PrimitiveModel extends AbstractModel {
 
            GL20.glEnableVertexAttribArray(1);
             break;
+
           case DRAW:
               if (manager.isInWireFrameMode())
                GL11.glDrawElements(GL11.GL_LINE_STRIP, numberOfVerts, GL11.GL_UNSIGNED_INT, 0);
            else
                GL11.glDrawElements(GL11.GL_TRIANGLES, numberOfVerts, GL11.GL_UNSIGNED_INT, 0);
-           break;
+              break;
             case POST:
            GL20.glDisableVertexAttribArray(0);
            GL20.glDisableVertexAttribArray(1);
