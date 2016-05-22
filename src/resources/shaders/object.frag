@@ -23,24 +23,24 @@ uniform Light[MAXLIGHTS] array3;
 in vec4 worldOutPos;
 in vec3 outNormal;
 
-vec3 hdr(vec3 input){
+vec3 hdr(vec3 color){
     float multiplier=1;
-        if(input.r>1){
-            float tempMultiplier=1/input.r;
+        if(color.r>1){
+            float tempMultiplier=1/color.r;
             if(tempMultiplier<multiplier)
                 multiplier=tempMultiplier;
         }
-        if(input.g>1){
-                float tempMultiplier=1/input.g;
+        if(color.g>1){
+                float tempMultiplier=1/color.g;
                 if(tempMultiplier<multiplier)
                     multiplier=tempMultiplier;
         }
-        if(input.b>1){
-                float tempMultiplier=1/input.b;
+        if(color.b>1){
+                float tempMultiplier=1/color.b;
                 if(tempMultiplier<multiplier)
                     multiplier=tempMultiplier;
         }
-       return input*multiplier;
+       return max((color*multiplier),0.25);
 }
 
 void main()
@@ -69,8 +69,8 @@ void main()
 
     float multiplier=1;
 
-   // diffuse=hdr(diffuse);
-    //color=color*vec4(diffuse,1);
+    diffuse=hdr(diffuse);
+    color=color*vec4(diffuse,1);
 
 
     fragColor=color;
