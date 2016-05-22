@@ -128,9 +128,33 @@ public class ObjLoader implements IModelLoader {
         fileReader.close();
         IModel model;
         //TODO finish moving to primitivemodel system
-        //IModel model= new PrimitiveModel(toArray(vertexes),in)
-        model=new FaceModel(faces);
+        model= new PrimitiveModel(toArray(vertexes),toIntArray(indices),toArrayVec3F(textures),toArrayVec3F(normals),null);
+        //model=new FaceModel(faces);
         return model ;
+    }
+
+    private float[] toArrayVec3F(ArrayList<Vector3f> coords) {
+        float[] vals=new float[ coords.size()*3];
+        for(int i=0;i<coords.size()*3;i+=3){
+            Vector3f currentVec=coords.get(i/3);
+            vals[i]=currentVec.x;
+            vals[i+1]=currentVec.y;
+            vals[i+2]=currentVec.z;
+
+        }
+        return vals;
+    }
+
+    private int[] toIntArray(ArrayList<Vector3f> coords) {
+        int[] vals=new int[ coords.size()*3];
+        for(int i=0;i<coords.size()*3;i+=3){
+            Vector3f currentVec=coords.get(i/3);
+            vals[i]=Math.round(currentVec.x);
+            vals[i+1]=Math.round(currentVec.y);
+            vals[i+2]=Math.round(currentVec.z);
+
+        }
+        return vals;
     }
 
     private Vector3f handleTexture(String line) {

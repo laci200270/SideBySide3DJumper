@@ -73,6 +73,10 @@ public class MainRenderManager {
         addTitleInfoProvider(counter);
     }
 
+    public void resizeWindow(int width,int height,boolean fullScreen){
+
+    }
+
     public void render(World world,Camera camera,AnimationThread animationThread){
         GL11.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         GL13.glActiveTexture(GL13.GL_TEXTURE0);

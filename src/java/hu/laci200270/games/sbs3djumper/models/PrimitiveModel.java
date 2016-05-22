@@ -25,7 +25,7 @@ public class PrimitiveModel extends AbstractModel {
     int indicesVboId=GL15.glGenBuffers();
 
     public PrimitiveModel(float[] verts,int[] indices,float[] texCoords,float[] normals,ResourceLocation texture) {
-        try {
+        /*try {
             System.out.println("Exporting.");
 
             PrintWriter writer=new PrintWriter(new FileWriter("terrain.obj"));
@@ -41,7 +41,7 @@ public class PrimitiveModel extends AbstractModel {
             e.printStackTrace();
         }
 
-        System.out.println("Experting done");
+        System.out.println("Experting done");*/
         GL30.glBindVertexArray(vaoId);
         FloatBuffer verticesBuffer = BufferUtils.createFloatBuffer(verts.length);
         FloatBuffer normalBuffer=BufferUtils.createFloatBuffer(normals.length);
@@ -70,7 +70,8 @@ public class PrimitiveModel extends AbstractModel {
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
         GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesVboId);
         GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL15.GL_STATIC_DRAW);
-        this.texture=new Texture(texture);
+        if(texture!=null)
+            this.texture=new Texture(texture);
         numberOfVerts=indices.length;
         GL30.glBindVertexArray(0);
     }

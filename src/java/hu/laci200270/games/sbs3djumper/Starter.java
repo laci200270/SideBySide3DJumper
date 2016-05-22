@@ -66,9 +66,9 @@ public class Starter {
         bunny1.setScaling(new Vector3f(0.1f));
 
 
-        /*WorldPart part=new TerrainWorldObject("rsz_earth");
+        WorldPart part=new TerrainWorldObject("laptopvirus");
         part.setScaling(new Vector3f(150));
-        part.setWorldPos(new Vector3f(0,-0,0));*/
+        part.setWorldPos(new Vector3f(0,-0,0));
         //world.addWorldPart(part);
         world.addWorldPart(bunny1);
         AnimationThread animationThread = new AnimationThread(world);
