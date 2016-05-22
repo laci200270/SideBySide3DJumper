@@ -114,9 +114,8 @@ public class PrimitiveModel extends AbstractModel {
         PrimitiveModel that = (PrimitiveModel) o;
 
         if (indicesVboId != that.indicesVboId) return false;
-        if (numberOfVerts != that.numberOfVerts) return false;
+        return numberOfVerts == that.numberOfVerts;
 
-        return true;
     }
 
     @Override

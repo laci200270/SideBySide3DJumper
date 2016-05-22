@@ -63,7 +63,7 @@ public class Starter {
         World world=new World(manager.getMainShader());
         Bunny bunny1=new Bunny();
         bunny1.setWorldPos(new Vector3f(-0f, -0.25f, -4f));
-        bunny1.setScaling(new Vector3f(0.1f));
+        bunny1.setScaling(new Vector3f(1f));
 
 
         WorldPart part=new TerrainWorldObject("laptopvirus");

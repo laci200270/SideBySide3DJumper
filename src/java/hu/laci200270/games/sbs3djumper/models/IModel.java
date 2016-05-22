@@ -14,16 +14,16 @@ public interface IModel {
      * Renders the model
      * Called each frame
     */
-    public void render(MainRenderManager renderManager,EnumRenderState state);
+    void render(MainRenderManager renderManager, EnumRenderState state);
 
     /***
      *
      *
      * @return The name of the texture for see @link{hu.laci200270.games.sbs3djumper.ResourceLocation}
      */
-    public String getTextureName();
-    public void setTextureName(String name);
-    public void setTexture(Texture texture);
-    public void loadTexture();
+    String getTextureName();
+    void setTextureName(String name);
+    void setTexture(Texture texture);
+    void loadTexture();
 
 }

@@ -129,7 +129,7 @@ public class ObjLoader implements IModelLoader {
         IModel model;
         //TODO finish moving to primitivemodel system
         model= new PrimitiveModel(toArray(vertexes),toIntArray(indices),toArrayVec3F(textures),toArrayVec3F(normals),null);
-        //model=new FaceModel(faces);
+       // model=new FaceModel(faces);
         return model ;
     }
 

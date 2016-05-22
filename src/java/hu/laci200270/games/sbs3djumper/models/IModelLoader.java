@@ -15,11 +15,11 @@ public interface IModelLoader {
      * @return the loaded model, or null if there was an error
      * @throws IOException if there was error while loading inputstream
      */
-    public IModel loadModel(ResourceLocation loc) throws IOException;
+    IModel loadModel(ResourceLocation loc) throws IOException;
 
     /**
      * @return the file extension what this loader should handle
      */
-    public String getTypeFormat();
+    String getTypeFormat();
 
 }
