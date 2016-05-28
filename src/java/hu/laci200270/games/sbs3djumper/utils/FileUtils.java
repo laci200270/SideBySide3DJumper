@@ -1,10 +1,13 @@
 package hu.laci200270.games.sbs3djumper.utils;
 
 import hu.laci200270.games.sbs3djumper.Constants;
+import hu.laci200270.games.sbs3djumper.ResourceLocation;
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -66,5 +69,23 @@ public class FileUtils {
         }
 
         return str;
+    }
+
+    public static List<String> readAllLines(ResourceLocation loc) {
+        List<String> returnable=new ArrayList<>();
+        BufferedReader reader=new BufferedReader(new InputStreamReader(loc.getInputStream()));
+        String line= null;
+        try {
+            line = reader.readLine();
+
+        while(line!=null){
+            returnable.add(line);
+            line=reader.readLine();
+        }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return returnable;
     }
 }

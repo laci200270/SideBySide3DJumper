@@ -8,7 +8,6 @@ import hu.laci200270.games.sbs3djumper.renderer.EnumRenderState;
 import hu.laci200270.games.sbs3djumper.renderer.MainRenderManager;
 import org.joml.AxisAngle4f;
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL20;
 
 
 /**

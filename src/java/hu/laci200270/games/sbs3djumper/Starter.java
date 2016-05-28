@@ -6,10 +6,7 @@ import hu.laci200270.games.sbs3djumper.renderer.MainRenderManager;
 import hu.laci200270.games.sbs3djumper.threading.AnimationThread;
 import hu.laci200270.games.sbs3djumper.threading.WorldTickingThread;
 import hu.laci200270.games.sbs3djumper.utils.CommonUtils;
-import hu.laci200270.games.sbs3djumper.world.Bunny;
-import hu.laci200270.games.sbs3djumper.world.TerrainWorldObject;
-import hu.laci200270.games.sbs3djumper.world.World;
-import hu.laci200270.games.sbs3djumper.world.WorldPart;
+import hu.laci200270.games.sbs3djumper.world.*;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -66,10 +63,7 @@ public class Starter {
         bunny1.setScaling(new Vector3f(1f));
 
 
-        WorldPart part=new TerrainWorldObject("laptopvirus");
-        part.setScaling(new Vector3f(150));
-        part.setWorldPos(new Vector3f(0,-0,0));
-        //world.addWorldPart(part);
+        world.addLight(new Light(new Vector3f(-0f,0f,-3f)));
         world.addWorldPart(bunny1);
         AnimationThread animationThread = new AnimationThread(world);
         WorldTickingThread worldTickingThread = new WorldTickingThread(world);

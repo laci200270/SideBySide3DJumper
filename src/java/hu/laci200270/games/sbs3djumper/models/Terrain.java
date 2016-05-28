@@ -35,7 +35,7 @@ public class Terrain extends AbstractModel{
 
     private static final float STARTZ = -5f;
     public Terrain(String name,float minY,float maxY, int textInc){
-        List<Face> faceList=new ArrayList<>();
+
 
             this.maxY=maxY;
             this.minY=minY;
@@ -98,7 +98,7 @@ public class Terrain extends AbstractModel{
         }
         float[] normalsArr = calcNormals(posArr, width, height);
 
-        model=new PrimitiveModel(posArr,indicesArr,texcoordarray,normalsArr, new ResourceLocation("textures/terrain.png"));
+        model=new PrimitiveModel(posArr,indicesArr,texcoordarray,normalsArr, new ResourceLocation("textures/terrain.png"),4);
 
 
     }

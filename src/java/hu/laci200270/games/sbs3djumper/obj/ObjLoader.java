@@ -1,181 +1,141 @@
 package hu.laci200270.games.sbs3djumper.obj;
 
-import hu.laci200270.games.sbs3djumper.Constants;
 import hu.laci200270.games.sbs3djumper.ResourceLocation;
-import hu.laci200270.games.sbs3djumper.models.*;
+import hu.laci200270.games.sbs3djumper.models.IModel;
+import hu.laci200270.games.sbs3djumper.models.IModelLoader;
+import hu.laci200270.games.sbs3djumper.models.PrimitiveModel;
+import hu.laci200270.games.sbs3djumper.utils.FileUtils;
+import org.jcp.xml.dsig.internal.dom.Utils;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Laci on 2016. 02. 06..
- */
-public class ObjLoader implements IModelLoader {
+public class ObjLoader implements IModelLoader{
 
-    private BufferedReader fileReader;
+    public static PrimitiveModel loadPrimitveModel(ResourceLocation file) throws Exception {
+        List<String> lines = FileUtils.readAllLines(file);
 
-    private ArrayList<Vector4f> vertexes = new ArrayList<>();
+        List<Vector4f> vertices = new ArrayList<>();
+        List<Vector2f> textures = new ArrayList<>();
+        List<Vector3f> normals = new ArrayList<>();
+        List<Face> faces = new ArrayList<>();
 
-    private List<Face> faces = new ArrayList<>();
-
-    private ArrayList<Vector3f> normals = new ArrayList<>();
-
-    private ArrayList<Vector3f> textures = new ArrayList<>();
-
-    private ArrayList<Vector3f> points = new ArrayList<>();
-
-    private ArrayList<Vector3f> indices = new ArrayList<>();
-
-    private static Vector3f handleNormal(String line) {
-        float x, y, z;
-        ObjInstruction normal = makeInstruction(line);
-        String params[] = new String[normal.params.size()];
-        for (int i = 0; i < normal.params.size(); i++) {
-            params[i] = normal.params.get(i);
-        }
-        x = Float.parseFloat(params[0]);
-        y = Float.parseFloat(params[1]);
-        z = Float.parseFloat(params[2]);
-        return new Vector3f(x, y, z);
-    }
-
-    public static ObjInstruction makeInstruction(String line) {
-        String[] words = line.split(" ");
-        InstructionType instructionType = ObjInstruction.keySetInstructions.get(words[0]);
-
-        ObjInstruction instruction = new ObjInstruction(instructionType);
-        for (int i = 1; i < words.length; i++) {
-            instruction.addParam(words[i]);
-        }
-        return instruction;
-    }
-
-    private Vector4f handleVertex(String line) {
-        float x, y, z, normal;
-        ObjInstruction vertex = makeInstruction(line);
-        String params[] = new String[vertex.params.size()];
-        normal = 1f;
-        for (int i = 0; i < vertex.params.size(); i++) {
-            params[i] = vertex.params.get(i);
-        }
-        boolean hasNormal = params.length == 4;
-        x = Float.parseFloat(params[0]);
-        y = Float.parseFloat(params[1]);
-        z = Float.parseFloat(params[2]);
-        Constants.logger.fine("Handling vertex");
-        if (hasNormal) {
-            normal = Float.parseFloat(params[3]);
-        }
-        points.add(new Vector3f(x, y, z));
-        return new Vector4f(x, y, z, normal);
-    }
-
-    public IModel loadModel(InputStream inputStream, String location) throws IOException {
-        this.fileReader = new BufferedReader(new InputStreamReader(inputStream));
-        vertexes = new ArrayList<>();
-        faces = new ArrayList<>();
-        normals = new ArrayList<>();
-        textures = new ArrayList<>();
-        points = new ArrayList<>();
-        indices = new ArrayList<>();
-        String line = null;
-        line = fileReader.readLine();
-
-        System.out.println("Parsing");
-        while (line != null) {
-            String[] words = line.split(" ");
-            if(line!="") {
-                InstructionType instructionType = ObjInstruction.keySetInstructions.get(words[0]);
-                try {
-                    if(instructionType!=null) {
-                        switch (instructionType) {
-                            case VERTEX:
-                                vertexes.add(handleVertex(line));
-                                break;
-                            case FACE:
-                                faces.add(handleFace(line));
-                                break;
-                            case NORMAL:
-                                normals.add(handleNormal(line));
-                                break;
-                            case TEXTURE:
-                                textures.add(handleTexture(line));
-
-                        }
+        for (String line : lines) {
+            String[] tokens = line.split("\\s+");
+            switch (tokens[0]) {
+                case "v":
+                    // Geometric vertex
+                    if(tokens.length==5){
+                        Vector4f vec4f = new Vector4f(
+                                Float.parseFloat(tokens[1]),
+                                Float.parseFloat(tokens[2]),
+                                Float.parseFloat(tokens[3]),
+                                Float.parseFloat(tokens[4]));
+                        vertices.add(vec4f);
+                    }
+                    else{
+                    Vector4f vec4f = new Vector4f(
+                            Float.parseFloat(tokens[1]),
+                            Float.parseFloat(tokens[2]),
+                            Float.parseFloat(tokens[3]),0f);
+                    vertices.add(vec4f);
                     }
 
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                    System.out.println(words[0]);
-                }
-                ObjInstruction instruction = new ObjInstruction(instructionType);
-                for (int i = 1; i < words.length; i++) {
-                    instruction.addParam(words[i]);
-                }
+                    break;
+                case "vt":
+                    // Texture coordinate
+                    Vector2f vec2f = new Vector2f(
+                            Float.parseFloat(tokens[1]),
+                            Float.parseFloat(tokens[2]));
+                    textures.add(vec2f);
+                    break;
+                case "vn":
+                    // Vertex normal
+                    Vector3f vec3fNorm = new Vector3f(
+                            Float.parseFloat(tokens[1]),
+                            Float.parseFloat(tokens[2]),
+                            Float.parseFloat(tokens[3]));
+                    normals.add(vec3fNorm);
+                    break;
+                case "f":
+                    Face face = new Face(tokens[1], tokens[2], tokens[3]);
+                    faces.add(face);
+                    break;
+                default:
+                    System.out.println("Ignored line: "+line);
+                    // Ignore other lines
+                    break;
             }
-
-            // instructions.add(instruction);
-
-            line = fileReader.readLine();
-
         }
-        fileReader.close();
-        IModel model;
-        //TODO finish moving to primitivemodel system
-        model= new PrimitiveModel(toArray(vertexes),toIntArray(indices),toArrayVec3F(textures),toArrayVec3F(normals),null);
-       // model=new FaceModel(faces);
-        return model ;
+        return reorderLists(vertices, textures, normals, faces);
     }
 
-    private float[] toArrayVec3F(ArrayList<Vector3f> coords) {
-        float[] vals=new float[ coords.size()*3];
-        for(int i=0;i<coords.size()*3;i+=3){
-            Vector3f currentVec=coords.get(i/3);
-            vals[i]=currentVec.x;
-            vals[i+1]=currentVec.y;
-            vals[i+2]=currentVec.z;
+    private static PrimitiveModel reorderLists(List<Vector4f> posList, List<Vector2f> textCoordList,
+                                     List<Vector3f> normList, List<Face> facesList) {
 
+        List<Integer> indices = new ArrayList();
+        // Create position array in the order it has been declared
+        float[] posArr = new float[posList.size() * 4];
+        int i = 0;
+        for (Vector4f pos : posList) {
+            posArr[i * 3] = pos.x;
+            posArr[i * 3 + 1] = pos.y;
+            posArr[i * 3 + 2] = pos.z;
+            posArr[i * 3 + 3]=pos.w;
+            i++;
         }
-        return vals;
+        float[] textCoordArr = new float[posList.size() * 2];
+        float[] normArr = new float[posList.size() * 3];
+
+        for (Face face : facesList) {
+            IdxGroup[] faceVertexIndices = face.getFaceVertexIndices();
+            for (IdxGroup indValue : faceVertexIndices) {
+                processFaceVertex(indValue, textCoordList, normList,
+                        indices, textCoordArr, normArr);
+            }
+        }
+        int[] indicesArr = new int[indices.size()];
+        indicesArr = indices.stream().mapToInt((Integer v) -> v).toArray();
+        PrimitiveModel model = new PrimitiveModel(posArr, indicesArr, textCoordArr, normArr,null,3);
+        return model;
     }
 
-    private int[] toIntArray(ArrayList<Vector3f> coords) {
-        int[] vals=new int[ coords.size()*3];
-        for(int i=0;i<coords.size()*3;i+=3){
-            Vector3f currentVec=coords.get(i/3);
-            vals[i]=Math.round(currentVec.x);
-            vals[i+1]=Math.round(currentVec.y);
-            vals[i+2]=Math.round(currentVec.z);
+    private static void processFaceVertex(IdxGroup indices, List<Vector2f> textCoordList,
+                                          List<Vector3f> normList, List<Integer> indicesList,
+                                          float[] texCoordArr, float[] normArr) {
 
+        // Set index for vertex coordinates
+        int posIndex = indices.idxPos;
+        indicesList.add(posIndex);
+
+        // Reorder texture coordinates
+        if (indices.idxTextCoord >= 0) {
+            Vector2f textCoord = textCoordList.get(indices.idxTextCoord);
+            texCoordArr[posIndex * 2] = textCoord.x;
+            texCoordArr[posIndex * 2 + 1] = 1 - textCoord.y;
         }
-        return vals;
-    }
-
-    private Vector3f handleTexture(String line) {
-        float x, y, z;
-        ObjInstruction normal = makeInstruction(line);
-        String params[] = new String[normal.params.size()];
-        for (int i = 0; i < normal.params.size(); i++) {
-            params[i] = normal.params.get(i);
+        if (indices.idxVecNormal >= 0) {
+            // Reorder vectornormals
+            Vector3f vecNorm = normList.get(indices.idxVecNormal);
+            normArr[posIndex * 3] = vecNorm.x;
+            normArr[posIndex * 3 + 1] = vecNorm.y;
+            normArr[posIndex * 3 + 2] = vecNorm.z;
         }
-        x = Float.parseFloat(params[0]);
-        y = Float.parseFloat(params[1]);
-        z = 1;
-        if (params.length == 3)
-            z = Float.parseFloat(params[2]);
-
-        return new Vector3f(x, y, z);
     }
 
     @Override
     public IModel loadModel(ResourceLocation loc) throws IOException {
-        return loadModel(loc.getInputStream(),loc.getFileNameWithoutExtension());
+        try {
+            return loadPrimitveModel(loc);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        }
     }
 
     @Override
@@ -183,118 +143,58 @@ public class ObjLoader implements IModelLoader {
         return "obj";
     }
 
-    private Face handleFace(String line) {
-        ObjInstruction instruction = makeInstruction(line);
-        Vector3f vec = new Vector3f();
-        for (int i = 0; i < 3; i++) {
-            String param = instruction.params.get(i);
-            if (!param.contains("/")) {
-                if (i == 0)
-                    vec = new Vector3f(Integer.parseInt(param), vec.y, vec.z);
-                if (i == 1)
-                    vec = new Vector3f(vec.x, Integer.parseInt(param), vec.z);
-                if (i == 2)
-                    vec = new Vector3f(vec.x, vec.y, Integer.parseInt(param));
-            } else {
-                int value = Integer.parseInt(param.split("/")[0]);
-                if (i == 0)
-                    vec = new Vector3f(value, vec.y, vec.z);
-                if (i == 1)
-                    vec = new Vector3f(vec.x, value, vec.z);
-                if (i == 2)
-                    vec = new Vector3f(vec.x, vec.y, value);
-            }
-        }
-        indices.add(vec);
-        return handleNormalFace(line);
-    }
+    protected static class Face {
 
-   /* private int[] handleFace(String line) {
-        ObjInstruction instruction = makeInstruction(line);
-        Vector3f vec = new Vector3f();
-        for (int i = 0; i < 3; i++) {
-            String param = instruction.params.get(i);
-            if (!param.contains("/")) {
-                if (i == 0)
-                    vec = new Vector3f(Integer.parseInt(param), vec.y, vec.z);
-                if (i == 1)
-                    vec = new Vector3f(vec.x, Integer.parseInt(param), vec.z);
-                if (i == 2)
-                    vec = new Vector3f(vec.x, vec.y, Integer.parseInt(param));
-            } else {
-                int value = Integer.parseInt(param.split("/")[0]);
-                if (i == 0)
-                    vec = new Vector3f(value, vec.y, vec.z);
-                if (i == 1)
-                    vec = new Vector3f(vec.x, value, vec.z);
-                if (i == 2)
-                    vec = new Vector3f(vec.x, vec.y, value);
-            }
-        }
-        indices.add(vec);
-      //  return handleNormalFace(line);
-    }*/
+        /**
+         * List of idxGroup groups for a face triangle (3 vertices per face).
+         */
+        private IdxGroup[] idxGroups = new IdxGroup[3];
 
-    public Face handleNormalFace(String line) {
-        float x, y, z, normal;
-        ObjInstruction faceobjstr = makeInstruction(line);
-
-        String params[] = new String[faceobjstr.params.size()];
-        for (int i = 0; i < faceobjstr.params.size(); i++) {
-            params[i] = faceobjstr.params.get(i);
+        public Face(String v1, String v2, String v3) {
+            idxGroups = new IdxGroup[3];
+            // Parse the lines
+            idxGroups[0] = parseLine(v1);
+            idxGroups[1] = parseLine(v2);
+            idxGroups[2] = parseLine(v3);
         }
 
-        ArrayList<FacePoint> poligons = new ArrayList<>();
-        for (String param : params) {
-            String[] parts = param.split("/");
+        private IdxGroup parseLine(String line) {
+            IdxGroup idxGroup = new IdxGroup();
 
-            if (parts.length == 1) {
-                int var1 = Integer.parseInt(parts[0]) - 1;
-                FacePoint point = new FacePoint(vertexes.get(var1), null, null);
-                point.color = new Vector3f(Constants.random.nextFloat(), Constants.random.nextFloat(), Constants.random.nextFloat());
-                poligons.add(point);
-            }
-            if (parts.length == 2) {
-                int var1 = Integer.parseInt(parts[0]) - 1;
-                int var2 = Integer.parseInt(parts[1]) - 1;
-                FacePoint point = new FacePoint(vertexes.get(var1), textures.get(var2), null);
-                point.color = new Vector3f(Constants.random.nextFloat(), Constants.random.nextFloat(), Constants.random.nextFloat());
-
-                poligons.add(point);
-            }
-            if (parts.length == 3) {
-                int var1 = Integer.parseInt(parts[0]) - 1;
-                if (parts[1].isEmpty()) {
-                    int var3 = Integer.parseInt(parts[2]) - 1;
-                    FacePoint point = new FacePoint(vertexes.get(var1), null, normals.get(var3));
-                    point.color = new Vector3f(Constants.random.nextFloat(), Constants.random.nextFloat(), Constants.random.nextFloat());
-                    poligons.add(point);
-                } else {
-                    int var2 = Integer.parseInt(parts[1]) - 1;
-                    int var3 = Integer.parseInt(parts[2]) - 1;
-                    FacePoint point = new FacePoint(vertexes.get(var1), textures.get(var2), normals.get(var3));
-                    point.color = new Vector3f(Constants.random.nextFloat(), Constants.random.nextFloat(), Constants.random.nextFloat());
-
-                    poligons.add(point);
+            String[] lineTokens = line.split("/");
+            int length = lineTokens.length;
+            idxGroup.idxPos = Integer.parseInt(lineTokens[0]) - 1;
+            if (length > 1) {
+                // It can be empty if the obj does not define text coords
+                String textCoord = lineTokens[1];
+                idxGroup.idxTextCoord = textCoord.length() > 0 ? Integer.parseInt(textCoord) - 1 : IdxGroup.NO_VALUE;
+                if (length > 2) {
+                    idxGroup.idxVecNormal = Integer.parseInt(lineTokens[2]) - 1;
                 }
-
             }
 
-
+            return idxGroup;
         }
-        return new Face(poligons);
+
+        public IdxGroup[] getFaceVertexIndices() {
+            return idxGroups;
+        }
     }
 
-    public float[] toArray(ArrayList<Vector4f> coords){
-        float[] vals=new float[ coords.size()*4];
-        for(int i=0;i<coords.size()*4;i+=4){
-            Vector4f currentVec=coords.get(i/4);
-            vals[i]=currentVec.x;
-            vals[i+1]=currentVec.y;
-            vals[i+2]=currentVec.z;
-            vals[i+3]=currentVec.w;
-        }
-        return vals;
-    }
+    protected static class IdxGroup {
 
+        public static final int NO_VALUE = -1;
+
+        public int idxPos;
+
+        public int idxTextCoord;
+
+        public int idxVecNormal;
+
+        public IdxGroup() {
+            idxPos = NO_VALUE;
+            idxTextCoord = NO_VALUE;
+            idxVecNormal = NO_VALUE;
+        }
+    }
 }

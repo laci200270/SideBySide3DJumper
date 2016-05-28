@@ -35,7 +35,7 @@ public class MainRenderManager {
     boolean wireframe;
     private boolean isInWireFrameMode;
     private FpsCounter counter;
-    private boolean optimazitainsEnabled=false;
+    private boolean optimazitainsEnabled=true;
 
     public void init() {
 
@@ -66,6 +66,7 @@ public class MainRenderManager {
         providers=new ArrayList<>();
         GL11.glMatrixMode(GL_PROJECTION);
         GL11.glEnable(GL_BLEND);
+        GL11.glEnable(GL_DEPTH_TEST);
         sepChar="|";
         GL11.glEnable(GL_CULL_FACE);
         GL11.glCullFace(GL11.GL_FRONT_FACE);

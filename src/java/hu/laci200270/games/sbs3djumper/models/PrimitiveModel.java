@@ -24,7 +24,7 @@ public class PrimitiveModel extends AbstractModel {
     private final int numberOfVerts;
     int indicesVboId=GL15.glGenBuffers();
 
-    public PrimitiveModel(float[] verts,int[] indices,float[] texCoords,float[] normals,ResourceLocation texture) {
+    public PrimitiveModel(float[] verts,int[] indices,float[] texCoords,float[] normals,ResourceLocation texture ,int lenght) {
         /*try {
             System.out.println("Exporting.");
 
@@ -55,10 +55,10 @@ public class PrimitiveModel extends AbstractModel {
         texBuffer.flip();
         normalBuffer.flip();
         indicesBuffer.flip();
-       // indicesBuffer.rewind();
+        //indicesBuffer.rewind();
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vboId);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
-        GL20.glVertexAttribPointer(0, 4, GL11.GL_FLOAT, false, 0, 0);
+        GL20.glVertexAttribPointer(0, lenght, GL11.GL_FLOAT, true, 0, 0);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, texVboId);
         GL15.glBufferData(GL15.GL_ARRAY_BUFFER, texBuffer, GL15.GL_STATIC_DRAW);
@@ -85,7 +85,7 @@ public class PrimitiveModel extends AbstractModel {
                texture.bind();
            //else
                //Constants.errorTexture.bind();
-
+               System.out.println("Primtivemodel PRE");
            GL20.glEnableVertexAttribArray(0);
            GL20.glEnableVertexAttribArray(2);
 
@@ -93,12 +93,15 @@ public class PrimitiveModel extends AbstractModel {
             break;
 
           case DRAW:
+              System.out.println("Primtivemodel DRAW");
               if (manager.isInWireFrameMode())
                GL11.glDrawElements(GL11.GL_LINE_STRIP, numberOfVerts, GL11.GL_UNSIGNED_INT, 0);
            else
                GL11.glDrawElements(GL11.GL_TRIANGLES, numberOfVerts, GL11.GL_UNSIGNED_INT, 0);
-              break;
+                 //GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, numberOfVerts*32);
+                  break;
             case POST:
+                System.out.println("Primtivemodel POST");
            GL20.glDisableVertexAttribArray(0);
            GL20.glDisableVertexAttribArray(1);
            GL20.glDisableVertexAttribArray(2);
